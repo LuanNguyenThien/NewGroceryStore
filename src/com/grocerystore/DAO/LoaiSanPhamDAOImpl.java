@@ -22,13 +22,12 @@ public class LoaiSanPhamDAOImpl implements ILoaiSanPham{
 
     @Override
     public Boolean add(LoaiSanPham model) {
-        String sql = "Call ThemLoaiSanPham(?, ?)";
+        String sql = "Call ThemLoaiSanPham(?)";
         PreparedStatement ps = null;
         try {
 
             ps = DatabaseConnection.getInstance().getConnection().prepareStatement(sql);
-            ps.setString(1, model.getMaLoaiSP());
-            ps.setString(2, model.getTenLoaiSP());
+            ps.setString(1, model.getTenLoaiSP());
             int rowsInserted = ps.executeUpdate();
             return rowsInserted > 0;
         } catch (SQLException ex) {
@@ -47,10 +46,9 @@ public class LoaiSanPhamDAOImpl implements ILoaiSanPham{
     public Boolean update(LoaiSanPham model) {
         PreparedStatement ps = null;
         try {
-            String sql = "UPDATE LoaiSanPham SET MaLoaiSP = ?, TenLoaiSP = ? WHERE MaLoaiSP = ?";
+            String sql = "UPDATE LoaiSanPham SET TenLoaiSP = ? WHERE MaLoaiSP = ?";
             ps = DatabaseConnection.getInstance().getConnection().prepareStatement(sql);
-            ps.setString(1, model.getMaLoaiSP());
-            ps.setString(2, model.getTenLoaiSP());
+            ps.setString(1, model.getTenLoaiSP());
             int rowsUpdated = ps.executeUpdate();
             return rowsUpdated > 0;
         } catch (SQLException ex) {
