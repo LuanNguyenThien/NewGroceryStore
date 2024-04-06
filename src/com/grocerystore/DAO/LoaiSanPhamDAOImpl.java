@@ -49,6 +49,7 @@ public class LoaiSanPhamDAOImpl implements ILoaiSanPham{
             String sql = "UPDATE LoaiSanPham SET TenLoaiSP = ? WHERE MaLoaiSP = ?";
             ps = DatabaseConnection.getInstance().getConnection().prepareStatement(sql);
             ps.setString(1, model.getTenLoaiSP());
+            ps.setString(2, model.getMaLoaiSP());
             int rowsUpdated = ps.executeUpdate();
             return rowsUpdated > 0;
         } catch (SQLException ex) {
