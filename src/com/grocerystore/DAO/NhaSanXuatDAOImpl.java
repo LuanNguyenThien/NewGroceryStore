@@ -24,14 +24,14 @@ public class NhaSanXuatDAOImpl implements INhaSanXuat{
 
     @Override
     public Boolean add(NhaSanXuat model) {
+        String sql = "Call ThemNhaSanXuat(?, ?, ?)";
         PreparedStatement ps = null;
         try {
-            String sql = "INSERT INTO NhaSanXuat (MaNSX, TenNSX, DiaChi, Sdt) VALUES (?, ?, ?, ?)";
+            
             ps = DatabaseConnection.getInstance().getConnection().prepareStatement(sql);
-            ps.setString(1, model.getMaNSX());
-            ps.setString(2, model.getTenNSX());
-            ps.setString(3, model.getDiaChi());
-            ps.setString(4, model.getSdt());
+            ps.setString(1, model.getTenNSX());
+            ps.setString(2, model.getDiaChi());
+            ps.setString(3, model.getSdt());
             int rowsInserted = ps.executeUpdate();
             return rowsInserted > 0;
         } catch (SQLException ex) {
@@ -50,12 +50,12 @@ public class NhaSanXuatDAOImpl implements INhaSanXuat{
     public Boolean update(NhaSanXuat model) {
          PreparedStatement ps = null;
         try {
-            String sql = "UPDATE NhaSanrXuat SET MaNSX = ?, TenNSX = ?, DiaChi = ?, Sdt = ? WHERE MaNSX = ?";
+            String sql = "UPDATE NhaSanXuat SET TenNSX = ?, DiaChi = ?, Sdt = ? WHERE MaNSX = ?";
             ps = DatabaseConnection.getInstance().getConnection().prepareStatement(sql);
-            ps.setString(1, model.getMaNSX());
-            ps.setString(2, model.getTenNSX());
-            ps.setString(3, model.getDiaChi());
-            ps.setString(4, model.getSdt());
+            ps.setString(1, model.getTenNSX());
+            ps.setString(2, model.getDiaChi());
+            ps.setString(3, model.getSdt());
+            ps.setString(4, model.getMaNSX());
             int rowsUpdated = ps.executeUpdate();
             return rowsUpdated > 0;
         } catch (SQLException ex) {
