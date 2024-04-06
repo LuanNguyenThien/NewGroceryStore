@@ -22,9 +22,10 @@ public class LoaiSanPhamDAOImpl implements ILoaiSanPham{
 
     @Override
     public Boolean add(LoaiSanPham model) {
+        String sql = "Call ThemLoaiSanPham(?, ?)";
         PreparedStatement ps = null;
         try {
-            String sql = "INSERT INTO LoaiSanPham (MaLoaiSP, TenLoaiSP) VALUES (?, ?)";
+
             ps = DatabaseConnection.getInstance().getConnection().prepareStatement(sql);
             ps.setString(1, model.getMaLoaiSP());
             ps.setString(2, model.getTenLoaiSP());
