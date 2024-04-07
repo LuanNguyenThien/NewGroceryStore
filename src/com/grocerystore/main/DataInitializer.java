@@ -17,7 +17,7 @@ public class DataInitializer {
     public static NhanVien nhanVien1;
     public static SanPham sp1, sp2;
     
-    public static void initialize() {
+    static {
         // Tạo dữ liệu mẫu cho NhanVien
         nhanVien1 = new NhanVien(
             "NV001", 

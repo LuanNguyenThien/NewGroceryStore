@@ -23,6 +23,24 @@ public class SanPham {
     private String tinhTrang;
     private byte[] hinhAnh;
 
+    public SanPham() {
+    }
+
+    public SanPham(String maSP, String maLoaiSP, String maNSX, String tenSP, String donViTinh, BigDecimal giaTien, BigDecimal giaNhap, int soLuong, int loiNhuan, String tinhTrang, byte[] hinhAnh) {
+        this.maSP = maSP;
+        this.maLoaiSP = maLoaiSP;
+        this.maNSX = maNSX;
+        this.tenSP = tenSP;
+        this.donViTinh = donViTinh;
+        this.giaTien = giaTien;
+        this.giaNhap = giaNhap;
+        this.soLuong = soLuong;
+        this.loiNhuan = loiNhuan;
+        this.tinhTrang = tinhTrang;
+        this.hinhAnh = hinhAnh;
+    }
+    
+    
     // Getters and setters for each field
 
     public String getMaSP() {

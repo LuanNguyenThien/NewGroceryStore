@@ -18,13 +18,13 @@ public class Form_Product extends javax.swing.JPanel {
     }
     
     private ProductClickListener listener;
-    private int itemsPerPage = 12;
+    private int itemsPerPage = 10;
     private int currentPage = 0;
-    private List<Product> cards;
+    private List<Product> products;
 
     private void init() {
         // Load all cards
-        loadCards();
+        loadProducts();
 
         // Set layout and scrollbar
         panel.setLayout(new FlowLayout());
@@ -38,33 +38,41 @@ public class Form_Product extends javax.swing.JPanel {
         this.listener = listener;
     }
 
-    private void loadCards() {
-        cards = new ArrayList<>();
-        SanPham sp1 = DataInitializer.sp1;
-        SanPham sp2 = DataInitializer.sp2;
-        for (int i = 1; i <= 36; i++) {
-            int iconNumber = (i % 12) + 1;
-            Product product;
-            if(i%2==1){
-                sp1.setHinhAnh(util.Util.imageIconToByteArray(new ImageIcon(getClass().getResource("/com/raven/icon/testing/" + iconNumber + ".jpg"))));
-                product = new Product(sp1);
-            }
-            else
-            {
-                sp2.setHinhAnh(util.Util.imageIconToByteArray(new ImageIcon(getClass().getResource("/com/raven/icon/testing/" + iconNumber + ".jpg"))));
-                product = new Product(sp2);
-            }
-            product.setProductClickListener(new Product.ProductClickListener() {
-                @Override
-                public void onProductClick(SanPham product) {
-                    if (listener != null) {
-                        listener.onProductClick(product);
-                    }
-                }
-            });
-            cards.add(product);
+    private void loadProducts() {
+    products = new ArrayList<>();
+    for (int i = 1; i <= 36; i++) {
+        int iconNumber = (i % 12) + 1;
+        SanPham sp = new SanPham();
+        if(i%2==1){
+            sp.setMaSP(DataInitializer.sp1.getMaSP());
+            sp.setMaLoaiSP(DataInitializer.sp1.getMaLoaiSP());
+            sp.setMaNSX(DataInitializer.sp1.getMaNSX());
+            sp.setTenSP(DataInitializer.sp1.getTenSP());
+            sp.setDonViTinh(DataInitializer.sp1.getDonViTinh());
+            sp.setGiaTien(DataInitializer.sp1.getGiaTien());
+            sp.setGiaNhap(DataInitializer.sp1.getGiaNhap());
+            sp.setSoLuong(DataInitializer.sp1.getSoLuong());
+            sp.setLoiNhuan(DataInitializer.sp1.getLoiNhuan());
+            sp.setTinhTrang(DataInitializer.sp1.getTinhTrang());
+            sp.setHinhAnh(util.Util.imageIconToByteArray(new ImageIcon(getClass().getResource("/com/raven/icon/testing/" + iconNumber + ".jpg"))));
         }
+        else
+        {
+            sp = DataInitializer.sp2;
+            sp.setHinhAnh(util.Util.imageIconToByteArray(new ImageIcon(getClass().getResource("/com/raven/icon/testing/" + iconNumber + ".jpg"))));
+        }
+        Product product = new Product(sp);
+        product.setProductClickListener(new Product.ProductClickListener() {
+            @Override
+            public void onProductClick(SanPham product) {
+                if (listener != null) {
+                    listener.onProductClick(product);
+                }
+            }
+        });
+        products.add(product);
     }
+}
 
     private void loadPage(int pageNumber) {
         // Clear the panel
@@ -73,11 +81,11 @@ public class Form_Product extends javax.swing.JPanel {
 
         // Calculate the start and end indices
         int start = pageNumber * itemsPerPage;
-        int end = Math.min(start + itemsPerPage, cards.size());
+        int end = Math.min(start + itemsPerPage, products.size());
 
         // Add the cards for the current page
         for (int i = start; i < end; i++) {
-            panel.add(cards.get(i));
+            panel.add(products.get(i));
         }
 
         // Refresh the panel
@@ -90,7 +98,7 @@ public class Form_Product extends javax.swing.JPanel {
 
     // Call this method to go to the next page
     private void nextPage() {
-        int totalPages = (int) Math.ceil((double) cards.size() / itemsPerPage);
+        int totalPages = (int) Math.ceil((double) products.size() / itemsPerPage);
         if (currentPage < totalPages - 1) {
             loadPage(currentPage + 1);
         }
@@ -146,7 +154,12 @@ public class Form_Product extends javax.swing.JPanel {
         btnBack = new javax.swing.JButton();
         btnContinue = new javax.swing.JButton();
 
+        setBackground(new java.awt.Color(255, 255, 255));
+        setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
         jScrollPane1.setBorder(null);
+
+        panel.setBackground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout panelLayout = new javax.swing.GroupLayout(panel);
         panel.setLayout(panelLayout);
@@ -161,14 +174,16 @@ public class Form_Product extends javax.swing.JPanel {
 
         jScrollPane1.setViewportView(panel);
 
-        btnBack.setIcon(new javax.swing.ImageIcon("D:\\DH_SPKT\\Nam_3\\Ki_1\\Software_Engineering\\DACK\\ToyStore-master\\QuanLyCuaHangBanDoChoi\\Resources\\icons8_previous_32px_1.png")); // NOI18N
+        btnBack.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/grocerystore/icon/icons8_previous_32px_1.png"))); // NOI18N
+        btnBack.setBorder(null);
         btnBack.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnBackMouseClicked(evt);
             }
         });
 
-        btnContinue.setText("Continue");
+        btnContinue.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/grocerystore/icon/icons8_next_32px_5.png"))); // NOI18N
+        btnContinue.setBorder(null);
         btnContinue.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnContinueMouseClicked(evt);
@@ -184,21 +199,22 @@ public class Form_Product extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnContinue))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE))
+                        .addGap(42, 42, 42)
+                        .addComponent(btnContinue, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE))
                 .addGap(30, 30, 30))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 405, Short.MAX_VALUE)
                 .addGap(15, 15, 15)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnContinue))
-                .addContainerGap())
+                    .addComponent(btnContinue, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(9, 9, 9))
         );
     }// </editor-fold>//GEN-END:initComponents
 

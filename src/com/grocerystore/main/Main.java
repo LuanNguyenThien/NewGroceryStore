@@ -9,6 +9,7 @@ import com.grocerystore.form.Form_Home;
 import com.grocerystore.form.Form_Home1;
 import com.grocerystore.form.Form_QLBanHang;
 import com.grocerystore.form.Form_QLNhanVien;
+import com.grocerystore.form.Form_QLNhapHang;
 import com.grocerystore.form.MainForm;
 import com.grocerystore.model.NhanVien;
 import com.grocerystore.swing.MenuItem;
@@ -70,6 +71,8 @@ public class Main extends javax.swing.JFrame {
                     main.showForm(new Form_QLNhanVien());
                 if (menuIndex == 1)
                     main.showForm(new Form_QLBanHang());
+                if (menuIndex == 2)
+                    main.showForm(new Form_QLNhapHang());
             }
         });
         menu.addEventShowPopup(new EventShowPopupMenu() {
@@ -200,7 +203,6 @@ public class Main extends javax.swing.JFrame {
                 } catch (SQLException e) {
                     System.err.println(e);
                 }
-                DataInitializer.initialize();
                 Main main = new Main();
                 main.setData(DataInitializer.nhanVien1);
                 main.setVisible(true);

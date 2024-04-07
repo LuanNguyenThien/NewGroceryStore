@@ -1,6 +1,5 @@
 package com.grocerystore.main;
 
-import com.raven.main.*;
 import connection.DatabaseConnection;
 import java.awt.Color;
 import java.sql.SQLException;
@@ -70,6 +69,7 @@ public class Login extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 try {
                     DatabaseConnection.getInstance().connectToDatabase();
