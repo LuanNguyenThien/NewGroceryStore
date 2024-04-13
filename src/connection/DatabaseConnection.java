@@ -22,7 +22,7 @@ public class DatabaseConnection {
     public void connectToDatabase() throws SQLException {
         String server = "localhost";
         String port = "3306";
-        String database = "qlchvpp";
+        String database = "newqlchvpp";
         String userName = "root";
         String password = "thienluan";
         connection = java.sql.DriverManager.getConnection("jdbc:mysql://" + server + ":" + port + "/" + database, userName, password);

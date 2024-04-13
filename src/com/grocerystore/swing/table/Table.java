@@ -4,6 +4,7 @@ import com.grocerystore.swing.scrollbar.ScrollBarCustom;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
@@ -53,6 +54,10 @@ public class Table extends JTable {
                         cell.setBackground(Color.WHITE);
                     }
                     return cell;
+                } else if (o instanceof ImageIcon) {
+                    JLabel label = new JLabel();
+                    label.setIcon((ImageIcon) o);
+                    return label;
                 } else {
                     Component com = super.getTableCellRendererComponent(jtable, o, selected, focus, i, i1);
                     setBorder(noFocusBorder);

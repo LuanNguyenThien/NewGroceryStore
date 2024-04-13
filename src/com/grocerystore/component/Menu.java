@@ -61,8 +61,8 @@ public class Menu extends javax.swing.JPanel {
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/3.png")), "Nhập hàng"));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/4.png")), "Sản phẩm"));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/5.png")), "Nhân viên"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/6.png")), "Thiết lập tài khoản"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/7.png")), ""));
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/6.png")), "Khách hàng"));
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/7.png")), "Thiết lập tài khoản"));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/8.png")), ""));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/9.png")), ""));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/10.png")), ""));

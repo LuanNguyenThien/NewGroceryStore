@@ -8,8 +8,10 @@ import com.grocerystore.form.Form1;
 import com.grocerystore.form.Form_Home;
 import com.grocerystore.form.Form_Home1;
 import com.grocerystore.form.Form_QLBanHang;
+import com.grocerystore.form.Form_QLKhachHang;
 import com.grocerystore.form.Form_QLNhanVien;
 import com.grocerystore.form.Form_QLNhapHang;
+import com.grocerystore.form.Form_QLSanPham;
 import com.grocerystore.form.MainForm;
 import com.grocerystore.model.NhanVien;
 import com.grocerystore.swing.MenuItem;
@@ -67,12 +69,16 @@ public class Main extends javax.swing.JFrame {
                         main.showForm(new Form_Home1());
                     }
                 }
-                if (menuIndex == 4)
-                    main.showForm(new Form_QLNhanVien());
                 if (menuIndex == 1)
                     main.showForm(new Form_QLBanHang());
                 if (menuIndex == 2)
                     main.showForm(new Form_QLNhapHang());
+                if (menuIndex == 3)
+                    main.showForm(new Form_QLSanPham());
+                if (menuIndex == 4)
+                    main.showForm(new Form_QLNhanVien());
+                if (menuIndex == 5)
+                    main.showForm(new Form_QLKhachHang());
             }
         });
         menu.addEventShowPopup(new EventShowPopupMenu() {

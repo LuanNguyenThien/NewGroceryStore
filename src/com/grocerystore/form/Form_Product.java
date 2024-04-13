@@ -6,7 +6,9 @@ import com.raven.component.Product;
 import com.raven.model.Model_Product;
 import com.raven.swing.ScrollBar;
 import com.raven.swing.WrapLayout;
+import connection.DatabaseConnection;
 import java.awt.FlowLayout;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
@@ -23,15 +25,22 @@ public class Form_Product extends javax.swing.JPanel {
     private List<Product> products;
 
     private void init() {
+        connect_DB();
         // Load all cards
         loadProducts();
-
         // Set layout and scrollbar
         panel.setLayout(new FlowLayout());
         jScrollPane1.setVerticalScrollBar(new ScrollBar());
-
         // Load the first page
         loadPage(0);
+    }
+    
+    private void connect_DB(){
+        try {
+            DatabaseConnection.getInstance().connectToDatabase();
+        } catch (SQLException e) {
+            System.err.println(e);
+        }
     }
     
     public void setProductClickListener(ProductClickListener listener) {

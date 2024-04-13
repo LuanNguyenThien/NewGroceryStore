@@ -11,12 +11,14 @@ import com.grocerystore.model.SanPham;
 import com.grocerystore.swing.scrollbar.ScrollBarCustom;
 import com.raven.model.Model_Product;
 import com.sun.java.swing.plaf.windows.WindowsBorders;
+import connection.DatabaseConnection;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -39,6 +41,7 @@ public class Form_QLBanHang extends javax.swing.JPanel {
      * Creates new form Form_QLNhanVien
      */
     public Form_QLBanHang() {
+        connect_DB();
         initComponents();
         setOpaque(false);
         table1.fixTable(jScrollPane1);
@@ -54,6 +57,14 @@ public class Form_QLBanHang extends javax.swing.JPanel {
                 System.out.println(product.getGiaTien());
             }
         });
+    }
+    
+    private void connect_DB(){
+        try {
+            DatabaseConnection.getInstance().connectToDatabase();
+        } catch (SQLException e) {
+            System.err.println(e);
+        }
     }
     
     private void addtoTable(SanPham product){

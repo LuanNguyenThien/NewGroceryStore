@@ -13,7 +13,9 @@ import java.math.BigDecimal;
 public class SanPham {
     private String maSP;
     private String maLoaiSP;
+    private String tenLoaiSP;
     private String maNSX;
+    private String tenNSX;
     private String tenSP;
     private String donViTinh;
     private BigDecimal giaTien;
@@ -39,9 +41,41 @@ public class SanPham {
         this.tinhTrang = tinhTrang;
         this.hinhAnh = hinhAnh;
     }
+
+    public SanPham(String maSP, String maLoaiSP, String tenLoaiSP, String maNSX, String tenNSX, String tenSP, String donViTinh, BigDecimal giaTien, BigDecimal giaNhap, int soLuong, int loiNhuan, String tinhTrang, byte[] hinhAnh) {
+        this.maSP = maSP;
+        this.maLoaiSP = maLoaiSP;
+        this.tenLoaiSP = tenLoaiSP;
+        this.maNSX = maNSX;
+        this.tenNSX = tenNSX;
+        this.tenSP = tenSP;
+        this.donViTinh = donViTinh;
+        this.giaTien = giaTien;
+        this.giaNhap = giaNhap;
+        this.soLuong = soLuong;
+        this.loiNhuan = loiNhuan;
+        this.tinhTrang = tinhTrang;
+        this.hinhAnh = hinhAnh;
+    }
     
     
+
+    public String getTenLoaiSP() {
+        return tenLoaiSP;
+    }
+
+    public void setTenLoaiSP(String tenLoaiSP) {
+        this.tenLoaiSP = tenLoaiSP;
+    }
+
+    public String getTenNSX() {
+        return tenNSX;
+    }
+
     // Getters and setters for each field
+    public void setTenNSX(String tenNSX) {
+        this.tenNSX = tenNSX;
+    }
 
     public String getMaSP() {
         return maSP;
