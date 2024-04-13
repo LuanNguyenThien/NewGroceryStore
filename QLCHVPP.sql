@@ -193,6 +193,7 @@ CREATE TABLE `loaisanpham` (
 
 LOCK TABLES `loaisanpham` WRITE;
 /*!40000 ALTER TABLE `loaisanpham` DISABLE KEYS */;
+INSERT INTO `loaisanpham` VALUES ('LSP0001','Đồ chơi trẻ em'),('LSP0002','Dụng cụ học tập'),('LSP0003','Nước uống đóng chai'),('LSP0004','Thực phẩm dinh dưỡng');
 /*!40000 ALTER TABLE `loaisanpham` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -253,6 +254,7 @@ CREATE TABLE `nhasanxuat` (
 
 LOCK TABLES `nhasanxuat` WRITE;
 /*!40000 ALTER TABLE `nhasanxuat` DISABLE KEYS */;
+INSERT INTO `nhasanxuat` VALUES ('NSX0001','Thiên Long','Việt Nam','18009090'),('NSX0002','Revive','Việt Nam','18001234');
 /*!40000 ALTER TABLE `nhasanxuat` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -667,4 +669,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-04-13 11:37:00
+-- Dump completed on 2024-04-13 17:20:04
