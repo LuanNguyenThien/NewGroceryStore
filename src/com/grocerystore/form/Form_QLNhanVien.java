@@ -79,38 +79,38 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
             row[10] = nhanVien.getMatKhau();
             row[11] = nhanVien.getQuyen();
             model.addRow(row);
-    }
-
-    table1.setModel(model);
-    table1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // Disable auto resizing
-
-    for (int column = 0; column < table1.getColumnCount(); column++) {
-        TableColumn tableColumn = table1.getColumnModel().getColumn(column);
-        int preferredWidth = tableColumn.getMinWidth();
-        int maxWidth = tableColumn.getMaxWidth();
-
-        // Consider the header's width
-        TableCellRenderer headerRenderer = table1.getTableHeader().getDefaultRenderer();
-        Object headerValue = tableColumn.getHeaderValue();
-        Component headerComp = headerRenderer.getTableCellRendererComponent(table1, headerValue, false, false, 0, column);
-        preferredWidth = Math.max(preferredWidth, headerComp.getPreferredSize().width + table1.getIntercellSpacing().width);
-
-        for (int row = 0; row < table1.getRowCount(); row++) {
-            TableCellRenderer cellRenderer = table1.getCellRenderer(row, column);
-            Component c = table1.prepareRenderer(cellRenderer, row, column);
-            int width = c.getPreferredSize().width + table1.getIntercellSpacing().width;
-            preferredWidth = Math.max(preferredWidth, width);
-
-            // We've exceeded the maximum width, no need to check other rows
-            if (preferredWidth >= maxWidth) {
-                preferredWidth = maxWidth;
-                break;
-            }
         }
-        
-        tableColumn.setMinWidth(preferredWidth+5); // Set minimum width instead of preferred width
+
+        table1.setModel(model);
+        table1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // Disable auto resizing
+
+        for (int column = 0; column < table1.getColumnCount(); column++) {
+            TableColumn tableColumn = table1.getColumnModel().getColumn(column);
+            int preferredWidth = tableColumn.getMinWidth();
+            int maxWidth = tableColumn.getMaxWidth();
+
+            // Consider the header's width
+            TableCellRenderer headerRenderer = table1.getTableHeader().getDefaultRenderer();
+            Object headerValue = tableColumn.getHeaderValue();
+            Component headerComp = headerRenderer.getTableCellRendererComponent(table1, headerValue, false, false, 0, column);
+            preferredWidth = Math.max(preferredWidth, headerComp.getPreferredSize().width + table1.getIntercellSpacing().width);
+
+            for (int row = 0; row < table1.getRowCount(); row++) {
+                TableCellRenderer cellRenderer = table1.getCellRenderer(row, column);
+                Component c = table1.prepareRenderer(cellRenderer, row, column);
+                int width = c.getPreferredSize().width + table1.getIntercellSpacing().width;
+                preferredWidth = Math.max(preferredWidth, width);
+
+                // We've exceeded the maximum width, no need to check other rows
+                if (preferredWidth >= maxWidth) {
+                    preferredWidth = maxWidth;
+                    break;
+                }
+            }
+
+            tableColumn.setMinWidth(preferredWidth+5); // Set minimum width instead of preferred width
+        }
     }
-}
 
     /**
      * This method is called from within the constructor to initialize the form.

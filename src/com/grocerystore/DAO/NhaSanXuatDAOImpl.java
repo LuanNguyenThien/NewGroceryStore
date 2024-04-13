@@ -6,6 +6,7 @@ package com.grocerystore.DAO;
 
 import com.grocerystore.model.NhaSanXuat;
 import connection.DatabaseConnection;
+import java.sql.CallableStatement;
 import java.sql.Statement;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.sql.ResultSet;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -35,7 +37,7 @@ public class NhaSanXuatDAOImpl implements INhaSanXuat{
             int rowsInserted = ps.executeUpdate();
             return rowsInserted > 0;
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
         } finally {
             try {
                 if (ps != null) ps.close();
@@ -48,21 +50,21 @@ public class NhaSanXuatDAOImpl implements INhaSanXuat{
 
     @Override
     public Boolean update(NhaSanXuat model) {
-         PreparedStatement ps = null;
+        CallableStatement cs = null;
         try {
-            String sql = "UPDATE NhaSanXuat SET TenNSX = ?, DiaChi = ?, Sdt = ? WHERE MaNSX = ?";
-            ps = DatabaseConnection.getInstance().getConnection().prepareStatement(sql);
-            ps.setString(1, model.getTenNSX());
-            ps.setString(2, model.getDiaChi());
-            ps.setString(3, model.getSdt());
-            ps.setString(4, model.getMaNSX());
-            int rowsUpdated = ps.executeUpdate();
+            String sql = "{CALL UpdateNhaSanXuat(?, ?, ?, ?)}";
+            cs = DatabaseConnection.getInstance().getConnection().prepareCall(sql);
+            cs.setString(1, model.getMaNSX());
+            cs.setString(2, model.getTenNSX());
+            cs.setString(3, model.getDiaChi());
+            cs.setString(4, model.getSdt());
+            int rowsUpdated = cs.executeUpdate();
             return rowsUpdated > 0;
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
         } finally {
             try {
-                if (ps != null) ps.close();
+                if (cs != null) cs.close();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }

@@ -33,4 +33,13 @@ public class CustomCombobox extends JComboBox {
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         this.setBackground(Color.WHITE);
     }
+    
+    public void addItem(String maLoaiSP, String tenLoaiSP) {
+        super.addItem(new Item(maLoaiSP, tenLoaiSP));
+    }
+
+    public String getSelectedValue() {
+        Item selectedItem = (Item) super.getSelectedItem();
+        return selectedItem != null ? selectedItem.getMaItem() : null;
+    }
 }

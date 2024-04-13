@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class LoaiSanPhamDAOImpl implements ILoaiSanPham{
 
-
+    
     @Override
     public Boolean add(LoaiSanPham model) {
         String sql = "Call ThemLoaiSanPham(?)";

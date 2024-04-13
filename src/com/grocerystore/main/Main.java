@@ -135,7 +135,7 @@ public class Main extends javax.swing.JFrame {
         //  Init google icon font
         IconFontSwing.register(GoogleMaterialDesignIcons.getIconFont());
         //  Start with this form
-        main.showForm(new MainForm());
+        main.showForm(new Form_Home());
     }
 
     @SuppressWarnings("unchecked")

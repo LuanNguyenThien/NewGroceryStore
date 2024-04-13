@@ -6,9 +6,13 @@ package com.grocerystore.form;
 
 import com.grocerystore.model.NhanVien;
 import com.grocerystore.DAO.INhanVienDAO;
+import com.grocerystore.DAO.LoaiSanPhamDAOImpl;
+import com.grocerystore.DAO.NhaSanXuatDAOImpl;
 import com.grocerystore.DAO.NhanVienDAOImpl;
 import com.grocerystore.DAO.SanPhamDAOImpl;
+import com.grocerystore.model.LoaiSanPham;
 import com.grocerystore.model.ModelCard;
+import com.grocerystore.model.NhaSanXuat;
 import com.grocerystore.model.SanPham;
 import com.grocerystore.swing.icon.GoogleMaterialDesignIcons;
 import com.grocerystore.swing.icon.IconFontSwing;
@@ -48,16 +52,24 @@ import util.Util;
  */
 public class Form_QLSanPham extends javax.swing.JPanel {
 
+    private LoaiSanPhamDAOImpl loaiSanPhamDao;
+    private NhaSanXuatDAOImpl nhaSanXuatDao; 
     /**
      * Creates new form Form_QLNhanVien
      */
     public Form_QLSanPham() {
-        connect_DB();
+        loaiSanPhamDao = new LoaiSanPhamDAOImpl();
+        nhaSanXuatDao = new NhaSanXuatDAOImpl();
         initComponents();
-        setOpaque(false);
+        setOpaque(false); 
+        init();
+    }
+    
+    private void init(){
         table_listSP.fixTable(jScrollPane3);
         loadData_SP();
         card_init();
+        load_cbbselect();
     }
     
     private void connect_DB(){
@@ -69,6 +81,7 @@ public class Form_QLSanPham extends javax.swing.JPanel {
     }
     
     private void loadData_SP() {
+       connect_DB();
        List<SanPham> SanPhamList = SanPhamDAOImpl.getInstance().getAll_viewSP();
 
         String[] columnNames = {"Mã SP", "Tên SP", "Đơn vị tính", "Giá tiền", "Giá nhập", "Số lượng", "Lợi nhuận", "Tình trạng", "Hình ảnh", "Mã NSX", "Mã LSP"};
@@ -83,8 +96,6 @@ public class Form_QLSanPham extends javax.swing.JPanel {
                 }
             }
         };
-        
-        
 
         for (SanPham sanPham : SanPhamList) {
             Object[] row = new Object[11];
@@ -114,40 +125,94 @@ public class Form_QLSanPham extends javax.swing.JPanel {
         table_listSP.removeColumn(table_listSP.getColumnModel().getColumn(9));
 
 
-    for (int column = 0; column < table_listSP.getColumnCount(); column++) {
-        TableColumn tableColumn = table_listSP.getColumnModel().getColumn(column);
-        int preferredWidth = tableColumn.getMinWidth();
-        int maxWidth = tableColumn.getMaxWidth();
+        for (int column = 0; column < table_listSP.getColumnCount(); column++) {
+            TableColumn tableColumn = table_listSP.getColumnModel().getColumn(column);
+            int preferredWidth = tableColumn.getMinWidth();
+            int maxWidth = tableColumn.getMaxWidth();
 
-        // Consider the header's width
-        TableCellRenderer headerRenderer = table_listSP.getTableHeader().getDefaultRenderer();
-        Object headerValue = tableColumn.getHeaderValue();
-        Component headerComp = headerRenderer.getTableCellRendererComponent(table_listSP, headerValue, false, false, 0, column);
-        preferredWidth = Math.max(preferredWidth, headerComp.getPreferredSize().width + table_listSP.getIntercellSpacing().width);
+            // Consider the header's width
+            TableCellRenderer headerRenderer = table_listSP.getTableHeader().getDefaultRenderer();
+            Object headerValue = tableColumn.getHeaderValue();
+            Component headerComp = headerRenderer.getTableCellRendererComponent(table_listSP, headerValue, false, false, 0, column);
+            preferredWidth = Math.max(preferredWidth, headerComp.getPreferredSize().width + table_listSP.getIntercellSpacing().width);
 
-        for (int row = 0; row < table_listSP.getRowCount(); row++) {
-            TableCellRenderer cellRenderer = table_listSP.getCellRenderer(row, column);
-            Component c = table_listSP.prepareRenderer(cellRenderer, row, column);
-            int width = c.getPreferredSize().width + table_listSP.getIntercellSpacing().width;
-            preferredWidth = Math.max(preferredWidth, width);
+            for (int row = 0; row < table_listSP.getRowCount(); row++) {
+                TableCellRenderer cellRenderer = table_listSP.getCellRenderer(row, column);
+                Component c = table_listSP.prepareRenderer(cellRenderer, row, column);
+                int width = c.getPreferredSize().width + table_listSP.getIntercellSpacing().width;
+                preferredWidth = Math.max(preferredWidth, width);
 
-            // We've exceeded the maximum width, no need to check other rows
-            if (preferredWidth >= maxWidth) {
-                preferredWidth = maxWidth;
-                break;
+                // We've exceeded the maximum width, no need to check other rows
+                if (preferredWidth >= maxWidth) {
+                    preferredWidth = maxWidth;
+                    break;
+                }
             }
-        }
-        
-        tableColumn.setMinWidth(preferredWidth+5); // Set minimum width instead of preferred width
-    }
 
-}
+            tableColumn.setMinWidth(preferredWidth+5); // Set minimum width instead of preferred width
+        }
+
+    }
     
     private void card_init(){
         Icon icon1 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.SHOPPING_CART, 60, new Color(255, 255, 255, 255), new Color(255, 255, 255, 255));
         card_NSX.setData(new ModelCard("Nhà sản xuất", 5100, 20, icon1));
+        card_NSX.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                card_NSXMouseClicked(evt);
+            }
+        });
+        
         Icon icon2 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.SHOP, 60, new Color(255, 255, 255, 255), new Color(255, 255, 255, 255));
         card_LSP.setData(new ModelCard("Loại sản phẩm", 0, 0, icon2));
+        card_LSP.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                card_LSPMouseClicked(evt);
+            }
+        });
+    }
+    
+    private void card_NSXMouseClicked(java.awt.event.MouseEvent evt) {
+        // Open Form_LSP here
+        Form_NSX form_NSX = new Form_NSX();
+        form_NSX.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                load_cbbselect();
+            }
+        });
+        form_NSX.setVisible(true);
+    }
+    
+    private void card_LSPMouseClicked(java.awt.event.MouseEvent evt) {
+        // Open Form_LSP here
+        Form_LSP form_LSP = new Form_LSP();
+        form_LSP.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                load_cbbselect();
+            }
+        });
+        form_LSP.setVisible(true);
+    }
+    
+    
+    
+    private void load_cbbselect(){
+        connect_DB();
+        cbb_LSPselect.removeAllItems();
+        List<LoaiSanPham> loaiSanPhamList = loaiSanPhamDao.getAll();
+        for (LoaiSanPham loaiSanPham : loaiSanPhamList) {
+            cbb_LSPselect.addItem(loaiSanPham.getMaLoaiSP(), loaiSanPham.getTenLoaiSP());
+        }
+        
+        cbb_NSXselect.removeAllItems();
+        List<NhaSanXuat> nhaSanXuatList = nhaSanXuatDao.getAll();
+        for (NhaSanXuat nhaSanXuat : nhaSanXuatList) {
+            cbb_NSXselect.addItem(nhaSanXuat.getMaNSX(), nhaSanXuat.getTenNSX());
+        }
     }
 
     /**
@@ -181,8 +246,8 @@ public class Form_QLSanPham extends javax.swing.JPanel {
         button4 = new com.raven.swing.Button();
         button5 = new com.raven.swing.Button();
         button6 = new com.raven.swing.Button();
-        customCombobox3 = new com.raven.swing.CustomCombobox();
-        customCombobox4 = new com.raven.swing.CustomCombobox();
+        cbb_LSPselect = new com.raven.swing.CustomCombobox();
+        cbb_NSXselect = new com.raven.swing.CustomCombobox();
         customCombobox5 = new com.raven.swing.CustomCombobox();
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
@@ -207,6 +272,7 @@ public class Form_QLSanPham extends javax.swing.JPanel {
         card_LSP = new com.grocerystore.component.Card_custom();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         jLabel2.setBackground(new java.awt.Color(102, 153, 255));
         jLabel2.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
@@ -263,7 +329,7 @@ public class Form_QLSanPham extends javax.swing.JPanel {
         jLabel20.setText("Loại sản phẩm");
 
         jLabel21.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jLabel21.setText("Nhà cung cấp");
+        jLabel21.setText("Nhà sản xuất");
 
         jLabel22.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel22.setText("Đơn vị tính");
@@ -295,6 +361,14 @@ public class Form_QLSanPham extends javax.swing.JPanel {
         button6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         button6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         button6.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        cbb_LSPselect.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+        cbb_NSXselect.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+        customCombobox5.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Cái", "Tờ", "Hộp", "Chai", "Lốc", "Thùng" }));
+        customCombobox5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        customCombobox5.setOpaque(false);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -333,8 +407,8 @@ public class Form_QLSanPham extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(customCombobox5, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
                             .addComponent(jTextField8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
-                            .addComponent(customCombobox3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(customCombobox4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(cbb_LSPselect, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cbb_NSXselect, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(258, 258, 258))))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(26, 26, 26)
@@ -386,11 +460,11 @@ public class Form_QLSanPham extends javax.swing.JPanel {
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel20)
-                                    .addComponent(customCombobox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(cbb_LSPselect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel21)
-                            .addComponent(customCombobox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(cbb_NSXselect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel22)
@@ -650,7 +724,7 @@ public class Form_QLSanPham extends javax.swing.JPanel {
         
     }//GEN-LAST:event_lbl_picSPMouseClicked
 
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.raven.swing.Button button1;
     private com.raven.swing.Button button2;
@@ -660,10 +734,10 @@ public class Form_QLSanPham extends javax.swing.JPanel {
     private com.raven.swing.Button button6;
     private com.grocerystore.component.Card_custom card_LSP;
     private com.grocerystore.component.Card_custom card_NSX;
+    private com.raven.swing.CustomCombobox cbb_LSPselect;
+    private com.raven.swing.CustomCombobox cbb_NSXselect;
     private com.raven.swing.CustomCombobox customCombobox1;
     private com.raven.swing.CustomCombobox customCombobox2;
-    private com.raven.swing.CustomCombobox customCombobox3;
-    private com.raven.swing.CustomCombobox customCombobox4;
     private com.raven.swing.CustomCombobox customCombobox5;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

@@ -5,7 +5,9 @@
 package com.grocerystore.form;
 
 import com.grocerystore.DAO.LoaiSanPhamDAOImpl;
+import com.grocerystore.DAO.NhaSanXuatDAOImpl;
 import com.grocerystore.model.LoaiSanPham;
+import com.grocerystore.model.NhaSanXuat;
 import connection.DatabaseConnection;
 import java.awt.Component;
 import java.io.File;
@@ -29,23 +31,23 @@ import javax.swing.table.TableColumn;
  *
  * @author My PC
  */
-public class Form_LSP extends javax.swing.JFrame {
+public class Form_NSX extends javax.swing.JFrame {
     
     /**
-     * Creates new form Form_LSP
+     * Creates new form Form_NSX
      */
-    String MaLSP_selected;
-    private LoaiSanPhamDAOImpl loaiSanPhamDao;
+    String MaNSX_selected;
+    private NhaSanXuatDAOImpl nhaSanXuatDao;
     
-    public Form_LSP() {
-        loaiSanPhamDao = new LoaiSanPhamDAOImpl();
+    public Form_NSX() {
+        nhaSanXuatDao = new NhaSanXuatDAOImpl();
         connect_DB();
         initComponents();
-        table_LSP.fixTable(jScrollPane1);
+        table_NSX.fixTable(jScrollPane1);
         loadData();
         
         lbl_errorInput.setVisible(false);
-        tf_LSP.getDocument().addDocumentListener(new DocumentListener() {
+        DocumentListener documentListener = new DocumentListener() {
             @Override
             public void changedUpdate(DocumentEvent e) {
                 lbl_errorInput.setVisible(false);
@@ -58,7 +60,11 @@ public class Form_LSP extends javax.swing.JFrame {
             public void insertUpdate(DocumentEvent e) {
                 lbl_errorInput.setVisible(false);
             }
-        });
+        };
+
+        tf_NSX.getDocument().addDocumentListener(documentListener);
+        tf_diachi.getDocument().addDocumentListener(documentListener);
+        tf_sdt.getDocument().addDocumentListener(documentListener);
     }
     
     private void connect_DB(){
@@ -70,9 +76,9 @@ public class Form_LSP extends javax.swing.JFrame {
     }
     
     private void loadData() {
-        List<LoaiSanPham> loaiSanPhamList = loaiSanPhamDao.getAll();
+        List<NhaSanXuat> nhaSanXuatList = nhaSanXuatDao.getAll();
 
-        String[] columnNames = {"Mã Loại SP", "Tên Loại Sản Phẩm"};
+        String[] columnNames = {"Mã NSX", "Tên Nhà Sản Xuất", "Địa Chỉ", "SĐT"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0){
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -81,31 +87,33 @@ public class Form_LSP extends javax.swing.JFrame {
             }
         };
 
-        for (LoaiSanPham loaiSanPham : loaiSanPhamList) {
-            Object[] row = new Object[2];
-            row[0] = loaiSanPham.getMaLoaiSP();
-            row[1] = loaiSanPham.getTenLoaiSP();
+        for (NhaSanXuat nhaSanXuat : nhaSanXuatList) {
+            Object[] row = new Object[4];
+            row[0] = nhaSanXuat.getMaNSX();
+            row[1] = nhaSanXuat.getTenNSX();
+            row[2] = nhaSanXuat.getDiaChi();
+            row[3] = nhaSanXuat.getSdt();
             model.addRow(row);
         }
 
-        table_LSP.setModel(model);
-        table_LSP.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // Disable auto resizing
+        table_NSX.setModel(model);
+        table_NSX.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // Disable auto resizing
 
-        for (int column = 0; column < table_LSP.getColumnCount(); column++) {
-            TableColumn tableColumn = table_LSP.getColumnModel().getColumn(column);
+        for (int column = 0; column < table_NSX.getColumnCount(); column++) {
+            TableColumn tableColumn = table_NSX.getColumnModel().getColumn(column);
             int preferredWidth = tableColumn.getMinWidth();
             int maxWidth = tableColumn.getMaxWidth();
 
             // Consider the header's width
-            TableCellRenderer headerRenderer = table_LSP.getTableHeader().getDefaultRenderer();
+            TableCellRenderer headerRenderer = table_NSX.getTableHeader().getDefaultRenderer();
             Object headerValue = tableColumn.getHeaderValue();
-            Component headerComp = headerRenderer.getTableCellRendererComponent(table_LSP, headerValue, false, false, 0, column);
-            preferredWidth = Math.max(preferredWidth, headerComp.getPreferredSize().width + table_LSP.getIntercellSpacing().width);
+            Component headerComp = headerRenderer.getTableCellRendererComponent(table_NSX, headerValue, false, false, 0, column);
+            preferredWidth = Math.max(preferredWidth, headerComp.getPreferredSize().width + table_NSX.getIntercellSpacing().width);
 
-            for (int row = 0; row < table_LSP.getRowCount(); row++) {
-                TableCellRenderer cellRenderer = table_LSP.getCellRenderer(row, column);
-                Component c = table_LSP.prepareRenderer(cellRenderer, row, column);
-                int width = c.getPreferredSize().width + table_LSP.getIntercellSpacing().width;
+            for (int row = 0; row < table_NSX.getRowCount(); row++) {
+                TableCellRenderer cellRenderer = table_NSX.getCellRenderer(row, column);
+                Component c = table_NSX.prepareRenderer(cellRenderer, row, column);
+                int width = c.getPreferredSize().width + table_NSX.getIntercellSpacing().width;
                 preferredWidth = Math.max(preferredWidth, width);
 
                 // We've exceeded the maximum width, no need to check other rows
@@ -132,16 +140,20 @@ public class Form_LSP extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
         jLabel15 = new javax.swing.JLabel();
-        tf_LSP = new javax.swing.JTextField();
+        tf_NSX = new javax.swing.JTextField();
         btn_them = new com.raven.swing.Button();
         lbl_errorInput = new javax.swing.JLabel();
         btn_capnhat = new com.raven.swing.Button();
+        tf_diachi = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        tf_sdt = new javax.swing.JTextField();
+        jLabel17 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         btn_exit = new com.raven.swing.Button();
         jLabel3 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        table_LSP = new com.grocerystore.swing.table.Table();
+        table_NSX = new com.grocerystore.swing.table.Table();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -152,10 +164,10 @@ public class Form_LSP extends javax.swing.JFrame {
 
         jLabel15.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel15.setText("Tên loại sản phẩm");
+        jLabel15.setText("Tên nhà sản xuất");
 
-        tf_LSP.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        tf_LSP.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        tf_NSX.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        tf_NSX.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         btn_them.setBackground(new java.awt.Color(51, 102, 255));
         btn_them.setForeground(new java.awt.Color(255, 255, 255));
@@ -171,7 +183,8 @@ public class Form_LSP extends javax.swing.JFrame {
 
         lbl_errorInput.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         lbl_errorInput.setForeground(new java.awt.Color(255, 51, 51));
-        lbl_errorInput.setText("Thông tin tên loại sản phẩm không được bỏ trống");
+        lbl_errorInput.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbl_errorInput.setText("Thông tin không được bỏ trống");
 
         btn_capnhat.setBackground(new java.awt.Color(51, 102, 255));
         btn_capnhat.setForeground(new java.awt.Color(255, 255, 255));
@@ -185,52 +198,79 @@ public class Form_LSP extends javax.swing.JFrame {
             }
         });
 
+        tf_diachi.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        tf_diachi.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        jLabel16.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel16.setText("Địa chỉ");
+
+        tf_sdt.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        tf_sdt.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        jLabel17.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel17.setText("Số điện thoại");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lbl_errorInput, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jSeparator1)
                             .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
-                                .addComponent(tf_LSP, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tf_diachi, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tf_NSX, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tf_sdt, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 22, Short.MAX_VALUE))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(71, 71, 71)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addGap(72, 72, 72)
                         .addComponent(btn_capnhat, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(69, 69, 69)
+                        .addGap(68, 68, 68)
                         .addComponent(btn_them, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addComponent(lbl_errorInput)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(60, 60, 60)
+                .addGap(44, 44, 44)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel15)
-                    .addComponent(tf_LSP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tf_NSX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel15))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tf_diachi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel16))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tf_sdt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel17))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lbl_errorInput)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_them, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_capnhat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(80, 80, 80))
+                    .addComponent(btn_capnhat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_them, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18))
         );
 
         jPanel2.setBackground(new java.awt.Color(51, 51, 255));
@@ -247,16 +287,17 @@ public class Form_LSP extends javax.swing.JFrame {
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("LOẠI SẢN PHẨM");
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("NHÀ SẢN XUẤT");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(232, 232, 232)
-                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(262, 262, 262)
+                .addGap(246, 246, 246)
+                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
+                .addGap(248, 248, 248)
                 .addComponent(btn_exit, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -269,7 +310,7 @@ public class Form_LSP extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 51, 255), 1, true));
 
-        table_LSP.setModel(new javax.swing.table.DefaultTableModel(
+        table_NSX.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -280,12 +321,12 @@ public class Form_LSP extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        table_LSP.addMouseListener(new java.awt.event.MouseAdapter() {
+        table_NSX.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                table_LSPMouseClicked(evt);
+                table_NSXMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(table_LSP);
+        jScrollPane1.setViewportView(table_NSX);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -329,24 +370,38 @@ public class Form_LSP extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_themActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_themActionPerformed
-        // TODO add your handling code here:
-        String tenLoaiSP = tf_LSP.getText().trim();
-        if (tenLoaiSP.isEmpty()) {
-            lbl_errorInput.setText("Thông tin tên loại sản phẩm không được bỏ trống");
+        String tenNhaSX = tf_NSX.getText().trim();
+        String diachi = tf_diachi.getText().trim();
+        String sdt = tf_sdt.getText().trim();
+        if (tenNhaSX.isEmpty()||diachi.isEmpty()||sdt.isEmpty()) {
+            lbl_errorInput.setText("Thông tin không được bỏ trống");
+            lbl_errorInput.setVisible(true);
+        } else if (!sdt.matches("\\d{8}|\\d{10}")) {
+            lbl_errorInput.setText("Số điện thoại phải là số có 8 hoặc 10 chữ số");
             lbl_errorInput.setVisible(true);
         } else {
-            LoaiSanPham loaiSanPham = new LoaiSanPham();
-            loaiSanPham.setTenLoaiSP(tenLoaiSP);
-            boolean isAdded = loaiSanPhamDao.add(loaiSanPham);
+            NhaSanXuat nhaSanXuat = new NhaSanXuat();
+            nhaSanXuat.setTenNSX(tenNhaSX);
+            nhaSanXuat.setDiaChi(diachi);
+            nhaSanXuat.setSdt(sdt);
+            boolean isAdded = nhaSanXuatDao.add(nhaSanXuat);
             if (isAdded) {
                 // Code to handle successful addition
                 // For example, you might want to reload the data
                 loadData();
+                tf_NSX.setText("");
+                tf_diachi.setText("");
+                tf_sdt.setText("");
+                
+                lbl_errorInput.setText("Thêm nhà sản xuất thành công");
+                lbl_errorInput.setVisible(true);
             } else {
                 // Code to handle failure in addition
                 // For example, you might want to show an error message
+                lbl_errorInput.setText("Thêm nhà sản xuất thất bại");
+                lbl_errorInput.setVisible(true);
             }
-        } 
+        }
     }//GEN-LAST:event_btn_themActionPerformed
 
     private void btn_exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_exitActionPerformed
@@ -356,41 +411,57 @@ public class Form_LSP extends javax.swing.JFrame {
 
     private void btn_capnhatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_capnhatActionPerformed
         // TODO add your handling code here:
-        String tenLoaiSP = tf_LSP.getText().trim();
-        if (tenLoaiSP.isEmpty()) {
-            lbl_errorInput.setText("Thông tin tên loại sản phẩm không được bỏ trống");
+        String maNhaSX = MaNSX_selected;
+        String tenNhaSX = tf_NSX.getText().trim();
+        String diachi = tf_diachi.getText().trim();
+        String sdt = tf_sdt.getText().trim();
+        if (tenNhaSX.isEmpty()||diachi.isEmpty()||sdt.isEmpty()) {
+            lbl_errorInput.setText("Thông tin không được bỏ trống");
             lbl_errorInput.setVisible(true);
-        } else if(MaLSP_selected == null || MaLSP_selected.isEmpty()){
-            lbl_errorInput.setText("Chưa có thông tin loại sản phẩm được chọn");
+        } else if (!sdt.matches("\\d{8}|\\d{10}")) {
+            lbl_errorInput.setText("Số điện thoại phải là số có 8 hoặc 10 chữ số");
+            lbl_errorInput.setVisible(true);
+        }else if(MaNSX_selected == null || MaNSX_selected.isEmpty()){
+            lbl_errorInput.setText("Chưa có thông tin nhà sản xuất được chọn");
             lbl_errorInput.setVisible(true);
         } else {
-            LoaiSanPham loaiSanPham = new LoaiSanPham();
-            loaiSanPham.setMaLoaiSP(MaLSP_selected);
-            loaiSanPham.setTenLoaiSP(tenLoaiSP);
-            boolean isUpdated = loaiSanPhamDao.update(loaiSanPham);
+            NhaSanXuat nhaSanXuat = new NhaSanXuat();
+            nhaSanXuat.setMaNSX(maNhaSX);
+            nhaSanXuat.setTenNSX(tenNhaSX);
+            nhaSanXuat.setDiaChi(diachi);
+            nhaSanXuat.setSdt(sdt);
+            boolean isUpdated = nhaSanXuatDao.update(nhaSanXuat);
             if (isUpdated) {
-                // Code to handle successful update
-                // For example, you might want to reload the data
                 loadData();
-                MaLSP_selected = null;
-                tf_LSP.setText("");
+                tf_NSX.setText("");
+                tf_diachi.setText("");
+                tf_sdt.setText("");
+                MaNSX_selected = null;
+                
+                lbl_errorInput.setText("Cập nhật nhà sản xuất thành công");
+                lbl_errorInput.setVisible(true);
             } else {
-                // Code to handle failure in update
-                // For example, you might want to show an error message
+                lbl_errorInput.setText("Cập nhật nhà sản xuất thất bại");
+                lbl_errorInput.setVisible(true);
             }
         }
     }//GEN-LAST:event_btn_capnhatActionPerformed
 
-    private void table_LSPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_LSPMouseClicked
+    private void table_NSXMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_NSXMouseClicked
         // TODO add your handling code here:
-        int selectedRow = table_LSP.getSelectedRow();
+        int selectedRow = table_NSX.getSelectedRow();
         if (selectedRow != -1) {
-            String maLoaiSP = table_LSP.getValueAt(selectedRow, 0).toString();
-            String tenLoaiSP = table_LSP.getValueAt(selectedRow, 1).toString();
-            MaLSP_selected = maLoaiSP;
-            tf_LSP.setText(tenLoaiSP);
+            String maNhaSX = table_NSX.getValueAt(selectedRow, 0).toString();
+            String tenNhaSX = table_NSX.getValueAt(selectedRow, 1).toString();
+            String diaChi = table_NSX.getValueAt(selectedRow, 2).toString();
+            String sdt = table_NSX.getValueAt(selectedRow, 3).toString();
+            
+            MaNSX_selected = maNhaSX;
+            tf_NSX.setText(tenNhaSX);
+            tf_diachi.setText(diaChi);
+            tf_sdt.setText(sdt);
         }
-    }//GEN-LAST:event_table_LSPMouseClicked
+    }//GEN-LAST:event_table_NSXMouseClicked
 
 
     /**
@@ -410,21 +481,23 @@ public class Form_LSP extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Form_LSP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Form_NSX.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Form_LSP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Form_NSX.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Form_LSP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Form_NSX.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Form_LSP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Form_NSX.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Form_LSP().setVisible(true);
+                new Form_NSX().setVisible(true);
             }
         });
     }
@@ -434,6 +507,8 @@ public class Form_LSP extends javax.swing.JFrame {
     private com.raven.swing.Button btn_exit;
     private com.raven.swing.Button btn_them;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -442,7 +517,9 @@ public class Form_LSP extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel lbl_errorInput;
-    private com.grocerystore.swing.table.Table table_LSP;
-    private javax.swing.JTextField tf_LSP;
+    private com.grocerystore.swing.table.Table table_NSX;
+    private javax.swing.JTextField tf_NSX;
+    private javax.swing.JTextField tf_diachi;
+    private javax.swing.JTextField tf_sdt;
     // End of variables declaration//GEN-END:variables
 }
