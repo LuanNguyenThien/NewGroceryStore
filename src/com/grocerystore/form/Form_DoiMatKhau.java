@@ -224,9 +224,7 @@ public class Form_DoiMatKhau extends javax.swing.JPanel {
 
     private boolean changePassword(String username, String oldPassword, String newPassword) {
         // Find the user by their username
-        NhanVien user = new NhanVien();
-        NhanVienDAOImpl nvdao = new NhanVienDAOImpl();
-        user = nvdao.checkLogin(username, oldPassword);
+        NhanVien user = DataInitializer.curUser;
 
         if (user != null && user.getTenTK().equals(username)) {
             // Check if the old password matches the password stored in the database
@@ -256,6 +254,9 @@ public class Form_DoiMatKhau extends javax.swing.JPanel {
     }
 
     private void loadData() {
+        NhanVien user = DataInitializer.curUser;
+        txtUsername.setEditable(false);
+        txtUsername.setText(user.getTenTK());
         txtOldPass.setEchoChar('*');
         txtNewPass.setEchoChar('*');
         txtConfirmNewPass.setEchoChar('*');

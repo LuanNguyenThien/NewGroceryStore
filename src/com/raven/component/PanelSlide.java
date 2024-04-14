@@ -41,6 +41,7 @@ public class PanelSlide extends javax.swing.JLayeredPane {
     private Thread th;
     private MigLayout layout;
     private JFrame fram;
+    public static String IDCurUser;
 
     public PanelSlide() {
         initComponents();
@@ -149,6 +150,7 @@ public class PanelSlide extends javax.swing.JLayeredPane {
                     NhanVien nv = new NhanVien();
                     NhanVienDAOImpl nvdao = new NhanVienDAOImpl();
                     nv = nvdao.checkLogin(userName, password);
+                    IDCurUser = nv.getMaNV();
                     if(nv!=null){
                         String quyen = nv.getQuyen();
                         String hoten = nv.getHoTen();
