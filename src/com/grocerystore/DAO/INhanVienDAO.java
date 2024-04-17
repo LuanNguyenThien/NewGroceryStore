@@ -12,10 +12,11 @@ import java.util.List;
  * @author My PC
  */
 public interface INhanVienDAO {
-    Boolean add (NhanVien model);
-    Boolean update (NhanVien model);
+    Boolean add (NhanVien nv);
+    Boolean update (NhanVien nv);
     NhanVien checkLogin(String TenTK, String MatKhau);
     NhanVien findByID(String MaNV);
-    List<NhanVien> findByFilter(String Hoten);
+    List<NhanVien> findByName(String Hoten);
     List<NhanVien> getAll();
+    Boolean delete(String maNV);
 }
