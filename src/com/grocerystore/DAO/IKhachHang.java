@@ -21,5 +21,6 @@ public interface IKhachHang {
     KhachHang findById(String MaKH);
     List<KhachHang> findByName(String HoTen);
     int count();
-    
+    List<KhachHang> searchByParam(String searchParam);
+
 }
