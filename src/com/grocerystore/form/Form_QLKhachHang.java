@@ -9,6 +9,7 @@ import com.grocerystore.DAO.KhachHangDAOImpl;
 import com.grocerystore.model.KhachHang;
 import connection.DatabaseConnection;
 import java.awt.Color;
+import java.awt.Component;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -16,9 +17,12 @@ import java.util.List;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
 public class Form_QLKhachHang extends javax.swing.JPanel {
     
@@ -45,7 +49,6 @@ public class Form_QLKhachHang extends javax.swing.JPanel {
     
     private void init(){
         table_listcus.fixTable(jScrollPane2);
-        //table_listcus.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String formattedNow = now.format(formatter);
@@ -59,8 +62,8 @@ public class Form_QLKhachHang extends javax.swing.JPanel {
 
         DefaultTableModel model = new DefaultTableModel();
 
-        model.addColumn("Mã KH");
-        model.addColumn("Họ tên");
+        model.addColumn("Mã khách hàng");
+        model.addColumn("Họ và tên");
         model.addColumn("Số điện thoại");
         model.addColumn("Giới tính");
         model.addColumn("Ngày đăng ký");
@@ -78,6 +81,34 @@ public class Form_QLKhachHang extends javax.swing.JPanel {
             model.addRow(rowData);
         }
         table_listcus.setModel(model);
+        table_listcus.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // Disable auto resizing
+
+        for (int column = 0; column < table_listcus.getColumnCount(); column++) {
+            TableColumn tableColumn = table_listcus.getColumnModel().getColumn(column);
+            int preferredWidth = tableColumn.getMinWidth();
+            int maxWidth = tableColumn.getMaxWidth();
+
+            // Consider the header's width
+            TableCellRenderer headerRenderer = table_listcus.getTableHeader().getDefaultRenderer();
+            Object headerValue = tableColumn.getHeaderValue();
+            Component headerComp = headerRenderer.getTableCellRendererComponent(table_listcus, headerValue, false, false, 0, column);
+            preferredWidth = Math.max(preferredWidth, headerComp.getPreferredSize().width + table_listcus.getIntercellSpacing().width);
+
+            for (int row = 0; row < table_listcus.getRowCount(); row++) {
+                TableCellRenderer cellRenderer = table_listcus.getCellRenderer(row, column);
+                Component c = table_listcus.prepareRenderer(cellRenderer, row, column);
+                int width = c.getPreferredSize().width + table_listcus.getIntercellSpacing().width;
+                preferredWidth = Math.max(preferredWidth, width);
+
+                // We've exceeded the maximum width, no need to check other rows
+                if (preferredWidth >= maxWidth) {
+                    preferredWidth = maxWidth;
+                    break;
+                }
+            }
+
+            tableColumn.setMinWidth(preferredWidth+12); // Set minimum width instead of preferred width
+        }
     }
 
     /**
@@ -358,9 +389,9 @@ public class Form_QLKhachHang extends javax.swing.JPanel {
         if (selectedRow != -1) {
             DefaultTableModel model = (DefaultTableModel) table_listcus.getModel();
             String maKH = model.getValueAt(selectedRow, 0).toString();
-            String tenKH = model.getValueAt(selectedRow, 1).toString();
-            String sdt = model.getValueAt(selectedRow, 2).toString();
-            String gioiTinh = model.getValueAt(selectedRow, 3).toString();
+            String tenKH = tf_name.getText();
+            String sdt = tf_phone.getText();
+            String gioiTinh = (String) cbb_gender.getSelectedItem();
             Date ngayDangKy = (Date) model.getValueAt(selectedRow, 4); 
             BigDecimal tongChiTieu = (BigDecimal) model.getValueAt(selectedRow, 5);
 
@@ -372,12 +403,12 @@ public class Form_QLKhachHang extends javax.swing.JPanel {
                 clearFields();
                 btn_add.setEnabled(true);
                 btn_add.setBackground(ACTIVE_BUTTON_COLOR);
-                btn_reload.setEnabled(true);
-                btn_reload.setBackground(ACTIVE_BUTTON_COLOR);
                 table_listcus.clearSelection();
+                loadData();
             } else {
                 JOptionPane.showMessageDialog(this, "Cập nhật khách hàng thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                table_listcus.clearSelection();
+                //table_listcus.clearSelection();
+                //clearFields();
             }
         } else {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn khách hàng để cập nhật", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
@@ -415,6 +446,7 @@ public class Form_QLKhachHang extends javax.swing.JPanel {
         if (added) {
             JOptionPane.showMessageDialog(this, "Thêm khách hàng thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             clearFields();
+            loadData();
         } else {
             JOptionPane.showMessageDialog(this, "Thêm khách hàng thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
@@ -422,7 +454,10 @@ public class Form_QLKhachHang extends javax.swing.JPanel {
 
     private void btn_reloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_reloadActionPerformed
         // TODO add your handling code here:
-        loadData();
+        clearFields();
+        table_listcus.clearSelection();
+        btn_add.setEnabled(true);
+        btn_add.setBackground(ACTIVE_BUTTON_COLOR);
     }//GEN-LAST:event_btn_reloadActionPerformed
     
     private void clearFields() {
@@ -489,8 +524,6 @@ public class Form_QLKhachHang extends javax.swing.JPanel {
                 
                 btn_add.setEnabled(false);
                 btn_add.setBackground(DISABLED_BUTTON_COLOR);
-                btn_reload.setEnabled(false);
-                btn_reload.setBackground(DISABLED_BUTTON_COLOR);
             }
         }
         });
@@ -537,7 +570,34 @@ public class Form_QLKhachHang extends javax.swing.JPanel {
                 model.addRow(rowData);
             }
             table_listcus.setModel(model);
-            
+            table_listcus.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // Disable auto resizing
+
+            for (int column = 0; column < table_listcus.getColumnCount(); column++) {
+                TableColumn tableColumn = table_listcus.getColumnModel().getColumn(column);
+                int preferredWidth = tableColumn.getMinWidth();
+                int maxWidth = tableColumn.getMaxWidth();
+
+                // Consider the header's width
+                TableCellRenderer headerRenderer = table_listcus.getTableHeader().getDefaultRenderer();
+                Object headerValue = tableColumn.getHeaderValue();
+                Component headerComp = headerRenderer.getTableCellRendererComponent(table_listcus, headerValue, false, false, 0, column);
+                preferredWidth = Math.max(preferredWidth, headerComp.getPreferredSize().width + table_listcus.getIntercellSpacing().width);
+
+                for (int row = 0; row < table_listcus.getRowCount(); row++) {
+                    TableCellRenderer cellRenderer = table_listcus.getCellRenderer(row, column);
+                    Component c = table_listcus.prepareRenderer(cellRenderer, row, column);
+                    int width = c.getPreferredSize().width + table_listcus.getIntercellSpacing().width;
+                    preferredWidth = Math.max(preferredWidth, width);
+
+                    // We've exceeded the maximum width, no need to check other rows
+                    if (preferredWidth >= maxWidth) {
+                        preferredWidth = maxWidth;
+                        break;
+                    }
+                }
+
+                tableColumn.setMinWidth(preferredWidth+20); // Set minimum width instead of preferred width
+            }  
         }
     };
     tf_param.getDocument().addDocumentListener(documentListener);
