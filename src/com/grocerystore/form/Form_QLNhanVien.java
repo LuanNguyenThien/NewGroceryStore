@@ -63,6 +63,10 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
     }
     
     private void loadData() {
+        btn_update.setEnabled(false);
+        btn_delete.setEnabled(false);
+        btn_add.setEnabled(true);
+        
         INhanVienDAO nhanVienDao = new NhanVienDAOImpl();
         List<NhanVien> nhanVienList = nhanVienDao.getAll();
 
@@ -144,7 +148,7 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
         jLabel15 = new javax.swing.JLabel();
         tf_TenTaiKhoan = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
-        btn_reload = new com.raven.swing.Button();
+        btn_SaThai = new com.raven.swing.Button();
         btn_delete = new com.raven.swing.Button();
         btn_update = new com.raven.swing.Button();
         btn_add = new com.raven.swing.Button();
@@ -158,9 +162,9 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
         jLabel8 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         tf_TimNhanVien = new javax.swing.JTextField();
-        customCombobox2 = new com.raven.swing.CustomCombobox();
+        cb_LocQuyen = new com.raven.swing.CustomCombobox();
         jLabel12 = new javax.swing.JLabel();
-        btn_Tim = new com.raven.swing.Button();
+        btn_ApDung = new com.raven.swing.Button();
         button2 = new com.raven.swing.Button();
 
         dateChooser1.setForeground(new java.awt.Color(51, 51, 255));
@@ -235,15 +239,15 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel10.setText("Tài khoản");
 
-        btn_reload.setBackground(new java.awt.Color(51, 102, 255));
-        btn_reload.setForeground(new java.awt.Color(255, 255, 255));
-        btn_reload.setText("Làm mới   ");
-        btn_reload.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btn_reload.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        btn_reload.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btn_reload.addActionListener(new java.awt.event.ActionListener() {
+        btn_SaThai.setBackground(new java.awt.Color(51, 102, 255));
+        btn_SaThai.setForeground(new java.awt.Color(255, 255, 255));
+        btn_SaThai.setText("Sa thải     ");
+        btn_SaThai.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btn_SaThai.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        btn_SaThai.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btn_SaThai.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_reloadActionPerformed(evt);
+                btn_SaThaiActionPerformed(evt);
             }
         });
 
@@ -323,7 +327,7 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(cb_GioiTinh, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(btn_reload, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btn_SaThai, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(36, 36, 36)
                                         .addComponent(btn_update, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(21, 21, 21)))))
@@ -387,7 +391,7 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
                     .addComponent(btn_add, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_delete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_update, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_reload, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btn_SaThai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
 
@@ -461,21 +465,27 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
 
         tf_TimNhanVien.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         tf_TimNhanVien.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        tf_TimNhanVien.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tf_TimNhanVienKeyTyped(evt);
+            }
+        });
 
-        customCombobox2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cb_LocQuyen.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Quản lý", "Nhân viên bán hàng", " " }));
+        cb_LocQuyen.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jLabel12.setText("Loại nhân viên");
+        jLabel12.setText("Quyền");
 
-        btn_Tim.setBackground(new java.awt.Color(51, 102, 255));
-        btn_Tim.setForeground(new java.awt.Color(255, 255, 255));
-        btn_Tim.setText("Áp dụng   ");
-        btn_Tim.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btn_Tim.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        btn_Tim.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btn_Tim.addActionListener(new java.awt.event.ActionListener() {
+        btn_ApDung.setBackground(new java.awt.Color(51, 102, 255));
+        btn_ApDung.setForeground(new java.awt.Color(255, 255, 255));
+        btn_ApDung.setText("Áp dụng   ");
+        btn_ApDung.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btn_ApDung.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        btn_ApDung.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btn_ApDung.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_TimActionPerformed(evt);
+                btn_ApDungActionPerformed(evt);
             }
         });
 
@@ -506,7 +516,7 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
                         .addGap(27, 27, 27)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(btn_Tim, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btn_ApDung, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(32, 32, 32)
                                 .addComponent(button2, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel3Layout.createSequentialGroup()
@@ -516,7 +526,7 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
                                 .addGap(50, 50, 50)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(customCombobox2, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(cb_LocQuyen, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(5, 5, 5))
         );
@@ -534,10 +544,10 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
                 .addGap(6, 6, 6)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tf_TimNhanVien, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(customCombobox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cb_LocQuyen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_Tim, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_ApDung, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(button2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(32, Short.MAX_VALUE))
         );
@@ -588,7 +598,7 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
 
     }//GEN-LAST:event_lbl_picSPMouseClicked
 
-    private void btn_reloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_reloadActionPerformed
+    private void btn_SaThaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SaThaiActionPerformed
         // TODO add your handling code here:
         tf_TenTaiKhoan.setEnabled(true);
         //Reset cac truong
@@ -601,7 +611,7 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
         tf_TenNhanVien.setText("");
         cb_GioiTinh.setSelectedItem(null);
         cb_Quyen.setSelectedItem(null);
-    }//GEN-LAST:event_btn_reloadActionPerformed
+    }//GEN-LAST:event_btn_SaThaiActionPerformed
 
     private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_updateActionPerformed
         // TODO add your handling code here:
@@ -650,8 +660,11 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
                     cb_Quyen.setSelectedItem(null);
 
                     tf_TenTaiKhoan.setEnabled(true);
+                    btn_update.setEnabled(false);
+                    btn_delete.setEnabled(false);
+                    btn_add.setEnabled(true);
                 } else {
-                    JOptionPane.showMessageDialog(null, "Cập nhật thất bại!");
+                    JOptionPane.showMessageDialog(null, "Số điện thoại hoặc tài khoản đã tồn tại!");
                 }
             }
             
@@ -664,6 +677,7 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
 
     private void btn_deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_deleteActionPerformed
         // TODO add your handling code here:
+        
         DefaultTableModel model = (DefaultTableModel) tb_QLNhanVien.getModel();
         int selectedRow = tb_QLNhanVien.getSelectedRow();
         if(selectedRow != -1) {
@@ -685,6 +699,9 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
                 cb_Quyen.setSelectedItem(null);
 
                 tf_TenTaiKhoan.setEnabled(true);
+                btn_update.setEnabled(false);
+                btn_delete.setEnabled(false);
+                btn_add.setEnabled(true);
            }
         } else {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên để xóa!");
@@ -746,6 +763,9 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
     private void tb_QLNhanVienMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tb_QLNhanVienMouseClicked
         // TODO add your handling code here:
         tf_TenTaiKhoan.setEnabled(false);
+        btn_update.setEnabled(true);
+        btn_delete.setEnabled(true);
+        btn_add.setEnabled(false);
         int selectedRow = tb_QLNhanVien.getSelectedRow();
         DefaultTableModel model = (DefaultTableModel) tb_QLNhanVien.getModel();
         INhanVienDAO nhanVienDao = new NhanVienDAOImpl();
@@ -766,13 +786,36 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
 
     }//GEN-LAST:event_tb_QLNhanVienMouseClicked
 
-    private void btn_TimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_TimActionPerformed
+    private void btn_ApDungActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ApDungActionPerformed
         // TODO add your handling code here:
         if (tf_TimNhanVien.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Vui lòng nhập tên nhân viên");
+            INhanVienDAO nhanVienDao = new NhanVienDAOImpl();
+            List<NhanVien> nhanVienList = nhanVienDao.findByQuyen(cb_LocQuyen.getSelectedItem().toString());
+            if (nhanVienList == null) {
+                JOptionPane.showMessageDialog(null, "Không tìm thấy nhân viên"); 
+                return;
+            }
+            DefaultTableModel model = (DefaultTableModel) tb_QLNhanVien.getModel();
+            model.setRowCount(0);
+            for (NhanVien nhanVien : nhanVienList) {
+                Object[] row = new Object[12];
+                row[0] = nhanVien.getMaNV();
+                row[1] = nhanVien.getHoTen();
+                row[2] = nhanVien.getNgaySinh();
+                row[3] = nhanVien.getSdt();
+                row[4] = nhanVien.getGioiTinh();
+                row[5] = nhanVien.getDiaChi();
+                row[6] = nhanVien.getNgayTuyenDung();
+                row[7] = nhanVien.getTrangThai();
+                row[8] = nhanVien.getTenTK();
+                row[9] = nhanVien.getHinhAnh();
+                row[10] = nhanVien.getMatKhau();
+                row[11] = nhanVien.getQuyen();
+                model.addRow(row);
+            }
         } else {
             INhanVienDAO nhanVienDao = new NhanVienDAOImpl();
-            List<NhanVien> nhanVienList = nhanVienDao.findByName(tf_TimNhanVien.getText());
+            List<NhanVien> nhanVienList = nhanVienDao.find(tf_TimNhanVien.getText(), cb_LocQuyen.getSelectedItem().toString());
             if (nhanVienList == null) {
                 JOptionPane.showMessageDialog(null, "Không tìm thấy nhân viên"); 
                 return;
@@ -797,7 +840,7 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
             }
 
         }
-    }//GEN-LAST:event_btn_TimActionPerformed
+    }//GEN-LAST:event_btn_ApDungActionPerformed
 
     private void button2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button2ActionPerformed
         // TODO add your handling code here:
@@ -805,18 +848,49 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
         loadData();
     }//GEN-LAST:event_button2ActionPerformed
 
+    private void tf_TimNhanVienKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_TimNhanVienKeyTyped
+        // TODO add your handling code here:
+        
+        INhanVienDAO nhanVienDao = new NhanVienDAOImpl();
+        List<NhanVien> nhanVienList = nhanVienDao.findByName(tf_TimNhanVien.getText());
+        if (nhanVienList == null) {
+            JOptionPane.showMessageDialog(null, "Không tìm thấy nhân viên"); 
+            return;
+        }
+        DefaultTableModel model = (DefaultTableModel) tb_QLNhanVien.getModel();
+        model.setRowCount(0);
+        for (NhanVien nhanVien : nhanVienList) {
+            Object[] row = new Object[12];
+            row[0] = nhanVien.getMaNV();
+            row[1] = nhanVien.getHoTen();
+            row[2] = nhanVien.getNgaySinh();
+            row[3] = nhanVien.getSdt();
+            row[4] = nhanVien.getGioiTinh();
+            row[5] = nhanVien.getDiaChi();
+            row[6] = nhanVien.getNgayTuyenDung();
+            row[7] = nhanVien.getTrangThai();
+            row[8] = nhanVien.getTenTK();
+            row[9] = nhanVien.getHinhAnh();
+            row[10] = nhanVien.getMatKhau();
+            row[11] = nhanVien.getQuyen();
+            model.addRow(row);
+        }
+
+        
+    }//GEN-LAST:event_tf_TimNhanVienKeyTyped
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.raven.swing.Button btn_ApDung;
     private com.grocerystore.swing.Button btn_ChonNgaySinh;
-    private com.raven.swing.Button btn_Tim;
+    private com.raven.swing.Button btn_SaThai;
     private com.raven.swing.Button btn_add;
     private com.raven.swing.Button btn_delete;
-    private com.raven.swing.Button btn_reload;
     private com.raven.swing.Button btn_update;
     private com.raven.swing.Button button2;
     private com.raven.swing.CustomCombobox cb_GioiTinh;
+    private com.raven.swing.CustomCombobox cb_LocQuyen;
     private com.raven.swing.CustomCombobox cb_Quyen;
-    private com.raven.swing.CustomCombobox customCombobox2;
     private com.raven.datechooser.DateChooser dateChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

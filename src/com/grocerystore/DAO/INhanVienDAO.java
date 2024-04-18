@@ -19,4 +19,6 @@ public interface INhanVienDAO {
     List<NhanVien> findByName(String Hoten);
     List<NhanVien> getAll();
     Boolean delete(String maNV);
+    List<NhanVien> find(String Hoten, String Quyen);
+    List<NhanVien> findByQuyen(String Quyen);
 }

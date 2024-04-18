@@ -257,4 +257,83 @@ public class NhanVienDAOImpl implements INhanVienDAO{
         }
         return false;
     }
+
+    @Override
+    public List<NhanVien> find(String HoTen, String Quyen) {
+        List<NhanVien> nhanVienList = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            String sql = "SELECT * FROM NhanVien WHERE HoTen LIKE ? and Quyen = ?";
+            ps = DatabaseConnection.getInstance().getConnection().prepareStatement(sql);
+            ps.setString(1, "%" + HoTen + "%");
+            ps.setString(2, Quyen);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                NhanVien nhanVien = new NhanVien();
+                nhanVien.setMaNV(rs.getString("MaNV"));
+                nhanVien.setHoTen(rs.getString("HoTen"));
+                nhanVien.setNgaySinh(rs.getDate("NgaySinh"));
+                nhanVien.setSdt(rs.getString("Sdt"));
+                nhanVien.setGioiTinh(rs.getString("GioiTinh"));
+                nhanVien.setDiaChi(rs.getString("DiaChi"));
+                nhanVien.setNgayTuyenDung(rs.getDate("NgayTuyenDung"));
+                nhanVien.setTrangThai(rs.getString("TrangThai"));
+                nhanVien.setTenTK(rs.getString("TenTK"));
+                nhanVien.setHinhAnh(rs.getBytes("HinhAnh"));
+                nhanVien.setMatKhau(rs.getString("MatKhau"));
+                nhanVien.setQuyen(rs.getString("Quyen"));
+                nhanVienList.add(nhanVien);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return nhanVienList;
+    }
+
+    @Override
+    public List<NhanVien> findByQuyen(String Quyen) {
+        List<NhanVien> nhanVienList = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            String sql = "SELECT * FROM NhanVien WHERE Quyen = ?";
+            ps = DatabaseConnection.getInstance().getConnection().prepareStatement(sql);
+            ps.setString(1, Quyen);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                NhanVien nhanVien = new NhanVien();
+                nhanVien.setMaNV(rs.getString("MaNV"));
+                nhanVien.setHoTen(rs.getString("HoTen"));
+                nhanVien.setNgaySinh(rs.getDate("NgaySinh"));
+                nhanVien.setSdt(rs.getString("Sdt"));
+                nhanVien.setGioiTinh(rs.getString("GioiTinh"));
+                nhanVien.setDiaChi(rs.getString("DiaChi"));
+                nhanVien.setNgayTuyenDung(rs.getDate("NgayTuyenDung"));
+                nhanVien.setTrangThai(rs.getString("TrangThai"));
+                nhanVien.setTenTK(rs.getString("TenTK"));
+                nhanVien.setHinhAnh(rs.getBytes("HinhAnh"));
+                nhanVien.setMatKhau(rs.getString("MatKhau"));
+                nhanVien.setQuyen(rs.getString("Quyen"));
+                nhanVienList.add(nhanVien);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return nhanVienList;
+    }
 }
