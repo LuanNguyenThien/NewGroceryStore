@@ -8,7 +8,7 @@
           <Color blue="ff" green="33" red="33" type="rgb"/>
         </Property>
         <Property name="textRefernce" type="javax.swing.JTextField" editor="org.netbeans.modules.form.ComponentChooserEditor">
-          <ComponentRef name="tf_ngaysinh"/>
+          <ComponentRef name="tf_NgaySinh"/>
         </Property>
       </Properties>
     </Component>
@@ -93,24 +93,24 @@
                                       </Group>
                                   </Group>
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="tf_ngaysinh" max="32767" attributes="0"/>
-                                      <Component id="customCombobox1" pref="215" max="32767" attributes="0"/>
-                                      <Component id="tf_tentaikhoan" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="tf_NgaySinh" max="32767" attributes="0"/>
+                                      <Component id="cb_Quyen" pref="215" max="32767" attributes="0"/>
+                                      <Component id="tf_TenTaiKhoan" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                               <Group type="102" attributes="0">
                                   <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="textField3" min="-2" pref="215" max="-2" attributes="0"/>
-                                      <Component id="textField2" min="-2" pref="215" max="-2" attributes="0"/>
-                                      <Component id="textField1" min="-2" pref="215" max="-2" attributes="0"/>
+                                      <Component id="tf_Sdt" min="-2" pref="215" max="-2" attributes="0"/>
+                                      <Component id="tf_DiaChi" min="-2" pref="215" max="-2" attributes="0"/>
+                                      <Component id="tf_TenNhanVien" min="-2" pref="215" max="-2" attributes="0"/>
                                       <Group type="102" alignment="1" attributes="0">
                                           <Component id="jLabel3" min="-2" pref="82" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="customCombobox3" min="-2" pref="215" max="-2" attributes="0"/>
+                                          <Component id="cb_GioiTinh" min="-2" pref="215" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="1" attributes="0">
-                                          <Component id="btn_reload" min="-2" pref="107" max="-2" attributes="0"/>
+                                          <Component id="btn_SaThai" min="-2" pref="107" max="-2" attributes="0"/>
                                           <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
                                           <Component id="btn_update" min="-2" pref="105" max="-2" attributes="0"/>
                                           <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
@@ -121,28 +121,23 @@
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Component id="button3" min="-2" pref="30" max="-2" attributes="0"/>
+                                  <Component id="btn_ChonNgaySinh" min="-2" pref="30" max="-2" attributes="0"/>
                                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
-                                  <EmptySpace min="0" pref="-9" max="32767" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="lbl_picSP" min="-2" pref="222" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Group type="103" groupAlignment="1" attributes="0">
+                                      <Component id="jLabel15" min="-2" pref="136" max="-2" attributes="0"/>
                                       <Group type="102" alignment="1" attributes="0">
-                                          <Component id="lbl_picSP" min="-2" pref="222" max="-2" attributes="0"/>
-                                          <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Group type="103" groupAlignment="1" attributes="0">
-                                              <Component id="jLabel15" min="-2" pref="136" max="-2" attributes="0"/>
-                                              <Group type="102" alignment="1" attributes="0">
-                                                  <Component id="btn_delete" min="-2" pref="67" max="-2" attributes="0"/>
-                                                  <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
-                                                  <Component id="btn_add" min="-2" pref="90" max="-2" attributes="0"/>
-                                              </Group>
-                                          </Group>
-                                          <EmptySpace min="-2" pref="62" max="-2" attributes="0"/>
+                                          <Component id="btn_delete" min="-2" pref="67" max="-2" attributes="0"/>
+                                          <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
+                                          <Component id="btn_add" min="-2" pref="90" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
+                                  <EmptySpace min="-2" pref="62" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -161,20 +156,20 @@
                   <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="textField1" min="-2" max="-2" attributes="0"/>
+                          <Component id="tf_TenNhanVien" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Component id="textField2" min="-2" max="-2" attributes="0"/>
+                          <Component id="tf_DiaChi" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Component id="textField3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tf_Sdt" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="customCombobox3" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cb_GioiTinh" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel3" alignment="3" min="-2" pref="29" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel1" alignment="3" min="-2" pref="29" max="-2" attributes="0"/>
-                              <Component id="customCombobox1" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cb_Quyen" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="102" attributes="0">
@@ -186,13 +181,13 @@
                   </Group>
                   <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="tf_tentaikhoan" alignment="3" min="-2" pref="29" max="-2" attributes="0"/>
+                      <Component id="tf_TenTaiKhoan" alignment="3" min="-2" pref="29" max="-2" attributes="0"/>
                       <Component id="jLabel10" alignment="3" min="-2" pref="29" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="tf_ngaysinh" alignment="3" min="-2" pref="29" max="-2" attributes="0"/>
-                      <Component id="button3" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
+                      <Component id="tf_NgaySinh" alignment="3" min="-2" pref="29" max="-2" attributes="0"/>
+                      <Component id="btn_ChonNgaySinh" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
                       <Component id="jLabel9" alignment="3" min="-2" pref="29" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
@@ -200,7 +195,7 @@
                       <Component id="btn_add" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btn_delete" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btn_update" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btn_reload" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btn_SaThai" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="27" max="32767" attributes="0"/>
               </Group>
@@ -233,7 +228,7 @@
             <Property name="opaque" type="boolean" value="true"/>
           </Properties>
         </Component>
-        <Component class="com.raven.swing.TextField" name="textField1">
+        <Component class="com.raven.swing.TextField" name="tf_TenNhanVien">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="16" style="0"/>
@@ -241,7 +236,7 @@
             <Property name="labelText" type="java.lang.String" value="T&#xea;n Nh&#xe2;n Vi&#xea;n"/>
           </Properties>
         </Component>
-        <Component class="com.raven.swing.TextField" name="textField2">
+        <Component class="com.raven.swing.TextField" name="tf_DiaChi">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="16" style="0"/>
@@ -249,7 +244,7 @@
             <Property name="labelText" type="java.lang.String" value="&#x110;&#x1ecb;a ch&#x1ec9;"/>
           </Properties>
         </Component>
-        <Component class="com.raven.swing.TextField" name="textField3">
+        <Component class="com.raven.swing.TextField" name="tf_Sdt">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="16" style="0"/>
@@ -266,7 +261,7 @@
             <Property name="text" type="java.lang.String" value=" Quy&#x1ec1;n"/>
           </Properties>
         </Component>
-        <Component class="com.raven.swing.CustomCombobox" name="customCombobox1">
+        <Component class="com.raven.swing.CustomCombobox" name="cb_Quyen">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="2">
@@ -279,7 +274,7 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="com.raven.swing.CustomCombobox" name="customCombobox3">
+        <Component class="com.raven.swing.CustomCombobox" name="cb_GioiTinh">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="2">
@@ -310,7 +305,7 @@
             <Property name="text" type="java.lang.String" value="Ng&#xe0;y sinh"/>
           </Properties>
         </Component>
-        <Component class="com.grocerystore.swing.Button" name="button3">
+        <Component class="com.grocerystore.swing.Button" name="btn_ChonNgaySinh">
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
@@ -321,10 +316,10 @@
             <Property name="horizontalTextPosition" type="int" value="0"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="button3ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_ChonNgaySinhActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JTextField" name="tf_ngaysinh">
+        <Component class="javax.swing.JTextField" name="tf_NgaySinh">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="16" style="0"/>
@@ -360,7 +355,7 @@
             <Property name="text" type="java.lang.String" value="H&#xec;nh &#x1ea3;nh"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="tf_tentaikhoan">
+        <Component class="javax.swing.JTextField" name="tf_TenTaiKhoan">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="16" style="0"/>
@@ -381,7 +376,7 @@
             <Property name="text" type="java.lang.String" value="T&#xe0;i kho&#x1ea3;n"/>
           </Properties>
         </Component>
-        <Component class="com.raven.swing.Button" name="btn_reload">
+        <Component class="com.raven.swing.Button" name="btn_SaThai">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="66" red="33" type="rgb"/>
@@ -389,13 +384,16 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="L&#xe0;m m&#x1edb;i   "/>
+            <Property name="text" type="java.lang.String" value="Sa th&#x1ea3;i     "/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="14" style="1"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_SaThaiActionPerformed"/>
+          </Events>
         </Component>
         <Component class="com.raven.swing.Button" name="btn_delete">
           <Properties>
@@ -412,6 +410,9 @@
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_deleteActionPerformed"/>
+          </Events>
         </Component>
         <Component class="com.raven.swing.Button" name="btn_update">
           <Properties>
@@ -428,6 +429,9 @@
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_updateActionPerformed"/>
+          </Events>
         </Component>
         <Component class="com.raven.swing.Button" name="btn_add">
           <Properties>
@@ -444,6 +448,9 @@
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_addActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -515,7 +522,7 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="com.grocerystore.swing.table.Table" name="table1">
+            <Component class="com.grocerystore.swing.table.Table" name="tb_QLNhanVien">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="4" rowCount="4">
@@ -527,6 +534,9 @@
                 </Property>
                 <Property name="autoResizeMode" type="int" value="0"/>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tb_QLNhanVienMouseClicked"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -555,19 +565,19 @@
                           <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Component id="button1" min="-2" pref="133" max="-2" attributes="0"/>
+                                  <Component id="btn_ApDung" min="-2" pref="133" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                                   <Component id="button2" min="-2" pref="133" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="jTextField3" max="32767" attributes="0"/>
+                                      <Component id="tf_TimNhanVien" max="32767" attributes="0"/>
                                       <Component id="jLabel11" pref="215" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="jLabel12" min="-2" pref="128" max="-2" attributes="0"/>
-                                      <Component id="customCombobox2" min="-2" pref="156" max="-2" attributes="0"/>
+                                      <Component id="cb_LocQuyen" min="-2" pref="156" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -592,12 +602,12 @@
                   </Group>
                   <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jTextField3" alignment="3" min="-2" pref="29" max="-2" attributes="0"/>
-                      <Component id="customCombobox2" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="tf_TimNhanVien" alignment="3" min="-2" pref="29" max="-2" attributes="0"/>
+                      <Component id="cb_LocQuyen" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="button1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btn_ApDung" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="button2" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="32" max="32767" attributes="0"/>
@@ -639,7 +649,7 @@
             <Property name="text" type="java.lang.String" value="T&#xea;n nh&#xe2;n vi&#xea;n"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jTextField3">
+        <Component class="javax.swing.JTextField" name="tf_TimNhanVien">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="16" style="0"/>
@@ -650,9 +660,19 @@
               </Border>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="tf_TimNhanVienKeyTyped"/>
+          </Events>
         </Component>
-        <Component class="com.raven.swing.CustomCombobox" name="customCombobox2">
+        <Component class="com.raven.swing.CustomCombobox" name="cb_LocQuyen">
           <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="3">
+                <StringItem index="0" value="Qu&#x1ea3;n l&#xfd;"/>
+                <StringItem index="1" value="Nh&#xe2;n vi&#xea;n b&#xe1;n h&#xe0;ng"/>
+                <StringItem index="2" value=" "/>
+              </StringArray>
+            </Property>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="14" style="0"/>
             </Property>
@@ -663,10 +683,10 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="16" style="0"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Lo&#x1ea1;i nh&#xe2;n vi&#xea;n"/>
+            <Property name="text" type="java.lang.String" value="Quy&#x1ec1;n"/>
           </Properties>
         </Component>
-        <Component class="com.raven.swing.Button" name="button1">
+        <Component class="com.raven.swing.Button" name="btn_ApDung">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="66" red="33" type="rgb"/>
@@ -681,6 +701,9 @@
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_ApDungActionPerformed"/>
+          </Events>
         </Component>
         <Component class="com.raven.swing.Button" name="button2">
           <Properties>
@@ -697,6 +720,9 @@
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="button2ActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

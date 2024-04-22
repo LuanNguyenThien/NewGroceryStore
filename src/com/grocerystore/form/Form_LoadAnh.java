@@ -22,7 +22,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class Form_LoadAnh extends javax.swing.JFrame {
 
     private ImageIcon selectedImage;
-
+    
+   
     public ImageIcon getSelectedImage() {
         return this.selectedImage;
     }
