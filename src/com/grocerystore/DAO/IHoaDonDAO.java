@@ -5,6 +5,8 @@
 package com.grocerystore.DAO;
 
 import com.grocerystore.model.HoaDon;
+import com.grocerystore.model.XuatHoaDon;
+import java.util.List;
 
 /**
  *
@@ -14,4 +16,6 @@ public interface IHoaDonDAO {
     Boolean ThemHD(HoaDon hd);
     Boolean CapnhatTrangthaiTienHD(String MaHD, double TienKhachTra, double TienThua);
     Boolean XoaHD(String MaHD);
+    String LayMaHDMoiNhat();
+    List<XuatHoaDon> getXuatHoaDon();
 }

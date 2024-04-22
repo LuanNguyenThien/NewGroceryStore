@@ -42,4 +42,15 @@ public class CustomCombobox extends JComboBox {
         Item selectedItem = (Item) super.getSelectedItem();
         return selectedItem != null ? selectedItem.getMaItem() : null;
     }
+    
+    public void setSelectedValue(String value) {
+        for (int i = 0; i < this.getItemCount(); i++) {
+            Item item = (Item) this.getItemAt(i);
+            System.out.print(item.getMaItem());
+            if (item.getMaItem().equals(value)) {
+                this.setSelectedIndex(i);
+                break;
+            }
+        }
+    }
 }

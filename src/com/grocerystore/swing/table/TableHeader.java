@@ -25,6 +25,8 @@ public class TableHeader extends JLabel {
         Graphics2D g2 = (Graphics2D) grphcs;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setColor(new Color(230, 230, 230));
-        g2.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
+        g2.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1); // Đường kẻ dưới cùng
+        g2.setColor(Color.BLACK); // Màu sắc của grid
+        g2.drawLine(getWidth() - 1, 0, getWidth() - 1, getHeight()); // Đường kẻ bên phải
     }
 }

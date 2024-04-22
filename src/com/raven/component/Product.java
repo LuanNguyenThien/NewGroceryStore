@@ -41,7 +41,7 @@ public class Product extends javax.swing.JPanel {
         this.sanpham = sanpham;
         initComponents();
         setOpaque(false);
-        String description = "Tên SP: "+sanpham.getTenSP()+"\nNSX: "+sanpham.getMaNSX()+"\nSố lượng: "+sanpham.getSoLuong();
+        String description = "Tên SP: "+sanpham.getTenSP()+"\nNSX: "+sanpham.getTenNSX()+"\nSố lượng: "+sanpham.getSoLuong();
         cardDescription = new ProductDescription(sanpham.getGiaTien().toPlainString(), description);
         cardDescription.setLocation(0, y);
         
@@ -109,6 +109,7 @@ public class Product extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 72, 238), 2, true));
         setLayout(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -127,7 +128,8 @@ public class Product extends javax.swing.JPanel {
         super.paint(grphcs);
         Graphics2D g2 = (Graphics2D) grphcs;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        GradientPaint g = new GradientPaint(0, getHeight(), new Color(64, 67, 186, 200), 0, getHeight() - 50, new Color(0, 0, 0, 0));
+        // GradientPaint g = new GradientPaint(0, getHeight(), new Color(64, 67, 186, 200), 0, getHeight() - 50, new Color(0, 0, 0, 0));
+        GradientPaint g = new GradientPaint(0, getHeight(), new Color(93, 58, 196), 0, getHeight()-50, new Color(33, 105, 249,0));
         g2.setPaint(g);
         g2.fillRect(0, 0, getWidth(), getHeight());
     }

@@ -1,5 +1,8 @@
 package com.grocerystore.main;
 
+import com.formdev.flatlaf.FlatDarculaLaf;
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLaf;
 import com.grocerystore.component.Header;
 import com.grocerystore.component.Menu;
 import com.grocerystore.event.EventMenuSelected;
@@ -204,6 +207,9 @@ public class Main extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
+//                FlatLaf.registerCustomDefaultsSource("style");
+//                FlatDarculaLaf.setup();
+                FlatIntelliJLaf.setup();
                 try {
                     DatabaseConnection.getInstance().connectToDatabase();
                 } catch (SQLException e) {

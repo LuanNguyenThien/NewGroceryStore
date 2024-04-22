@@ -6,61 +6,44 @@ package com.grocerystore.DAO;
 
 import com.grocerystore.model.SanPham;
 import connection.DatabaseConnection;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author My PC
  */
 public class SanPhamDAOImpl implements ISanPhamDao{
-    private static SanPhamDAOImpl INSTANCE;
-
-    private SanPhamDAOImpl() {
-        // private constructor to prevent direct instantiation
-    }
-
-    public static SanPhamDAOImpl getInstance() {
-        if (INSTANCE == null) {
-            synchronized (SanPhamDAOImpl.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new SanPhamDAOImpl();
-                }
-            }
-        }
-        return INSTANCE;
-    }
-
-
+    
     @Override
     public Boolean add(SanPham sp) {
-        String sql = "INSERT INTO SanPham(MaSP, MaLoaiSP, MaNSX, TenSP, DonViTinh, GiaTien, GiaNhap, SoLuong, LoiNhuan, TinhTrang, HinhAnh) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    
+        String sql = "{CALL ThemSPMOI(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
+
         try (Connection conn = DatabaseConnection.getInstance().getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-    
-            stmt.setString(1, sp.getMaSP());
+            CallableStatement stmt = conn.prepareCall(sql)) {
+
+            stmt.setString(1, sp.getTenSP());
             stmt.setString(2, sp.getMaLoaiSP());
             stmt.setString(3, sp.getMaNSX());
-            stmt.setString(4, sp.getTenSP());
-            stmt.setString(5, sp.getDonViTinh());
-            stmt.setBigDecimal(6, sp.getGiaTien());
-            stmt.setBigDecimal(7, sp.getGiaNhap());
-            stmt.setInt(8, sp.getSoLuong());
-            stmt.setInt(9, sp.getLoiNhuan());
-            stmt.setString(10, sp.getTinhTrang());
-            stmt.setBytes(11, sp.getHinhAnh());
-    
+            stmt.setString(4, sp.getDonViTinh());
+            stmt.setBigDecimal(5, sp.getGiaTien());
+            stmt.setBigDecimal(6, sp.getGiaNhap());
+            stmt.setInt(7, sp.getSoLuong());
+            stmt.setInt(8, sp.getLoiNhuan());
+            stmt.setString(9, sp.getTinhTrang());
+            stmt.setBytes(10, sp.getHinhAnh());
+
             int affectedRows = stmt.executeUpdate();
-    
             return affectedRows > 0;
-    
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            // Handle exception
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
     }
