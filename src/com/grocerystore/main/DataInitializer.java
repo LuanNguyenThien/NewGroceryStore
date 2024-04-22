@@ -4,8 +4,10 @@
  */
 package com.grocerystore.main;
 
+import com.grocerystore.DAO.NhanVienDAOImpl;
 import com.grocerystore.model.NhanVien;
 import com.grocerystore.model.SanPham;
+import com.raven.component.PanelSlide;
 import java.math.BigDecimal;
 import java.sql.Date;
 
@@ -14,10 +16,12 @@ import java.sql.Date;
  * @author My PC
  */
 public class DataInitializer {
-    public static NhanVien nhanVien1;
+    public static NhanVien nhanVien1, curUser;
     public static SanPham sp1, sp2;
     
     static {
+         NhanVienDAOImpl nvdao = new NhanVienDAOImpl();
+         curUser = nvdao.findByID(PanelSlide.IDCurUser);
         // Tạo dữ liệu mẫu cho NhanVien
         nhanVien1 = new NhanVien(
             "NV0001", 
