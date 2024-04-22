@@ -24,7 +24,7 @@ public class DatabaseConnection {
         String port = "3306";
         String database = "newqlchvpp";
         String userName = "root";
-        String password = "password";
+        String password = "thienluan";
         connection = java.sql.DriverManager.getConnection("jdbc:mysql://" + server + ":" + port + "/" + database, userName, password);
     }
 

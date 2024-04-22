@@ -34,15 +34,6 @@ CREATE TABLE `chitietdonnhaphang` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `chitietdonnhaphang`
---
-
-LOCK TABLES `chitietdonnhaphang` WRITE;
-/*!40000 ALTER TABLE `chitietdonnhaphang` DISABLE KEYS */;
-/*!40000 ALTER TABLE `chitietdonnhaphang` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `chitiethoadon`
 --
 
@@ -57,15 +48,6 @@ CREATE TABLE `chitiethoadon` (
   PRIMARY KEY (`MaHD`,`MaSP`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `chitiethoadon`
---
-
-LOCK TABLES `chitiethoadon` WRITE;
-/*!40000 ALTER TABLE `chitiethoadon` DISABLE KEYS */;
-/*!40000 ALTER TABLE `chitiethoadon` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `donnhaphang`
@@ -83,15 +65,6 @@ CREATE TABLE `donnhaphang` (
   PRIMARY KEY (`MaDNH`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `donnhaphang`
---
-
-LOCK TABLES `donnhaphang` WRITE;
-/*!40000 ALTER TABLE `donnhaphang` DISABLE KEYS */;
-/*!40000 ALTER TABLE `donnhaphang` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Temporary view structure for view `fullproductinfo`
@@ -128,23 +101,14 @@ CREATE TABLE `hoadon` (
   `MaHD` varchar(10) NOT NULL,
   `MaNV` varchar(10) DEFAULT NULL,
   `MaKH` varchar(10) DEFAULT NULL,
-  `NgayBanHang` date DEFAULT NULL,
+  `NgayBanHang` datetime DEFAULT NULL,
   `TrangThai` varchar(21) NOT NULL DEFAULT 'Chưa thanh toán',
-  `TriGiaHoaDon` decimal(18,1) NOT NULL,
+  `TriGiaHoaDon` decimal(18,1) NOT NULL DEFAULT '0.0',
   `TienKhachTra` decimal(18,1) DEFAULT NULL,
   `TienThua` decimal(18,1) DEFAULT NULL,
   PRIMARY KEY (`MaHD`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `hoadon`
---
-
-LOCK TABLES `hoadon` WRITE;
-/*!40000 ALTER TABLE `hoadon` DISABLE KEYS */;
-/*!40000 ALTER TABLE `hoadon` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `khachhang`
@@ -165,15 +129,6 @@ CREATE TABLE `khachhang` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `khachhang`
---
-
-LOCK TABLES `khachhang` WRITE;
-/*!40000 ALTER TABLE `khachhang` DISABLE KEYS */;
-/*!40000 ALTER TABLE `khachhang` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `loaisanpham`
 --
 
@@ -186,16 +141,6 @@ CREATE TABLE `loaisanpham` (
   PRIMARY KEY (`MaLoaiSP`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `loaisanpham`
---
-
-LOCK TABLES `loaisanpham` WRITE;
-/*!40000 ALTER TABLE `loaisanpham` DISABLE KEYS */;
-INSERT INTO `loaisanpham` VALUES ('LSP0001','Đồ chơi trẻ em'),('LSP0002','Dụng cụ học tập'),('LSP0003','Nước uống đóng chai'),('LSP0004','Thực phẩm dinh dưỡng');
-/*!40000 ALTER TABLE `loaisanpham` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `nhanvien`
@@ -223,16 +168,6 @@ CREATE TABLE `nhanvien` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `nhanvien`
---
-
-LOCK TABLES `nhanvien` WRITE;
-/*!40000 ALTER TABLE `nhanvien` DISABLE KEYS */;
-INSERT INTO `nhanvien` VALUES ('NV0001','Nguyễn Thiện Luân','2003-12-08','0123456789','Nam','Lâm Đồng, Việt Nam','2024-03-27','Đang làm','username',NULL,'password','Admin');
-/*!40000 ALTER TABLE `nhanvien` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `nhasanxuat`
 --
 
@@ -247,16 +182,6 @@ CREATE TABLE `nhasanxuat` (
   PRIMARY KEY (`MaNSX`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `nhasanxuat`
---
-
-LOCK TABLES `nhasanxuat` WRITE;
-/*!40000 ALTER TABLE `nhasanxuat` DISABLE KEYS */;
-INSERT INTO `nhasanxuat` VALUES ('NSX0001','Thiên Long','Việt Nam','18009090'),('NSX0002','Revive','Việt Nam','18001234');
-/*!40000 ALTER TABLE `nhasanxuat` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `sanpham`
@@ -282,13 +207,27 @@ CREATE TABLE `sanpham` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `sanpham`
+-- Temporary view structure for view `xuathoadon`
 --
 
-LOCK TABLES `sanpham` WRITE;
-/*!40000 ALTER TABLE `sanpham` DISABLE KEYS */;
-/*!40000 ALTER TABLE `sanpham` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `xuathoadon`;
+/*!50001 DROP VIEW IF EXISTS `xuathoadon`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `xuathoadon` AS SELECT 
+ 1 AS `MaHD`,
+ 1 AS `NgayBanHang`,
+ 1 AS `TriGiaHoaDon`,
+ 1 AS `TienKhachTra`,
+ 1 AS `TienThua`,
+ 1 AS `MaSP`,
+ 1 AS `Soluong`,
+ 1 AS `TongTien`,
+ 1 AS `TenSP`,
+ 1 AS `GiaTien`,
+ 1 AS `TenNhanVien`,
+ 1 AS `TenKhachHang`*/;
+SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping events for database 'newqlchvpp'
@@ -463,11 +402,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ThemHoaDonMoi`(
     IN p_MaNV varchar(10),
-    IN p_MaKH varchar(10),
-    IN p_TrangThai varchar(21),
-    IN p_TriGiaHoaDon decimal(18, 1),
-    IN p_TienKhachTra decimal(18, 1),
-    IN p_TienThua decimal(18, 1)
+    IN p_MaKH varchar(10)
 )
 BEGIN
     DECLARE v_MaHD varchar(10);
@@ -475,8 +410,8 @@ BEGIN
     SELECT CONCAT('HD', LPAD(IFNULL(MAX(CAST(SUBSTRING(MaHD, 3) AS UNSIGNED)), 0) + 1, 4, '0')) INTO v_MaHD
     FROM HoaDon;
 
-    INSERT INTO HoaDon (MaHD, MaNV, MaKH, NgayBanHang, TrangThai, TriGiaHoaDon, TienKhachTra, TienThua)
-    VALUES (v_MaHD, p_MaNV, p_MaKH, NOW(), p_TrangThai, p_TriGiaHoaDon, p_TienKhachTra, p_TienThua);
+    INSERT INTO HoaDon (MaHD, MaNV, MaKH, NgayBanHang, TienKhachTra, TienThua)
+    VALUES (v_MaHD, p_MaNV, p_MaKH, NOW(), 0, 0);
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -556,8 +491,7 @@ DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ThemSPMOI`(
     IN p_TenSP varchar(255),
     IN p_MaLoaiSP varchar(10),
-    IN p_TenLoaiSP varchar(255),
-    IN p_TenNSX varchar(255),
+    IN p_MaNSX varchar(10),
     IN p_DonViTinh varchar(20),
     IN p_GiaTien decimal(10,1),
     IN p_GiaNhap decimal(10,1),
@@ -568,18 +502,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `ThemSPMOI`(
 )
 BEGIN
     DECLARE v_MaSP varchar(10);
-    DECLARE v_MaNSX varchar(10);
 
-    START TRANSACTION;
-    BEGIN
-        SELECT CONCAT('SP', LPAD(IFNULL(MAX(CAST(SUBSTRING(MaSP, 3) AS UNSIGNED)), 0) + 1, 4, '0')) INTO v_MaSP
-        FROM SanPham;
+    SELECT CONCAT('SP', LPAD(IFNULL(MAX(CAST(SUBSTRING(MaSP, 3) AS UNSIGNED)), 0) + 1, 4, '0')) INTO v_MaSP
+    FROM SanPham;
 
-        INSERT INTO SanPham (MaSP, MaLoaiSP, TenSP, DonViTinh, GiaTien, GiaNhap, SoLuong, LoiNhuan, TinhTrang, HinhAnh)
-        VALUES (v_MaSP, p_MaLoaiSP, p_TenSP, p_DonViTinh, p_GiaTien, p_GiaNhap, p_SoLuong, p_LoiNhuan, p_TinhTrang, p_HinhAnh);
-
-        COMMIT;
-    END;
+    INSERT INTO SanPham (MaSP, MaLoaiSP, MaNSX, TenSP, DonViTinh, GiaTien, GiaNhap, SoLuong, LoiNhuan, TinhTrang, HinhAnh)
+    VALUES (v_MaSP, p_MaLoaiSP, p_MaNSX, p_TenSP, p_DonViTinh, p_GiaTien, p_GiaNhap, p_SoLuong, p_LoiNhuan, p_TinhTrang, p_HinhAnh);
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -596,14 +524,39 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `UpdateNhanVien`(IN p_MaNV varchar(10), IN p_Sdt char(10), IN p_TenTK varchar(20))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `UpdateNhanVien`(
+    IN p_MaNV varchar(10), 
+    IN p_HoTen varchar(255), 
+    IN p_NgaySinh date, 
+    IN p_Sdt char(10), 
+    IN p_GioiTinh varchar(3), 
+    IN p_DiaChi varchar(255), 
+    IN p_NgayTuyenDung date, 
+    IN p_TrangThai varchar(20), 
+    IN p_TenTK varchar(20), 
+    IN p_HinhAnh BLOB, 
+    IN p_MatKhau varchar(31), 
+    IN p_Quyen varchar(30)
+)
 BEGIN
     IF EXISTS (SELECT 1 FROM NhanVien WHERE Sdt = p_Sdt AND MaNV <> p_MaNV) THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Đã tồn tại số điện thoại này';
     ELSEIF EXISTS (SELECT 1 FROM NhanVien WHERE TenTK = p_TenTK AND MaNV <> p_MaNV) THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Đã tồn tại tên tài khoản này';
     ELSE
-        UPDATE NhanVien SET Sdt = p_Sdt, TenTK = p_TenTK WHERE MaNV = p_MaNV;
+        UPDATE NhanVien 
+        SET HoTen = p_HoTen, 
+            NgaySinh = p_NgaySinh, 
+            Sdt = p_Sdt, 
+            GioiTinh = p_GioiTinh, 
+            DiaChi = p_DiaChi, 
+            NgayTuyenDung = p_NgayTuyenDung, 
+            TrangThai = p_TrangThai, 
+            TenTK = p_TenTK, 
+            HinhAnh = p_HinhAnh, 
+            MatKhau = p_MatKhau, 
+            Quyen = p_Quyen 
+        WHERE MaNV = p_MaNV;
     END IF;
 END ;;
 DELIMITER ;
@@ -659,6 +612,24 @@ DELIMITER ;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `xuathoadon`
+--
+
+/*!50001 DROP VIEW IF EXISTS `xuathoadon`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `xuathoadon` AS select `hoadon`.`MaHD` AS `MaHD`,`hoadon`.`NgayBanHang` AS `NgayBanHang`,`hoadon`.`TriGiaHoaDon` AS `TriGiaHoaDon`,`hoadon`.`TienKhachTra` AS `TienKhachTra`,`hoadon`.`TienThua` AS `TienThua`,`chitiethoadon`.`MaSP` AS `MaSP`,`chitiethoadon`.`Soluong` AS `Soluong`,`chitiethoadon`.`TongTien` AS `TongTien`,`sanpham`.`TenSP` AS `TenSP`,`sanpham`.`GiaTien` AS `GiaTien`,`nhanvien`.`HoTen` AS `TenNhanVien`,`khachhang`.`Hoten` AS `TenKhachHang` from ((((`hoadon` join `chitiethoadon` on((`hoadon`.`MaHD` = `chitiethoadon`.`MaHD`))) join `nhanvien` on((`hoadon`.`MaNV` = `nhanvien`.`MaNV`))) join `khachhang` on((`hoadon`.`MaKH` = `khachhang`.`MaKH`))) join `sanpham` on((`chitiethoadon`.`MaSP` = `sanpham`.`MaSP`))) where (`hoadon`.`MaHD` = (select max(`hoadon`.`MaHD`) from `hoadon`)) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -669,4 +640,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-04-13 17:20:04
+-- Dump completed on 2024-04-22 10:38:27
