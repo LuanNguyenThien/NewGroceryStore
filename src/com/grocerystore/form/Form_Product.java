@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
+import com.grocerystore.DAO.ISanPhamDao;
+import com.grocerystore.DAO.SanPhamDAOImpl;
 
 public class Form_Product extends javax.swing.JPanel {
 
@@ -23,14 +25,15 @@ public class Form_Product extends javax.swing.JPanel {
     private int itemsPerPage = 10;
     private int currentPage = 0;
     private List<Product> products;
+    private ISanPhamDao sanPhamDao;
 
     private void init() {
         connect_DB();
-        // Load all cards
-        loadProducts();
         // Set layout and scrollbar
         panel.setLayout(new FlowLayout());
         jScrollPane1.setVerticalScrollBar(new ScrollBar());
+        // Load all cards
+        loadProducts();
         // Load the first page
         loadPage(0);
     }
@@ -48,40 +51,23 @@ public class Form_Product extends javax.swing.JPanel {
     }
 
     private void loadProducts() {
-    products = new ArrayList<>();
-    for (int i = 1; i <= 36; i++) {
-        int iconNumber = (i % 12) + 1;
-        SanPham sp = new SanPham();
-        if(i%2==1){
-            sp.setMaSP(DataInitializer.sp1.getMaSP());
-            sp.setMaLoaiSP(DataInitializer.sp1.getMaLoaiSP());
-            sp.setMaNSX(DataInitializer.sp1.getMaNSX());
-            sp.setTenSP(DataInitializer.sp1.getTenSP());
-            sp.setDonViTinh(DataInitializer.sp1.getDonViTinh());
-            sp.setGiaTien(DataInitializer.sp1.getGiaTien());
-            sp.setGiaNhap(DataInitializer.sp1.getGiaNhap());
-            sp.setSoLuong(DataInitializer.sp1.getSoLuong());
-            sp.setLoiNhuan(DataInitializer.sp1.getLoiNhuan());
-            sp.setTinhTrang(DataInitializer.sp1.getTinhTrang());
-            sp.setHinhAnh(util.Util.imageIconToByteArray(new ImageIcon(getClass().getResource("/com/raven/icon/testing/" + iconNumber + ".jpg"))));
-        }
-        else
-        {
-            sp = DataInitializer.sp2;
-            sp.setHinhAnh(util.Util.imageIconToByteArray(new ImageIcon(getClass().getResource("/com/raven/icon/testing/" + iconNumber + ".jpg"))));
-        }
-        Product product = new Product(sp);
-        product.setProductClickListener(new Product.ProductClickListener() {
-            @Override
-            public void onProductClick(SanPham product) {
-                if (listener != null) {
-                    listener.onProductClick(product);
+        connect_DB();
+        List<SanPham> SanPhamList = sanPhamDao.getAll_viewSP();
+        products = new ArrayList<>();
+        
+        for (SanPham sp : SanPhamList) {
+            Product product = new Product(sp);
+            product.setProductClickListener(new Product.ProductClickListener() {
+                @Override
+                public void onProductClick(SanPham product) {
+                    if (listener != null) {
+                        listener.onProductClick(product);
+                    }
                 }
-            }
-        });
-        products.add(product);
+            });
+            products.add(product);
+        }
     }
-}
 
     private void loadPage(int pageNumber) {
         // Clear the panel
@@ -121,6 +107,7 @@ public class Form_Product extends javax.swing.JPanel {
     }
     
     public Form_Product() {
+        sanPhamDao = new SanPhamDAOImpl();
         initComponents();
         init();
     }

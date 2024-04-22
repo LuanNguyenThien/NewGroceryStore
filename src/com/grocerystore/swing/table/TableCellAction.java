@@ -27,4 +27,10 @@ public class TableCellAction extends DefaultCellEditor {
     public Object getCellEditorValue() {
         return data;
     }
+    
+    @Override
+    public boolean stopCellEditing() {
+        data = null;
+        return super.stopCellEditing();
+    }
 }

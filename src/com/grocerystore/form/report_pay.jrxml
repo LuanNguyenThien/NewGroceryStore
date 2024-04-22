@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report_pay" language="groovy" pageWidth="250" pageHeight="842" columnWidth="230" leftMargin="11" rightMargin="11" topMargin="0" bottomMargin="0" uuid="e85f8a0c-148f-465d-a4e7-5b7837dc9f27">
+    <property name="ireport.zoom" value="3.0"/>
+    <property name="ireport.x" value="0"/>
+    <property name="ireport.y" value="0"/>
+    <parameter name="staff" class="java.lang.String"/>
+    <parameter name="customer" class="java.lang.String"/>
+    <parameter name="total" class="java.lang.String"/>
+    <parameter name="qrcode" class="java.io.InputStream"/>
+    <field name="name" class="java.lang.String"/>
+    <field name="qty" class="java.lang.Integer"/>
+    <field name="price" class="java.lang.Double"/>
+    <field name="total" class="java.lang.Double"/>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <title>
+        <band height="50" splitType="Stretch">
+            <staticText>
+                <reportElement x="0" y="0" width="204" height="20" uuid="42cacdc9-f3a5-4942-a6f4-5e1cb5b3c7fa"/>
+                <textElement textAlignment="Center">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[HOÁ ĐƠN THANH TOÁN]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="20" width="100" height="15" uuid="2f889604-f4fe-4b4f-8f36-08553459bfad"/>
+                <textElement>
+                    <font fontName="Verdana" size="9"/>
+                </textElement>
+                <text><![CDATA[Nhân viên: $P{staff}]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="35" width="100" height="15" uuid="3da27491-e647-4de4-9f8a-1a9aa46015cb"/>
+                <textElement>
+                    <font fontName="Verdana" size="9"/>
+                </textElement>
+                <text><![CDATA[Khách hàng: $P{customer}]]></text>
+            </staticText>
+        </band>
+    </title>
+    <detail>
+        <band height="20">
+            <textField>
+                <reportElement x="0" y="0" width="50" height="20"/>
+                <textElement/>
+                <textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="50" y="0" width="50" height="20"/>
+                <textElement/>
+                <textFieldExpression><![CDATA[$F{price}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="100" y="0" width="50" height="20"/>
+                <textElement/>
+                <textFieldExpression><![CDATA[$F{qty}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="150" y="0" width="50" height="20"/>
+                <textElement/>
+                <textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+</jasperReport>

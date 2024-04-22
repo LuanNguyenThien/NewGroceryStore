@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import connection.DatabaseConnection;
+import java.sql.CallableStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
 
@@ -23,30 +24,28 @@ import java.util.ArrayList;
 public class NhanVienDAOImpl implements INhanVienDAO{
 
     @Override
-    public Boolean add(NhanVien model) {
-        PreparedStatement ps = null;
+    public Boolean add(NhanVien nv) {
+        CallableStatement cs = null;
         try {
-            String sql = "INSERT INTO NhanVien (MaNV, HoTen, NgaySinh, Sdt, GioiTinh, DiaChi, NgayTuyenDung, TrangThai, TenTK, HinhAnh, MatKhau, Quyen) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            ps = DatabaseConnection.getInstance().getConnection().prepareStatement(sql);
-            ps.setString(1, model.getMaNV());
-            ps.setString(2, model.getHoTen());
-            ps.setDate(3, new java.sql.Date(model.getNgaySinh().getTime()));
-            ps.setString(4, model.getSdt());
-            ps.setString(5, model.getGioiTinh());
-            ps.setString(6, model.getDiaChi());
-            ps.setDate(7, new java.sql.Date(model.getNgayTuyenDung().getTime()));
-            ps.setString(8, model.getTrangThai());
-            ps.setString(9, model.getTenTK());
-            ps.setBytes(10, model.getHinhAnh());
-            ps.setString(11, model.getMatKhau());
-            ps.setString(12, model.getQuyen());
-            int rowsInserted = ps.executeUpdate();
-            return rowsInserted > 0;
+            String sql = "{call spThemNhanVien(?,?,?,?,?,?,?,?,?,?)}";
+            cs = DatabaseConnection.getInstance().getConnection().prepareCall(sql);
+            cs.setString(1, nv.getHoTen());
+            cs.setString(2, nv.getSdt());
+            cs.setDate(3, new java.sql.Date(nv.getNgaySinh().getTime()));
+            cs.setString(4, nv.getGioiTinh());
+            cs.setString(5, nv.getDiaChi());
+            cs.setDate(6, new java.sql.Date(nv.getNgayTuyenDung().getTime()));
+            cs.setString(7, nv.getTrangThai());
+            cs.setString(8, nv.getTenTK());
+            cs.setBytes(9, nv.getHinhAnh());
+            cs.setString(10, nv.getQuyen());
+            int rs = cs.executeUpdate();
+            return rs > 0;
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {
             try {
-                if (ps != null) ps.close();
+                if (cs != null) cs.close();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
@@ -55,30 +54,30 @@ public class NhanVienDAOImpl implements INhanVienDAO{
     }
 
     @Override
-    public Boolean update(NhanVien model) {
-        PreparedStatement ps = null;
+    public Boolean update(NhanVien nv) {
+        CallableStatement cs = null;
         try {
-            String sql = "UPDATE NhanVien SET HoTen = ?, NgaySinh = ?, Sdt = ?, GioiTinh = ?, DiaChi = ?, NgayTuyenDung = ?, TrangThai = ?, TenTK = ?, HinhAnh = ?, MatKhau = ?, Quyen = ? WHERE MaNV = ?";
-            ps = DatabaseConnection.getInstance().getConnection().prepareStatement(sql);
-            ps.setString(1, model.getHoTen());
-            ps.setDate(2, new java.sql.Date(model.getNgaySinh().getTime()));
-            ps.setString(3, model.getSdt());
-            ps.setString(4, model.getGioiTinh());
-            ps.setString(5, model.getDiaChi());
-            ps.setDate(6, new java.sql.Date(model.getNgayTuyenDung().getTime()));
-            ps.setString(7, model.getTrangThai());
-            ps.setString(8, model.getTenTK());
-            ps.setBytes(9, model.getHinhAnh());
-            ps.setString(10, model.getMatKhau());
-            ps.setString(11, model.getQuyen());
-            ps.setString(12, model.getMaNV());
-            int rowsUpdated = ps.executeUpdate();
-            return rowsUpdated > 0;
+            String sql = "{call UpdateNhanVien(?,?,?,?,?,?,?,?,?,?,?,?)}";
+            cs = DatabaseConnection.getInstance().getConnection().prepareCall(sql);
+            cs.setString(1, nv.getMaNV());
+            cs.setString(2, nv.getHoTen());
+            cs.setDate(3, new java.sql.Date(nv.getNgaySinh().getTime()));
+            cs.setString(4, nv.getSdt());
+            cs.setString(5, nv.getGioiTinh());
+            cs.setString(6, nv.getDiaChi());
+            cs.setDate(7, new java.sql.Date(nv.getNgayTuyenDung().getTime()));
+            cs.setString(8, nv.getTrangThai());
+            cs.setString(9, nv.getTenTK());
+            cs.setBytes(10, nv.getHinhAnh());
+            cs.setString(11, nv.getMatKhau());
+            cs.setString(12, nv.getQuyen());
+            int rs = cs.executeUpdate();
+            return rs > 0;
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {
             try {
-                if (ps != null) ps.close();
+                if (cs != null) cs.close();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
@@ -161,7 +160,7 @@ public class NhanVienDAOImpl implements INhanVienDAO{
     }
 
     @Override
-    public List<NhanVien> findByFilter(String HoTen) {
+    public List<NhanVien> findByName(String HoTen) {
         List<NhanVien> nhanVienList = new ArrayList<>();
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -236,4 +235,105 @@ public class NhanVienDAOImpl implements INhanVienDAO{
             }
             return nhanVienList;
         }
+
+    @Override
+    public Boolean delete(String maNV) {
+        PreparedStatement ps = null;
+        try {
+            String sql = "UPDATE NhanVien SET TrangThai = ? WHERE MaNV = ?";
+            ps = DatabaseConnection.getInstance().getConnection().prepareStatement(sql);
+            ps.setString(1, "Đã nghỉ");
+            ps.setString(2, maNV);
+            int rowsUpdated = ps.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (ps != null) ps.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public List<NhanVien> find(String HoTen, String Quyen) {
+        List<NhanVien> nhanVienList = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            String sql = "SELECT * FROM NhanVien WHERE HoTen LIKE ? and Quyen = ?";
+            ps = DatabaseConnection.getInstance().getConnection().prepareStatement(sql);
+            ps.setString(1, "%" + HoTen + "%");
+            ps.setString(2, Quyen);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                NhanVien nhanVien = new NhanVien();
+                nhanVien.setMaNV(rs.getString("MaNV"));
+                nhanVien.setHoTen(rs.getString("HoTen"));
+                nhanVien.setNgaySinh(rs.getDate("NgaySinh"));
+                nhanVien.setSdt(rs.getString("Sdt"));
+                nhanVien.setGioiTinh(rs.getString("GioiTinh"));
+                nhanVien.setDiaChi(rs.getString("DiaChi"));
+                nhanVien.setNgayTuyenDung(rs.getDate("NgayTuyenDung"));
+                nhanVien.setTrangThai(rs.getString("TrangThai"));
+                nhanVien.setTenTK(rs.getString("TenTK"));
+                nhanVien.setHinhAnh(rs.getBytes("HinhAnh"));
+                nhanVien.setMatKhau(rs.getString("MatKhau"));
+                nhanVien.setQuyen(rs.getString("Quyen"));
+                nhanVienList.add(nhanVien);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return nhanVienList;
+    }
+
+    @Override
+    public List<NhanVien> findByQuyen(String Quyen) {
+        List<NhanVien> nhanVienList = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            String sql = "SELECT * FROM NhanVien WHERE Quyen = ?";
+            ps = DatabaseConnection.getInstance().getConnection().prepareStatement(sql);
+            ps.setString(1, Quyen);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                NhanVien nhanVien = new NhanVien();
+                nhanVien.setMaNV(rs.getString("MaNV"));
+                nhanVien.setHoTen(rs.getString("HoTen"));
+                nhanVien.setNgaySinh(rs.getDate("NgaySinh"));
+                nhanVien.setSdt(rs.getString("Sdt"));
+                nhanVien.setGioiTinh(rs.getString("GioiTinh"));
+                nhanVien.setDiaChi(rs.getString("DiaChi"));
+                nhanVien.setNgayTuyenDung(rs.getDate("NgayTuyenDung"));
+                nhanVien.setTrangThai(rs.getString("TrangThai"));
+                nhanVien.setTenTK(rs.getString("TenTK"));
+                nhanVien.setHinhAnh(rs.getBytes("HinhAnh"));
+                nhanVien.setMatKhau(rs.getString("MatKhau"));
+                nhanVien.setQuyen(rs.getString("Quyen"));
+                nhanVienList.add(nhanVien);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return nhanVienList;
+    }
 }

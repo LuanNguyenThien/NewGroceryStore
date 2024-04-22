@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -33,7 +34,7 @@ public class KhachHangDAOImpl implements IKhachHang{
             int rowsInserted = ps.executeUpdate();
             return rowsInserted > 0;
         }catch(SQLException e){
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Lỗi! " + e.getMessage(), "Thông báo", JOptionPane.ERROR_MESSAGE);
         }
         finally{
             try {
@@ -71,22 +72,21 @@ public class KhachHangDAOImpl implements IKhachHang{
 
     @Override
     public Boolean updateInfo(KhachHang k) {
-        String sql = "Update khachhang set HoTen = ? , Sdt = ? , GioiTinh = ? , NgayDangKi = ?, TongChiTieu = ? where MaKH = ?";
+        String sql = "Call PC_CapNhatKhachHang(?,?,?,?)";
         PreparedStatement ps = null;
         try{
             ps = DatabaseConnection.getInstance().getConnection().prepareStatement(sql);
             
-            ps.setString(1, k.getHoTen());
-            ps.setString(2, k.getSdt());
-            ps.setString(3, k.getGioiTinh());
-            ps.setDate(4, k.getNgayDangKy());
-            ps.setBigDecimal(5, k.getTongChiTieu());
-            ps.setString(5, k.getMaKH());
+            ps.setString(1, k.getMaKH());
+            ps.setString(2, k.getHoTen());
+            ps.setString(3, k.getSdt());
+            ps.setString(4, k.getGioiTinh());
             
+
             int rowsInserted = ps.executeUpdate();
             return rowsInserted > 0;
         }catch(SQLException e){
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Lỗi! " + e.getMessage(), "Thông báo", JOptionPane.ERROR_MESSAGE);
         }
         finally{
             try {
@@ -245,6 +245,39 @@ public class KhachHangDAOImpl implements IKhachHang{
         }
         
         return list;
+    }
+
+    public List<KhachHang> searchByParam(String searchParam) {
+        List<KhachHang> khachHangList = new ArrayList<>();
+        String sql = "SELECT * FROM KhachHang WHERE HoTen LIKE ? OR Sdt LIKE ?";
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = DatabaseConnection.getInstance().getConnection().prepareStatement(sql);
+            ps.setString(1, "%" + searchParam + "%");
+            ps.setString(2, "%" + searchParam + "%");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                KhachHang k = new KhachHang();
+                k.setMaKH(rs.getString(1));
+                k.setHoTen(rs.getString(2));
+                k.setSdt(rs.getString(3));
+                k.setGioiTinh(rs.getString(4));
+                k.setNgayDangKy(rs.getDate(5));
+                k.setTongChiTieu(rs.getBigDecimal(6));
+                khachHangList.add(k);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return khachHangList;
     }
 
 }

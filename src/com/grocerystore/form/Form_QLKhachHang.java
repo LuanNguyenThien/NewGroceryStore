@@ -4,47 +4,39 @@
  */
 package com.grocerystore.form;
 
-import com.grocerystore.model.NhanVien;
-import com.grocerystore.DAO.INhanVienDAO;
-import com.grocerystore.DAO.NhanVienDAOImpl;
-import com.grocerystore.swing.scrollbar.ScrollBarCustom;
-import com.sun.java.swing.plaf.windows.WindowsBorders;
+import com.grocerystore.DAO.IKhachHang;
+import com.grocerystore.DAO.KhachHangDAOImpl;
+import com.grocerystore.model.KhachHang;
 import connection.DatabaseConnection;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Rectangle;
+import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.plaf.basic.BasicArrowButton;
-import javax.swing.plaf.basic.BasicComboBoxUI;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
-/**
- *
- * @author My PC
- */
 public class Form_QLKhachHang extends javax.swing.JPanel {
-
-    /**
-     * Creates new form Form_QLNhanVien
-     */
+    
+    IKhachHang khachHangDAO = new KhachHangDAOImpl();
+    Color DISABLED_BUTTON_COLOR = new Color(200, 200, 200);
+    Color ACTIVE_BUTTON_COLOR = new Color(51, 102, 255);
+    
     public Form_QLKhachHang() {
         connect_DB();
         initComponents();
         setOpaque(false);
         loadData();
         init();
+        setEvents();
     }
     
     private void connect_DB(){
@@ -66,27 +58,56 @@ public class Form_QLKhachHang extends javax.swing.JPanel {
     }
     
     private void loadData() {
-        INhanVienDAO nhanVienDao = new NhanVienDAOImpl();
-        List<NhanVien> nhanVienList = nhanVienDao.getAll();
+        List<KhachHang> listKhachHang = khachHangDAO.getAll();
 
-        String[] columnNames = {"Mã NV", "Họ tên", "Ngày sinh", "SĐT", "Giới tính", "Địa chỉ", "Ngày tuyển dụng", "Trạng thái", "Tên TK", "Hình ảnh", "Mật khẩu", "Quyền"};
-        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+        DefaultTableModel model = new DefaultTableModel();
 
-        for (NhanVien nhanVien : nhanVienList) {
-            Object[] row = new Object[12];
-            row[0] = nhanVien.getMaNV();
-            row[1] = nhanVien.getHoTen();
-            row[2] = nhanVien.getNgaySinh();
-            row[3] = nhanVien.getSdt();
-            row[4] = nhanVien.getGioiTinh();
-            row[5] = nhanVien.getDiaChi();
-            row[6] = nhanVien.getNgayTuyenDung();
-            row[7] = nhanVien.getTrangThai();
-            row[8] = nhanVien.getTenTK();
-            row[9] = nhanVien.getHinhAnh();
-            row[10] = nhanVien.getMatKhau();
-            row[11] = nhanVien.getQuyen();
-            model.addRow(row);
+        model.addColumn("Mã khách hàng");
+        model.addColumn("Họ và tên");
+        model.addColumn("Số điện thoại");
+        model.addColumn("Giới tính");
+        model.addColumn("Ngày đăng ký");
+        model.addColumn("Tổng chi tiêu");
+
+        for (KhachHang khachHang : listKhachHang) {
+            Object[] rowData = {
+                khachHang.getMaKH(),
+                khachHang.getHoTen(),
+                khachHang.getSdt(),
+                khachHang.getGioiTinh(),
+                khachHang.getNgayDangKy(),
+                khachHang.getTongChiTieu()
+            };
+            model.addRow(rowData);
+        }
+        table_listcus.setModel(model);
+        table_listcus.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // Disable auto resizing
+
+        for (int column = 0; column < table_listcus.getColumnCount(); column++) {
+            TableColumn tableColumn = table_listcus.getColumnModel().getColumn(column);
+            int preferredWidth = tableColumn.getMinWidth();
+            int maxWidth = tableColumn.getMaxWidth();
+
+            // Consider the header's width
+            TableCellRenderer headerRenderer = table_listcus.getTableHeader().getDefaultRenderer();
+            Object headerValue = tableColumn.getHeaderValue();
+            Component headerComp = headerRenderer.getTableCellRendererComponent(table_listcus, headerValue, false, false, 0, column);
+            preferredWidth = Math.max(preferredWidth, headerComp.getPreferredSize().width + table_listcus.getIntercellSpacing().width);
+
+            for (int row = 0; row < table_listcus.getRowCount(); row++) {
+                TableCellRenderer cellRenderer = table_listcus.getCellRenderer(row, column);
+                Component c = table_listcus.prepareRenderer(cellRenderer, row, column);
+                int width = c.getPreferredSize().width + table_listcus.getIntercellSpacing().width;
+                preferredWidth = Math.max(preferredWidth, width);
+
+                // We've exceeded the maximum width, no need to check other rows
+                if (preferredWidth >= maxWidth) {
+                    preferredWidth = maxWidth;
+                    break;
+                }
+            }
+
+            tableColumn.setMinWidth(preferredWidth+12); // Set minimum width instead of preferred width
         }
     }
 
@@ -103,14 +124,12 @@ public class Form_QLKhachHang extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         tf_name = new com.raven.swing.TextField();
-        tf_address = new com.raven.swing.TextField();
         tf_phone = new com.raven.swing.TextField();
         cbb_gender = new com.raven.swing.CustomCombobox();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         tf_ngaydk = new javax.swing.JTextField();
         btn_reload = new com.raven.swing.Button();
-        btn_delete = new com.raven.swing.Button();
         btn_update = new com.raven.swing.Button();
         btn_add = new com.raven.swing.Button();
         jLabel16 = new javax.swing.JLabel();
@@ -138,9 +157,6 @@ public class Form_QLKhachHang extends javax.swing.JPanel {
         tf_name.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         tf_name.setLabelText("Tên Khách Hàng");
 
-        tf_address.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        tf_address.setLabelText("Địa chỉ");
-
         tf_phone.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         tf_phone.setLabelText("Số điện thoại");
 
@@ -164,13 +180,11 @@ public class Form_QLKhachHang extends javax.swing.JPanel {
         btn_reload.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btn_reload.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         btn_reload.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-
-        btn_delete.setBackground(new java.awt.Color(51, 102, 255));
-        btn_delete.setForeground(new java.awt.Color(255, 255, 255));
-        btn_delete.setText("Xóa   ");
-        btn_delete.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btn_delete.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        btn_delete.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btn_reload.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_reloadActionPerformed(evt);
+            }
+        });
 
         btn_update.setBackground(new java.awt.Color(51, 102, 255));
         btn_update.setForeground(new java.awt.Color(255, 255, 255));
@@ -178,6 +192,11 @@ public class Form_QLKhachHang extends javax.swing.JPanel {
         btn_update.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btn_update.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         btn_update.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btn_update.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_updateActionPerformed(evt);
+            }
+        });
 
         btn_add.setBackground(new java.awt.Color(51, 102, 255));
         btn_add.setForeground(new java.awt.Color(255, 255, 255));
@@ -185,6 +204,11 @@ public class Form_QLKhachHang extends javax.swing.JPanel {
         btn_add.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btn_add.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         btn_add.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btn_add.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_addActionPerformed(evt);
+            }
+        });
 
         jLabel16.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -206,34 +230,31 @@ public class Form_QLKhachHang extends javax.swing.JPanel {
                             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 496, Short.MAX_VALUE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(22, 22, 22)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(18, 18, 18)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(cbb_gender, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(tf_ngaydk)
-                                            .addComponent(tf_address, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(tf_phone, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(tf_name, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                        .addGap(121, 121, 121)
-                                        .addComponent(tf_doanhso)))
-                                .addGap(51, 51, 51))
+                                    .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cbb_gender, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(tf_ngaydk)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btn_reload, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btn_delete, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btn_update, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btn_add, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                .addGap(121, 121, 121)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(tf_phone, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(tf_name, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(tf_doanhso, javax.swing.GroupLayout.Alignment.LEADING))))
+                        .addGap(51, 51, 51))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btn_reload, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29)
+                        .addComponent(btn_update, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30)
+                        .addComponent(btn_add, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(62, 62, 62)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -245,11 +266,9 @@ public class Form_QLKhachHang extends javax.swing.JPanel {
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 1, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(50, 50, 50)
                 .addComponent(tf_name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(tf_address, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tf_phone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(7, 7, 7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbb_gender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel14))
@@ -261,13 +280,12 @@ public class Form_QLKhachHang extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel16)
                     .addComponent(tf_doanhso, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(121, 121, 121)
+                .addGap(54, 54, 54)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_reload, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_delete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_update, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_add, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(39, Short.MAX_VALUE))
+                .addContainerGap(160, Short.MAX_VALUE))
         );
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
@@ -322,10 +340,10 @@ public class Form_QLKhachHang extends javax.swing.JPanel {
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(5, 5, 5))
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(12, 12, 12)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 642, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 636, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -365,10 +383,96 @@ public class Form_QLKhachHang extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_updateActionPerformed
+        // TODO add your handling code here:
+        int selectedRow = table_listcus.getSelectedRow();
+        if (selectedRow != -1) {
+            DefaultTableModel model = (DefaultTableModel) table_listcus.getModel();
+            String maKH = model.getValueAt(selectedRow, 0).toString();
+            String tenKH = tf_name.getText();
+            String sdt = tf_phone.getText();
+            String gioiTinh = (String) cbb_gender.getSelectedItem();
+            Date ngayDangKy = (Date) model.getValueAt(selectedRow, 4); 
+            BigDecimal tongChiTieu = (BigDecimal) model.getValueAt(selectedRow, 5);
+
+            KhachHang khachHang = new KhachHang(maKH, tenKH, sdt, gioiTinh, ngayDangKy, tongChiTieu);
+ 
+            boolean updated = khachHangDAO.updateInfo(khachHang);
+            if (updated) {
+                JOptionPane.showMessageDialog(this, "Cập nhật khách hàng thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                clearFields();
+                btn_add.setEnabled(true);
+                btn_add.setBackground(ACTIVE_BUTTON_COLOR);
+                table_listcus.clearSelection();
+                loadData();
+            } else {
+                JOptionPane.showMessageDialog(this, "Cập nhật khách hàng thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                //table_listcus.clearSelection();
+                //clearFields();
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn khách hàng để cập nhật", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btn_updateActionPerformed
+
+    private boolean isValidName(String name) {
+        return name != null && name.matches("[\\p{L}\\s-]+");
+    }
+    
+    private boolean isValidPhoneNumber(String phoneNumber) {
+        return phoneNumber != null && phoneNumber.matches("\\d{10}");
+    }
+    
+    private void btn_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addActionPerformed
+        // TODO add your handling code here:
+        KhachHang khachHang = new KhachHang();
+        khachHang.setHoTen(tf_name.getText());
+        khachHang.setSdt(tf_phone.getText());
+        khachHang.setGioiTinh((String)cbb_gender.getSelectedItem());
+        
+        if (!isValidName(tf_name.getText())) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập họ tên hợp lệ.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            tf_name.requestFocus();
+            return;
+        }
+    
+        if (!isValidPhoneNumber(tf_phone.getText())) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập số điện thoại hợp lệ (10 số).", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            tf_phone.requestFocus();
+            return;
+        }
+        
+        boolean added = khachHangDAO.add(khachHang);
+        if (added) {
+            JOptionPane.showMessageDialog(this, "Thêm khách hàng thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            clearFields();
+            loadData();
+        } else {
+            JOptionPane.showMessageDialog(this, "Thêm khách hàng thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btn_addActionPerformed
+
+    private void btn_reloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_reloadActionPerformed
+        // TODO add your handling code here:
+        clearFields();
+        table_listcus.clearSelection();
+        btn_add.setEnabled(true);
+        btn_add.setBackground(ACTIVE_BUTTON_COLOR);
+    }//GEN-LAST:event_btn_reloadActionPerformed
+    
+    private void clearFields() {
+        tf_name.setText("");
+        tf_phone.setText("");
+        cbb_gender.setSelectedIndex(0); // Mặc định chọn giới tính là Nam
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String formattedNow = now.format(formatter);
+        tf_ngaydk.setText(formattedNow);
+        tf_doanhso.setText("");
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.raven.swing.Button btn_add;
-    private com.raven.swing.Button btn_delete;
     private com.raven.swing.Button btn_reload;
     private com.raven.swing.Button btn_update;
     private com.raven.swing.CustomCombobox cbb_gender;
@@ -385,11 +489,117 @@ public class Form_QLKhachHang extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane2;
     private com.grocerystore.swing.table.Table table_listcus;
-    private com.raven.swing.TextField tf_address;
     private javax.swing.JTextField tf_doanhso;
     private com.raven.swing.TextField tf_name;
     private javax.swing.JTextField tf_ngaydk;
     private javax.swing.JTextField tf_param;
     private com.raven.swing.TextField tf_phone;
     // End of variables declaration//GEN-END:variables
+
+    private void setEvents() {
+        table_listcus.addMouseListener(new java.awt.event.MouseAdapter() {
+        @Override
+        public void mouseClicked(java.awt.event.MouseEvent evt) {
+            int selectedRow = table_listcus.getSelectedRow();
+            // Kiểm tra xem người dùng đã chọn một hàng hay chưa
+            if (selectedRow != -1) {
+                // Lấy dữ liệu của hàng đã chọn
+                DefaultTableModel model = (DefaultTableModel) table_listcus.getModel();
+                String maKH = model.getValueAt(selectedRow, 0).toString();
+                String tenKH = model.getValueAt(selectedRow, 1).toString();
+                String sdt = model.getValueAt(selectedRow, 2).toString();
+                String gioiTinh = model.getValueAt(selectedRow, 3).toString();
+                String ngayDangKy = model.getValueAt(selectedRow, 4).toString();
+                String tongChiTieu = model.getValueAt(selectedRow, 5).toString();
+
+                tf_name.setText(tenKH);
+                tf_phone.setText(sdt);
+                if (gioiTinh.equalsIgnoreCase("Nam")) {
+                    cbb_gender.setSelectedIndex(0);
+                } else {
+                    cbb_gender.setSelectedIndex(1);
+                }
+                tf_ngaydk.setText(ngayDangKy);
+                tf_doanhso.setText(tongChiTieu);
+                
+                btn_add.setEnabled(false);
+                btn_add.setBackground(DISABLED_BUTTON_COLOR);
+            }
+        }
+        });
+        
+        DocumentListener documentListener = new DocumentListener() {
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            System.out.println("Text inserted");
+            search();
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            System.out.println("Text removed");
+            search();
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            // Không cần xử lý sự kiện này
+        }
+
+        private void search() {
+            String searchText = tf_param.getText();
+            List<KhachHang> listKhachHang = khachHangDAO.searchByParam(searchText);
+            DefaultTableModel model = new DefaultTableModel();
+
+            model.addColumn("Mã KH");
+            model.addColumn("Họ tên");
+            model.addColumn("Số điện thoại");
+            model.addColumn("Giới tính");
+            model.addColumn("Ngày đăng ký");
+            model.addColumn("Tổng chi tiêu");
+
+            for (KhachHang khachHang : listKhachHang) {
+                Object[] rowData = {
+                    khachHang.getMaKH(),
+                    khachHang.getHoTen(),
+                    khachHang.getSdt(),
+                    khachHang.getGioiTinh(),
+                    khachHang.getNgayDangKy(),
+                    khachHang.getTongChiTieu()
+                };
+                model.addRow(rowData);
+            }
+            table_listcus.setModel(model);
+            table_listcus.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // Disable auto resizing
+
+            for (int column = 0; column < table_listcus.getColumnCount(); column++) {
+                TableColumn tableColumn = table_listcus.getColumnModel().getColumn(column);
+                int preferredWidth = tableColumn.getMinWidth();
+                int maxWidth = tableColumn.getMaxWidth();
+
+                // Consider the header's width
+                TableCellRenderer headerRenderer = table_listcus.getTableHeader().getDefaultRenderer();
+                Object headerValue = tableColumn.getHeaderValue();
+                Component headerComp = headerRenderer.getTableCellRendererComponent(table_listcus, headerValue, false, false, 0, column);
+                preferredWidth = Math.max(preferredWidth, headerComp.getPreferredSize().width + table_listcus.getIntercellSpacing().width);
+
+                for (int row = 0; row < table_listcus.getRowCount(); row++) {
+                    TableCellRenderer cellRenderer = table_listcus.getCellRenderer(row, column);
+                    Component c = table_listcus.prepareRenderer(cellRenderer, row, column);
+                    int width = c.getPreferredSize().width + table_listcus.getIntercellSpacing().width;
+                    preferredWidth = Math.max(preferredWidth, width);
+
+                    // We've exceeded the maximum width, no need to check other rows
+                    if (preferredWidth >= maxWidth) {
+                        preferredWidth = maxWidth;
+                        break;
+                    }
+                }
+
+                tableColumn.setMinWidth(preferredWidth+20); // Set minimum width instead of preferred width
+            }  
+        }
+    };
+    tf_param.getDocument().addDocumentListener(documentListener);
+    }
 }

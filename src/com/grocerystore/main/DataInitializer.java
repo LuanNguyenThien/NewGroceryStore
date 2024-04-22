@@ -24,7 +24,7 @@ public class DataInitializer {
          curUser = nvdao.findByID(PanelSlide.IDCurUser);
         // Tạo dữ liệu mẫu cho NhanVien
         nhanVien1 = new NhanVien(
-            "NV001", 
+            "NV0001", 
             "Nguyen Van A", 
             Date.valueOf("1990-01-01"), 
             "0123456789", 
