@@ -14,12 +14,15 @@ import com.grocerystore.DAO.ChiTietHoaDonDAOImpl;
 import com.grocerystore.DAO.HoaDonDAOImpl;
 import com.grocerystore.DAO.IChiTietHoaDonDAO;
 import com.grocerystore.DAO.IHoaDonDAO;
+import com.grocerystore.DAO.IKhachHang;
 import com.grocerystore.model.NhanVien;
 import com.grocerystore.DAO.INhanVienDAO;
+import com.grocerystore.DAO.KhachHangDAOImpl;
 import com.grocerystore.DAO.NhanVienDAOImpl;
 import com.grocerystore.main.DataInitializer;
 import com.grocerystore.model.CTHD;
 import com.grocerystore.model.HoaDon;
+import com.grocerystore.model.KhachHang;
 import com.grocerystore.model.ModelStudent;
 import com.grocerystore.model.SanPham;
 import com.grocerystore.model.XuatHoaDon;
@@ -36,7 +39,11 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
@@ -58,7 +65,10 @@ import java.util.Map;
 import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -85,11 +95,14 @@ import print.model.ParameterReportPayment;
  */
 public class Form_QLBanHang extends javax.swing.JPanel {
     
+    private IKhachHang khachHangDao;  
     private IHoaDonDAO hoaDonDao;
     private IChiTietHoaDonDAO chitietHDDao;
     private HoaDon hd;
+    private KhachHang currKH;
     private boolean themhd = false;
     NumberFormat format;
+    private QtyCellEditor cellEditor;
     /**
      * Creates new form Form_QLNhanVien
      */
@@ -97,6 +110,7 @@ public class Form_QLBanHang extends javax.swing.JPanel {
         format = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         hoaDonDao = new HoaDonDAOImpl();
         chitietHDDao = new ChiTietHoaDonDAOImpl();
+        khachHangDao = new KhachHangDAOImpl();
         connect_DB();
         initComponents();
         setOpaque(false);
@@ -104,6 +118,17 @@ public class Form_QLBanHang extends javax.swing.JPanel {
     }
     
     private void init(){
+        try {
+            ImageIcon icon = new ImageIcon(getClass().getResource("/com/grocerystore/icon/success.gif"));
+            Image scaledImage = icon.getImage().getScaledInstance(60, 50, Image.SCALE_DEFAULT);
+            icon = new ImageIcon(scaledImage);
+            lbl_success.setIcon(icon);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        lbl_success.setVisible(false);
+        tf_SDT.setText("");
         tf_tienthua.setEnabled(false);
         tf_tienKH.setText("");
         tf_SDT.setEnabled(true);
@@ -117,7 +142,7 @@ public class Form_QLBanHang extends javax.swing.JPanel {
     private void setWidget(){
         table_hoadon.fixTable(jScrollPane1);
         table_hoadon.getColumnModel().getColumn(5).setCellEditor(new TableCellAction());
-        table_hoadon.getColumnModel().getColumn(3).setCellEditor(new QtyCellEditor(new EventCellInputChange(){
+        cellEditor = new QtyCellEditor(new EventCellInputChange(){
             @Override
             public void inputChanged(){
                 int selectedRow = table_hoadon.getSelectedRow();
@@ -138,12 +163,13 @@ public class Form_QLBanHang extends javax.swing.JPanel {
                         popup.setAlwaysOnTop(true);
                         popup.setVisible(true);
                         // Đặt lại số lượng sản phẩm về giá trị cũ
-                        table_hoadon.getCellEditor().stopCellEditing();
-                        table_hoadon.setValueAt(product.getSoLuong(), selectedRow, 3);
+                        cellEditor.setInputValue(product.getSoLuong());
                     }
                 }
             }
-        }));
+        });
+        table_hoadon.getColumnModel().getColumn(3).setCellEditor(cellEditor);
+        
         table_hoadon.getColumnModel().getColumn(3).setCellRenderer(new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -180,16 +206,18 @@ public class Form_QLBanHang extends javax.swing.JPanel {
         });
         
         DocumentListener dl = new DocumentListener() {
+            @Override
             public void changedUpdate(DocumentEvent e) {
                 update();
             }
+            @Override
             public void removeUpdate(DocumentEvent e) {
                 update();
             }
+            @Override
             public void insertUpdate(DocumentEvent e) {
                 update();
             }
-
             public void update() {
                 try {
                     // Parse the text of tf_tienKH and lbl_tongtien to BigDecimal
@@ -230,6 +258,63 @@ public class Form_QLBanHang extends javax.swing.JPanel {
             public void propertyChange(PropertyChangeEvent evt) {
                 // Trigger the update method of tf_tienKH's DocumentListener
                 dl.changedUpdate(null);
+            }
+        });
+        
+        tf_SDT.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!((c >= '0') && (c <= '9') ||
+                     (c == KeyEvent.VK_BACK_SPACE) ||
+                     (c == KeyEvent.VK_DELETE))) {
+                    e.consume();  // ignore event
+                } else if (tf_SDT.getText().length() >= 10) { // Check if length of text is more than 10
+                    e.consume();  // ignore event
+                    FormPopupNotification popup = new FormPopupNotification("Số điện thoại không hợp lệ", FormPopupNotification.Type.WARNING);
+                    popup.setAlwaysOnTop(true);
+                    popup.setVisible(true);
+                    popup.toFront();
+                }
+            }
+        });
+
+        tf_SDT.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                check();
+            }
+            public void removeUpdate(DocumentEvent e) {
+                check();
+            }
+            public void insertUpdate(DocumentEvent e) {
+                check();
+            }
+
+            public void check() {
+                connect_DB();
+                if (tf_SDT.getText().length() == 10) {
+                    List<KhachHang> khachHangList = khachHangDao.searchByParam(tf_SDT.getText());
+                    if (khachHangList != null && !khachHangList.isEmpty()) {
+                        currKH = khachHangList.get(0);
+                        tf_tenKH.setText(currKH.getHoTen());
+                        try {
+                            ImageIcon icon = new ImageIcon(getClass().getResource("/com/grocerystore/icon/success.gif"));
+                            Image scaledImage = icon.getImage().getScaledInstance(60, 50, Image.SCALE_DEFAULT);
+                            icon = new ImageIcon(scaledImage);
+                            lbl_success.setIcon(icon);
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                        lbl_success.setVisible(true);
+                    }
+                    else{
+                        currKH = khachHangDao.findById("KH0000");
+                        tf_tenKH.setText(currKH.getHoTen());
+                    }
+                }
+                else{
+                    tf_tenKH.setText("");
+                    lbl_success.setVisible(false);
+                }
             }
         });
     }
@@ -315,10 +400,10 @@ public class Form_QLBanHang extends javax.swing.JPanel {
         connect_DB();
         hd = new HoaDon();
         hd.setMaNV(DataInitializer.nhanVien1.getMaNV());
-        if(tf_tenKH==null||tf_tenKH.getText().contains(""))
+        if(tf_tenKH==null||tf_tenKH.getText().equals(""))
             hd.setMaKH("KH0000");
         else
-            hd.setMaKH(tf_tenKH.getText());
+            hd.setMaKH(currKH.getMaKH());
         try {
             hoaDonDao.ThemHD(hd);
         } catch (Exception e) {
@@ -481,6 +566,7 @@ public class Form_QLBanHang extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         tf_tenKH = new javax.swing.JTextField();
+        lbl_success = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -655,7 +741,7 @@ public class Form_QLBanHang extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(form_Product2, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE))
+                    .addComponent(form_Product2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -742,7 +828,7 @@ public class Form_QLBanHang extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
+                                        .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addGap(62, 62, 62))
                                     .addComponent(customCombobox2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
                 .addContainerGap())
@@ -799,6 +885,9 @@ public class Form_QLBanHang extends javax.swing.JPanel {
         tf_tenKH.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         tf_tenKH.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        lbl_success.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/grocerystore/icon/success.gif"))); // NOI18N
+        lbl_success.setText("jLabel17");
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -808,7 +897,7 @@ public class Form_QLBanHang extends javax.swing.JPanel {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 516, Short.MAX_VALUE)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
                             .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(56, 56, 56)
@@ -817,26 +906,33 @@ public class Form_QLBanHang extends javax.swing.JPanel {
                             .addComponent(jLabel3))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tf_SDT, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tf_tenKH, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(tf_tenKH, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tf_SDT, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(39, 39, 39)
+                        .addComponent(lbl_success, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(11, 11, 11)
-                .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 1, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(tf_SDT, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(tf_tenKH, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lbl_success, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
+                        .addGap(11, 11, 11)
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 1, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(tf_SDT, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(tf_tenKH, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(25, Short.MAX_VALUE))
         );
 
@@ -950,6 +1046,7 @@ public class Form_QLBanHang extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextField3;
+    private javax.swing.JLabel lbl_success;
     private javax.swing.JLabel lbl_tongtien;
     private com.grocerystore.swing.table.Table table_hoadon;
     private javax.swing.JTextField tf_SDT;

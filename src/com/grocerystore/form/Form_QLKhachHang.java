@@ -107,7 +107,7 @@ public class Form_QLKhachHang extends javax.swing.JPanel {
                 }
             }
 
-            tableColumn.setMinWidth(preferredWidth+12); // Set minimum width instead of preferred width
+            tableColumn.setMinWidth(preferredWidth+40); // Set minimum width instead of preferred width
         }
     }
 
@@ -529,77 +529,42 @@ public class Form_QLKhachHang extends javax.swing.JPanel {
         });
         
         DocumentListener documentListener = new DocumentListener() {
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            System.out.println("Text inserted");
-            search();
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            System.out.println("Text removed");
-            search();
-        }
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            // Không cần xử lý sự kiện này
-        }
-
-        private void search() {
-            String searchText = tf_param.getText();
-            List<KhachHang> listKhachHang = khachHangDAO.searchByParam(searchText);
-            DefaultTableModel model = new DefaultTableModel();
-
-            model.addColumn("Mã KH");
-            model.addColumn("Họ tên");
-            model.addColumn("Số điện thoại");
-            model.addColumn("Giới tính");
-            model.addColumn("Ngày đăng ký");
-            model.addColumn("Tổng chi tiêu");
-
-            for (KhachHang khachHang : listKhachHang) {
-                Object[] rowData = {
-                    khachHang.getMaKH(),
-                    khachHang.getHoTen(),
-                    khachHang.getSdt(),
-                    khachHang.getGioiTinh(),
-                    khachHang.getNgayDangKy(),
-                    khachHang.getTongChiTieu()
-                };
-                model.addRow(rowData);
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                System.out.println("Text inserted");
+                search();
             }
-            table_listcus.setModel(model);
-            table_listcus.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // Disable auto resizing
 
-            for (int column = 0; column < table_listcus.getColumnCount(); column++) {
-                TableColumn tableColumn = table_listcus.getColumnModel().getColumn(column);
-                int preferredWidth = tableColumn.getMinWidth();
-                int maxWidth = tableColumn.getMaxWidth();
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                System.out.println("Text removed");
+                search();
+            }
 
-                // Consider the header's width
-                TableCellRenderer headerRenderer = table_listcus.getTableHeader().getDefaultRenderer();
-                Object headerValue = tableColumn.getHeaderValue();
-                Component headerComp = headerRenderer.getTableCellRendererComponent(table_listcus, headerValue, false, false, 0, column);
-                preferredWidth = Math.max(preferredWidth, headerComp.getPreferredSize().width + table_listcus.getIntercellSpacing().width);
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                // Không cần xử lý sự kiện này
+            }
 
-                for (int row = 0; row < table_listcus.getRowCount(); row++) {
-                    TableCellRenderer cellRenderer = table_listcus.getCellRenderer(row, column);
-                    Component c = table_listcus.prepareRenderer(cellRenderer, row, column);
-                    int width = c.getPreferredSize().width + table_listcus.getIntercellSpacing().width;
-                    preferredWidth = Math.max(preferredWidth, width);
+            private void search() {
+                String searchText = tf_param.getText();
+                List<KhachHang> listKhachHang = khachHangDAO.searchByParam(searchText);
+                DefaultTableModel model = (DefaultTableModel) table_listcus.getModel();
+                model.setRowCount(0);
 
-                    // We've exceeded the maximum width, no need to check other rows
-                    if (preferredWidth >= maxWidth) {
-                        preferredWidth = maxWidth;
-                        break;
-                    }
+                for (KhachHang khachHang : listKhachHang) {
+                    Object[] rowData = {
+                        khachHang.getMaKH(),
+                        khachHang.getHoTen(),
+                        khachHang.getSdt(),
+                        khachHang.getGioiTinh(),
+                        khachHang.getNgayDangKy(),
+                        khachHang.getTongChiTieu()
+                    };
+                    model.addRow(rowData);
                 }
-
-                tableColumn.setMinWidth(preferredWidth+20); // Set minimum width instead of preferred width
-            }  
-        }
-    };
-    tf_param.getDocument().addDocumentListener(documentListener);
+            }
+        };
+        tf_param.getDocument().addDocumentListener(documentListener);
     }
 }

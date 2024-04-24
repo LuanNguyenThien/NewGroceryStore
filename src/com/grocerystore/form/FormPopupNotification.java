@@ -45,7 +45,7 @@ public class FormPopupNotification extends javax.swing.JFrame {
         double width = screenSize.getWidth();
         double height = screenSize.getHeight();
         // Set the location of the window to the bottom right corner
-        setLocation((int)width - WIDTH - 50, (int)height - HEIGHT - 50);
+        setLocation((int)width - WIDTH-80, (int)height - HEIGHT-20);
         
         lblMessage.setText(message);
         
@@ -53,34 +53,50 @@ public class FormPopupNotification extends javax.swing.JFrame {
         switch (type) {
             case SUCCESS:
                 getContentPane().setBackground(new Color(51, 153, 51));
+                lbl_icon.setIcon(new ImageIcon(getClass().getResource("/com/grocerystore/icon/success.png")));
                 break;
             case WARNING:
                 getContentPane().setBackground(Color.ORANGE);
+                lbl_icon.setIcon(new ImageIcon(getClass().getResource("/com/grocerystore/icon/warning.png")));
                 break;
             case ERROR:
                 getContentPane().setBackground(Color.RED);
+                lbl_icon.setIcon(new ImageIcon(getClass().getResource("/com/grocerystore/icon/error.png")));
                 break;
             case INFO:
                 getContentPane().setBackground(Color.BLUE);
+                lbl_icon.setIcon(new ImageIcon(getClass().getResource("/com/grocerystore/icon/info.png")));
                 break;
         }
-        timer = new Timer(5000, new ActionListener() {
+        this.action = Action.START;
+        setOpacity(opacity);
+        timer = new Timer(10, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 switch (action) {
                     case WAIT:
-                        timer.setDelay(4000);
-                        action = Action.CLOSE;
+                        timer.stop();
+                        Timer waitTimer = new Timer(2000, new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                action = Action.CLOSE;
+                                timer.start();
+                                ((Timer)e.getSource()).stop();
+                            }
+                        });
+                        waitTimer.setRepeats(false);
+                        waitTimer.start();
                         break;
                     case START:
-                        opacity += 0.01f;
+                        opacity += 0.1f;
                         if (opacity >= 1f) {
                             opacity = 1f;
                             action = Action.WAIT;
                         }
                         break;
                     case CLOSE:
-                        opacity -= 0.01f;
+                        opacity -= 0.1f;
+                        setLocation(getX() - 3, getY());
                         if (opacity <= 0f) {
                             opacity = 0f;
                             timer.stop();
@@ -104,6 +120,8 @@ public class FormPopupNotification extends javax.swing.JFrame {
     private void initComponents() {
 
         lblMessage = new javax.swing.JLabel();
+        lbl_close = new javax.swing.JLabel();
+        lbl_icon = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -112,25 +130,46 @@ public class FormPopupNotification extends javax.swing.JFrame {
         lblMessage.setForeground(new java.awt.Color(255, 255, 255));
         lblMessage.setText("jLabel1");
 
+        lbl_close.setIcon(new javax.swing.ImageIcon("D:\\DH_SPKT\\Nam_3\\Ki_1\\Database_ManagementSystem\\Final-Project\\Nhom13_QLCuaHangVPP\\QuanLyCuaHangBanDoChoi\\Resources\\close.png")); // NOI18N
+        lbl_close.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbl_closeMouseClicked(evt);
+            }
+        });
+
+        lbl_icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/grocerystore/icon/success.png"))); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(lblMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lbl_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lbl_close, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(37, 37, 37)
-                .addComponent(lblMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34))
+                .addGap(20, 20, 20)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lbl_icon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_close, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblMessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void lbl_closeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbl_closeMouseClicked
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_lbl_closeMouseClicked
 
     /**
      * @param args the command line arguments
@@ -169,5 +208,7 @@ public class FormPopupNotification extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel lblMessage;
+    private javax.swing.JLabel lbl_close;
+    private javax.swing.JLabel lbl_icon;
     // End of variables declaration//GEN-END:variables
 }

@@ -3,8 +3,11 @@ package com.grocerystore.swing.table;
 import com.grocerystore.form.FormPopupNotification;
 import com.grocerystore.model.SanPham;
 import java.awt.Component;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.EventObject;
 import javax.swing.DefaultCellEditor;
 import javax.swing.InputVerifier;
 import javax.swing.JCheckBox;
@@ -40,46 +43,29 @@ public class QtyCellEditor extends DefaultCellEditor {
         formatter.setCommitsOnValidEdit(true);
         editor.getTextField().setHorizontalAlignment(SwingConstants.CENTER);
         input.addChangeListener((ChangeEvent e) -> {
-            inputChange();
+           inputChange();
         });
+        
         // Lấy JFormattedTextField từ JSpinner
         JFormattedTextField textField = ((JSpinner.DefaultEditor) input.getEditor()).getTextField();
-        
-        // Thêm InputVerifier vào JFormattedTextField
-        textField.setInputVerifier(new InputVerifier() {
+
+        // Thêm KeyListener vào JFormattedTextField
+        textField.addKeyListener(new KeyAdapter() {
             @Override
-            public boolean verify(JComponent input) {
-                String text = ((JFormattedTextField) input).getText();
-                try {
-                    Integer.parseInt(text);
-                    return true;
-                } catch (NumberFormatException e) {
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!((c >= '0') && (c <= '9') ||
+                     (c == KeyEvent.VK_BACK_SPACE) ||
+                     (c == KeyEvent.VK_DELETE) || 
+                     (c == ','))) {
+                    e.consume();  // ignore event
                     FormPopupNotification popup = new FormPopupNotification("Giá trị nhập vào không hợp lệ!!!", FormPopupNotification.Type.WARNING);
                     popup.setAlwaysOnTop(true);
                     popup.setVisible(true);
-                    return false;
                 }
             }
         });
 
-        // Thêm DocumentListener vào JFormattedTextField
-        textField.getDocument().addDocumentListener(new DocumentListener() {
-            public void changedUpdate(DocumentEvent e) {
-                update();
-            }
-            public void removeUpdate(DocumentEvent e) {
-                update();
-            }
-            public void insertUpdate(DocumentEvent e) {
-                update();
-            }
-
-            public void update() {
-                // Gọi phương thức inputChange() mỗi khi text field thay đổi
-                System.out.println("test");
-                inputChange();
-            }
-        });
     }
 
     @Override
@@ -115,13 +101,14 @@ public class QtyCellEditor extends DefaultCellEditor {
 
     private void inputChange() {
         int qty = Integer.parseInt(input.getValue().toString());
-        int oldQty = (Integer) table.getValueAt(row, 3); // Lấy số lượng cũ từ bảng
-        if (qty != oldQty) {
-            DecimalFormat df = new DecimalFormat("#,##0.##");
-            BigDecimal price = (BigDecimal) table.getValueAt(row, 2); // Lấy giá từ bảng
-            BigDecimal total = price.multiply(new BigDecimal(qty)); // Tính toán tổng giá
-            table.setValueAt(total, row, 4); // Cập nhật tổng giá trong bảng
-            event.inputChanged();
-        }
+        DecimalFormat df = new DecimalFormat("#,##0.##");
+        BigDecimal price = (BigDecimal) table.getValueAt(row, 2); // Lấy giá từ bảng
+        BigDecimal total = price.multiply(new BigDecimal(qty)); // Tính toán tổng giá
+        table.setValueAt(total, row, 4); // Cập nhật tổng giá trong bảng
+        event.inputChanged();
+    }
+    
+    public void setInputValue(int value) {
+        input.setValue(value);
     }
 }

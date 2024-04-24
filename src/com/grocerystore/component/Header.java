@@ -1,5 +1,6 @@
 package com.grocerystore.component;
 
+import com.grocerystore.main.Login;
 import com.grocerystore.model.NhanVien;
 import com.raven.model.ModelUser;
 import java.awt.event.ActionEvent;
@@ -34,6 +35,7 @@ public class Header extends javax.swing.JPanel {
                 JFrame yourFrame = (JFrame) SwingUtilities.getWindowAncestor(Header.this);
                 if (yourFrame != null) {
                     yourFrame.dispose();
+                    new Login().setVisible(true);
                 }
             }
         });

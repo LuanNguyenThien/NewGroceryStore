@@ -20,8 +20,8 @@ public class DataInitializer {
     public static SanPham sp1, sp2;
     
     static {
-         NhanVienDAOImpl nvdao = new NhanVienDAOImpl();
-         curUser = nvdao.findByID(PanelSlide.IDCurUser);
+        NhanVienDAOImpl nvdao = new NhanVienDAOImpl();
+        curUser = nvdao.findByID(PanelSlide.IDCurUser);
         // Tạo dữ liệu mẫu cho NhanVien
         nhanVien1 = new NhanVien(
             "NV0001", 
@@ -64,10 +64,6 @@ public class DataInitializer {
         sp2.setLoiNhuan(5000);
         sp2.setTinhTrang("Còn hàng");
         // Thêm vào danh sách nhan vien hoặc lưu vào database tạm thời
-
-        // Tạo dữ liệu mẫu cho SanPham
-//        SanPham sanPham1 = new SanPham("SP001", "Laptop", 15000000);
-//        SanPham sanPham2 = new SanPham("SP002", "Điện thoại", 8000000);
         // Thêm vào danh sách sản phẩm hoặc lưu vào database tạm thời
     }
 }

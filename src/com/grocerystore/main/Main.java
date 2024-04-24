@@ -219,9 +219,9 @@ public class Main extends javax.swing.JFrame {
                 } catch (SQLException e) {
                     System.err.println(e);
                 }
-                //Main main = new Main();
-                //main.setData(DataInitializer.nhanVien1);
-                //main.setVisible(true);
+//                Main main = new Main();
+//                main.setData(DataInitializer.nhanVien1);
+//                main.setVisible(true);
                 new Login().setVisible(true);
             }
         });
