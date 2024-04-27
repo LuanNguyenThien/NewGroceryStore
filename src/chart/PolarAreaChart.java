@@ -3,6 +3,7 @@ package chart;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -15,6 +16,9 @@ import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.BoxLayout;
+
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
@@ -56,7 +60,7 @@ public class PolarAreaChart extends javax.swing.JComponent {
     }
 
     private void createChart(Graphics grphcs) {
-        int width = getWidth();
+        int width = (getWidth() - 180);
         int height = getHeight() - PADDING_BOTTON;
         int space = 5;
         int size = Math.min(width, height) - space;
@@ -93,11 +97,11 @@ public class PolarAreaChart extends javax.swing.JComponent {
             g2.drawOval(x, y, size, size);
         }
         g2.dispose();
-        grphcs.drawImage(img, 0, -20, null);
+        grphcs.drawImage(img, 0, 0, null);
     }
 
     private void drawValues(Graphics2D g2, String values, double angle, double rs) {
-        int centerx = getWidth() / 2;
+        int centerx = (getWidth() - 180) / 2;
         int centerY = (getHeight() - PADDING_BOTTON) / 2;
         Point p = getLocation(angle, rs);
         g2.setColor(getForeground());
@@ -110,7 +114,7 @@ public class PolarAreaChart extends javax.swing.JComponent {
     }
 
     private Shape createShape(double start, double end, double values) {
-        int width = getWidth();
+        int width = getWidth() - 180;
         int height = getHeight() - PADDING_BOTTON;
         double x = (width - values) / 2;
         double y = (height - values) / 2;
@@ -120,7 +124,7 @@ public class PolarAreaChart extends javax.swing.JComponent {
 
     private double valuesToRealSize(double values, int size) {
 //        double n = values * 100 / maxValues;
-        return size*0.8;
+        return size*0.9;
     }
 
     private double valuesToAngle(double values) {
@@ -176,24 +180,23 @@ public class PolarAreaChart extends javax.swing.JComponent {
         panel = new javax.swing.JPanel();
 
         panel.setOpaque(false);
-        panel.setLayout(new java.awt.GridLayout(2, 0));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(panel, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
-                    .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(252, Short.MAX_VALUE)
+                .addComponent(panel, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
-
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(250, Short.MAX_VALUE)
-                    .addComponent(panel, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(20, 20, 20)) // Add space below the panel
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(panel, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 

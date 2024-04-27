@@ -18,12 +18,12 @@ public class PolarAreaLabel extends JLabel {
     @Override
     public void paint(Graphics grphcs) {
         super.paint(grphcs);
-        int size = getHeight() - 10;
+        int size = ((getHeight() - 5))/2;
         Graphics2D g2 = (Graphics2D) grphcs;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         int y = (getHeight() - size) / 2;
         g2.setColor(getBackground());
-        g2.fillOval(3, y, size, size);
+        g2.fillOval(5, y, size, size);
         g2.dispose();
     }
 }
