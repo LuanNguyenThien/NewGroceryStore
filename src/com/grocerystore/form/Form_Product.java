@@ -14,6 +14,12 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import com.grocerystore.DAO.ISanPhamDao;
 import com.grocerystore.DAO.SanPhamDAOImpl;
+import com.grocerystore.swing.scrollbar.ScrollBarCustom;
+import java.awt.Color;
+import java.awt.Dimension;
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 
 public class Form_Product extends javax.swing.JPanel {
 
@@ -31,11 +37,11 @@ public class Form_Product extends javax.swing.JPanel {
         connect_DB();
         // Set layout and scrollbar
         panel.setLayout(new FlowLayout());
-        jScrollPane1.setVerticalScrollBar(new ScrollBar());
+        jScrollPane1.setVerticalScrollBar(new ScrollBarCustom(JScrollBar.VERTICAL));
         // Load all cards
-        loadProducts();
+//        loadProducts();
         // Load the first page
-        loadPage(0);
+//        loadPage(0);
     }
     
     private void connect_DB(){
@@ -52,7 +58,7 @@ public class Form_Product extends javax.swing.JPanel {
 
     private void loadProducts() {
         connect_DB();
-        List<SanPham> SanPhamList = sanPhamDao.getAll_viewSP();
+        List<SanPham> SanPhamList = sanPhamDao.getAll_viewSP("Đang bán");
         products = new ArrayList<>();
         
         for (SanPham sp : SanPhamList) {

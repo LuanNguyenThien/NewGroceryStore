@@ -50,7 +50,7 @@ public class SanPhamDAOImpl implements ISanPhamDao{
 
     @Override
     public Boolean soft_delete(String MaSP) {
-        String sql = "UPDATE SanPham SET TinhTrang = 'Ngừng kinh doanh' WHERE MaSP = ?";
+        String sql = "UPDATE SanPham SET TinhTrang = CASE WHEN TinhTrang = 'Đang bán' THEN 'Ngừng bán' ELSE 'Đang bán' END WHERE MaSP = ?";
 
         try (Connection conn = DatabaseConnection.getInstance().getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -130,12 +130,20 @@ public class SanPhamDAOImpl implements ISanPhamDao{
     }
 
     @Override
-    public List<SanPham> getAll_viewSP() {
+    public List<SanPham> getAll_viewSP(String TinhTrang) {
         List<SanPham> fullProductInfoList = new ArrayList<>();
         String sql = "SELECT * FROM FullProductInfo";
 
+        if (TinhTrang != null) {
+            sql += " WHERE TinhTrang = ?";
+        }
+
         try (Connection conn = DatabaseConnection.getInstance().getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            if (TinhTrang != null) {
+                stmt.setString(1, TinhTrang);
+            }
 
             ResultSet rs = stmt.executeQuery();
 
@@ -163,7 +171,7 @@ public class SanPhamDAOImpl implements ISanPhamDao{
 
         return fullProductInfoList;
     }
-
+    
     @Override
     public List<SanPham> findByBoLoc(String param, String MaNSX, String MaLSP) {
         List<SanPham> sanPhamList = new ArrayList<>();
@@ -206,6 +214,59 @@ public class SanPhamDAOImpl implements ISanPhamDao{
                 sp.setTinhTrang(rs.getString("TinhTrang"));
                 sp.setHinhAnh(rs.getBytes("HinhAnh"));
                 sanPhamList.add(sp);
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return sanPhamList;
+    }
+
+    @Override
+    public List<SanPham> findByBoLoc_viewSP(String param, String MaNSX, String MaLSP) {
+        List<SanPham> sanPhamList = new ArrayList<>();
+        String sql = "SELECT * FROM FullProductInfo WHERE TenSP LIKE ? ";
+
+        if (MaNSX != null) {
+            sql += "AND MaNSX = ? ";
+        }
+
+        if (MaLSP != null) {
+            sql += "AND MaLoaiSP = ? ";
+        }
+
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, "%" + param + "%");
+
+            if (MaNSX != null) {
+                stmt.setString(2, MaNSX);
+            }
+
+            if (MaLSP != null) {
+                stmt.setString(MaNSX != null ? 3 : 2, MaLSP);
+            }
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                SanPham fpi = new SanPham();
+                fpi.setMaSP(rs.getString("MaSP"));
+                fpi.setMaLoaiSP(rs.getString("MaLoaiSP"));
+                fpi.setMaNSX(rs.getString("MaNSX"));
+                fpi.setTenSP(rs.getString("TenSP"));
+                fpi.setDonViTinh(rs.getString("DonViTinh"));
+                fpi.setGiaTien(rs.getBigDecimal("GiaTien"));
+                fpi.setGiaNhap(rs.getBigDecimal("GiaNhap"));
+                fpi.setSoLuong(rs.getInt("SoLuong"));
+                fpi.setLoiNhuan(rs.getInt("LoiNhuan"));
+                fpi.setTinhTrang(rs.getString("TinhTrang"));
+                fpi.setHinhAnh(rs.getBytes("HinhAnh"));
+                fpi.setTenLoaiSP(rs.getString("TenLoaiSP"));
+                fpi.setTenNSX(rs.getString("TenNSX"));
+                sanPhamList.add(fpi);
             }
 
         } catch (SQLException ex) {

@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface IHoaDonDAO {
     Boolean ThemHD(HoaDon hd);
-    Boolean CapnhatTrangthaiTienHD(String MaHD, double TienKhachTra, double TienThua);
+    Boolean CapnhatTrangthaiTienHD(String MaHD, double TienKhachTra, double TienThua, double TriGiaHoaDon);
     Boolean XoaHD(String MaHD);
     String LayMaHDMoiNhat();
     List<XuatHoaDon> getXuatHoaDon();

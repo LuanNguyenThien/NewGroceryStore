@@ -609,8 +609,8 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
         tf_NgaySinh.setText("");
         lbl_picSP.setIcon(null);
         tf_TenNhanVien.setText("");
-        cb_GioiTinh.setSelectedItem(null);
-        cb_Quyen.setSelectedItem(null);
+        cb_GioiTinh.setSelectedItem(0);
+        cb_Quyen.setSelectedItem(0);
     }//GEN-LAST:event_btn_SaThaiActionPerformed
 
     private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_updateActionPerformed
@@ -656,8 +656,8 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
                     tf_NgaySinh.setText("");
                     lbl_picSP.setIcon(null);
                     tf_TenNhanVien.setText("");
-                    cb_GioiTinh.setSelectedItem(null);
-                    cb_Quyen.setSelectedItem(null);
+                    cb_GioiTinh.setSelectedItem(0);
+                    cb_Quyen.setSelectedItem(0);
 
                     tf_TenTaiKhoan.setEnabled(true);
                     btn_update.setEnabled(false);
@@ -695,8 +695,8 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
                 tf_NgaySinh.setText("");
                 lbl_picSP.setIcon(null);
                 tf_TenNhanVien.setText("");
-                cb_GioiTinh.setSelectedItem(null);
-                cb_Quyen.setSelectedItem(null);
+                cb_GioiTinh.setSelectedItem(0);
+                cb_Quyen.setSelectedItem(0);
 
                 tf_TenTaiKhoan.setEnabled(true);
                 btn_update.setEnabled(false);
@@ -750,8 +750,8 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
                 tf_NgaySinh.setText("");
                 lbl_picSP.setIcon(null);
                 tf_TenNhanVien.setText("");
-                cb_GioiTinh.setSelectedItem(null);
-                cb_Quyen.setSelectedItem(null);
+                cb_GioiTinh.setSelectedItem(0);
+                cb_Quyen.setSelectedItem(0);
                 tf_TenTaiKhoan.setEnabled(true);
             } else {
                 JOptionPane.showMessageDialog(null, "Số điện thoại hoặc tài khoản đã tồn tại");

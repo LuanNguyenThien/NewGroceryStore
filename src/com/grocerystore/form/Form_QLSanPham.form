@@ -127,7 +127,7 @@
                           <Component id="btn_stopSP" min="-2" pref="178" max="-2" attributes="0"/>
                           <EmptySpace min="29" pref="29" max="-2" attributes="0"/>
                           <Component id="btn_capnhatSP" min="-2" pref="100" max="-2" attributes="0"/>
-                          <EmptySpace min="26" pref="26" max="-2" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="btn_themSP" min="-2" pref="83" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -204,15 +204,16 @@
                       </Group>
                       <Component id="cbb_DVT" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="28" pref="28" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
                   <Component id="lbl_errorInput" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="27" pref="27" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="btn_reload" min="-2" max="-2" attributes="0"/>
-                      <Component id="btn_stopSP" min="-2" max="-2" attributes="0"/>
-                      <Component id="btn_capnhatSP" min="-2" max="-2" attributes="0"/>
-                      <Component id="btn_themSP" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="btn_stopSP" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btn_capnhatSP" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btn_themSP" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btn_reload" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -406,6 +407,9 @@
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_reloadActionPerformed"/>
+          </Events>
         </Component>
         <Component class="com.raven.swing.Button" name="btn_stopSP">
           <Properties>
@@ -422,6 +426,9 @@
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_stopSPActionPerformed"/>
+          </Events>
         </Component>
         <Component class="com.raven.swing.Button" name="btn_capnhatSP">
           <Properties>
@@ -438,6 +445,9 @@
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_capnhatSPActionPerformed"/>
+          </Events>
         </Component>
         <Component class="com.raven.swing.Button" name="btn_themSP">
           <Properties>
@@ -587,6 +597,55 @@
                     <Column editable="true" title="L&#x1ee3;i Nhu&#x1ead;n" type="java.lang.Object"/>
                   </Table>
                 </Property>
+                <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
+                  <TableColumnModel selectionModel="0">
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                  </TableColumnModel>
+                </Property>
                 <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
                   <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                 </Property>
@@ -618,7 +677,7 @@
                           <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Component id="button1" min="-2" pref="133" max="-2" attributes="0"/>
+                                  <Component id="btn_applyfilter" min="-2" pref="133" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                                   <Component id="button2" min="-2" pref="133" max="-2" attributes="0"/>
                               </Group>
@@ -628,7 +687,7 @@
                                           <Component id="jLabel11" max="32767" attributes="0"/>
                                           <EmptySpace min="108" pref="108" max="-2" attributes="0"/>
                                       </Group>
-                                      <Component id="jTextField3" max="32767" attributes="0"/>
+                                      <Component id="tf_tenSPfilter" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -636,7 +695,7 @@
                                           <Component id="jLabel12" max="32767" attributes="0"/>
                                           <EmptySpace min="52" pref="52" max="-2" attributes="0"/>
                                       </Group>
-                                      <Component id="customCombobox1" max="32767" attributes="0"/>
+                                      <Component id="cbb_LSPfilter" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -644,7 +703,7 @@
                                           <Component id="jLabel13" max="32767" attributes="0"/>
                                           <EmptySpace min="62" pref="62" max="-2" attributes="0"/>
                                       </Group>
-                                      <Component id="customCombobox2" max="32767" attributes="0"/>
+                                      <Component id="cbb_NSXfilter" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -676,15 +735,15 @@
                       </Group>
                   </Group>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="jTextField3" max="32767" attributes="0"/>
+                      <Component id="tf_tenSPfilter" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="customCombobox1" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="customCombobox2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbb_LSPfilter" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbb_NSXfilter" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="button1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btn_applyfilter" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="button2" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
@@ -718,7 +777,7 @@
             <Property name="opaque" type="boolean" value="true"/>
           </Properties>
         </Component>
-        <Component class="com.raven.swing.Button" name="button1">
+        <Component class="com.raven.swing.Button" name="btn_applyfilter">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="66" red="33" type="rgb"/>
@@ -733,6 +792,9 @@
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_applyfilterActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel11">
           <Properties>
@@ -742,7 +804,7 @@
             <Property name="text" type="java.lang.String" value="T&#xea;n s&#x1ea3;n ph&#x1ea9;m"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jTextField3">
+        <Component class="javax.swing.JTextField" name="tf_tenSPfilter">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="16" style="0"/>
@@ -783,17 +845,17 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="16" style="0"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Nh&#xe0; cung c&#x1ea5;p"/>
+            <Property name="text" type="java.lang.String" value="Nh&#xe0; s&#x1ea3;n xu&#x1ea5;t"/>
           </Properties>
         </Component>
-        <Component class="com.raven.swing.CustomCombobox" name="customCombobox1">
+        <Component class="com.raven.swing.CustomCombobox" name="cbb_LSPfilter">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="14" style="0"/>
             </Property>
           </Properties>
         </Component>
-        <Component class="com.raven.swing.CustomCombobox" name="customCombobox2">
+        <Component class="com.raven.swing.CustomCombobox" name="cbb_NSXfilter">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="14" style="0"/>

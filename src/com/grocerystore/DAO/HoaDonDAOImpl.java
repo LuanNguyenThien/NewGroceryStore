@@ -44,14 +44,15 @@ public class HoaDonDAOImpl implements IHoaDonDAO{
     }
 
     @Override
-    public Boolean CapnhatTrangthaiTienHD(String MaHD, double TienKhachTra, double TienThua) {
+    public Boolean CapnhatTrangthaiTienHD(String MaHD, double TienKhachTra, double TienThua, double TriGiaHoaDon) {
         PreparedStatement ps = null;
         try {
-            String sql = "UPDATE HoaDon SET TienKhachTra = ?, TienThua = ? WHERE MaHD = ?";
+            String sql = "UPDATE HoaDon SET TienKhachTra = ?, TienThua = ?, TriGiaHoaDon = ?, TrangThai = 'Đã thanh toán' WHERE MaHD = ?";
             ps = DatabaseConnection.getInstance().getConnection().prepareStatement(sql);
             ps.setDouble(1, TienKhachTra);
             ps.setDouble(2, TienThua);
-            ps.setString(3, MaHD);
+            ps.setDouble(3, TriGiaHoaDon);
+            ps.setString(4, MaHD);
             int rowsUpdated = ps.executeUpdate();
             return rowsUpdated > 0;
         } catch (SQLException ex) {

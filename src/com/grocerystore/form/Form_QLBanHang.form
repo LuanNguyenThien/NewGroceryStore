@@ -21,9 +21,9 @@
                   <Component id="jPanel1" max="32767" attributes="0"/>
                   <Component id="jPanel4" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jPanel3" max="32767" attributes="0"/>
+                  <Component id="jPanel3" pref="528" max="32767" attributes="0"/>
                   <Component id="jPanel2" max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -425,7 +425,7 @@
                                           <Component id="jLabel12" max="32767" attributes="0"/>
                                           <EmptySpace min="52" pref="52" max="-2" attributes="0"/>
                                       </Group>
-                                      <Component id="customCombobox1" max="32767" attributes="0"/>
+                                      <Component id="cbb_LSPfilter" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -433,7 +433,7 @@
                                           <Component id="jLabel13" max="32767" attributes="0"/>
                                           <EmptySpace min="62" pref="62" max="-2" attributes="0"/>
                                       </Group>
-                                      <Component id="customCombobox2" max="32767" attributes="0"/>
+                                      <Component id="cbb_NSXfilter" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -467,8 +467,8 @@
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="jTextField3" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="customCombobox1" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="customCombobox2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbb_LSPfilter" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbb_NSXfilter" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -572,17 +572,17 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="16" style="0"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Nh&#xe0; cung c&#x1ea5;p"/>
+            <Property name="text" type="java.lang.String" value="Nh&#xe0; s&#x1ea3;n xu&#x1ea5;t"/>
           </Properties>
         </Component>
-        <Component class="com.raven.swing.CustomCombobox" name="customCombobox1">
+        <Component class="com.raven.swing.CustomCombobox" name="cbb_LSPfilter">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="14" style="0"/>
             </Property>
           </Properties>
         </Component>
-        <Component class="com.raven.swing.CustomCombobox" name="customCombobox2">
+        <Component class="com.raven.swing.CustomCombobox" name="cbb_NSXfilter">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="14" style="0"/>

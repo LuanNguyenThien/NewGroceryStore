@@ -27,6 +27,8 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -81,19 +83,80 @@ public class Form_QLSanPham extends javax.swing.JPanel {
         sanPhamDao = new SanPhamDAOImpl();
         initComponents();
         setOpaque(false); 
+        setWidget();
         init();
     }
     
     private void init(){
+        loadData_SP();
+        load_cbbselect();
+        load_cbbfilter();
+        
+        tf_tenSPfilter.setText("");
+        tf_tensp.setText("");
+        tf_gianhap.setText("");
+        tf_loinhuan.setText("");
+        tf_giaban.setText("");
+        tf_soluong.setText("");
+        cbb_DVT.setSelectedIndex(0);
+        cbb_LSPselect.setSelectedIndex(0);
+        cbb_NSXselect.setSelectedIndex(0);
         lbl_errorInput.setText("");
         lbl_errorInput.setVisible(false);
         tf_giaban.setEnabled(false);
         table_listSP.fixTable(jScrollPane3);
-        loadData_SP();
+        
+        ImageIcon image = new ImageIcon(getClass().getResource("/com/grocerystore/icon/none_SP.jpg"));
+        lbl_picSP.setIcon(Util.resizeImage(image, 220, 220));
+        
+        btn_stopSP.setEnabled(false);
+        btn_capnhatSP.setEnabled(false);
+        btn_themSP.setEnabled(true);
+    }
+    
+    private void setWidget(){
         card_init();
-        load_cbbselect();
         format_gianhap();
         format_loinhuan();
+        
+        tf_tenSPfilter.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                filter();
+            }
+            public void removeUpdate(DocumentEvent e) {
+                filter();
+            }
+            public void insertUpdate(DocumentEvent e) {
+                filter();
+            }
+
+            public void filter() {
+                filterSP();
+            }
+        });
+        
+        tf_soluong.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!((c >= '0') && (c <= '9') ||
+                     (c == KeyEvent.VK_BACK_SPACE) ||
+                     (c == KeyEvent.VK_DELETE) || 
+                     (c == ','))) {
+                    FormPopupNotification popup = new FormPopupNotification("Vui lòng nhập dữ liệu hợp lệ", FormPopupNotification.Type.WARNING);
+                    popup.setAlwaysOnTop(true);
+                    popup.setVisible(true);
+                    popup.toFront();
+                    e.consume();  // ignore event
+                }else if (tf_soluong.getText().length() >= 10) { // Check if length of text is more than 10
+                    e.consume();  // ignore event
+                    FormPopupNotification popup = new FormPopupNotification("Số lượng sản phẩm quá lớn", FormPopupNotification.Type.WARNING);
+                    popup.setAlwaysOnTop(true);
+                    popup.setVisible(true);
+                    popup.toFront();
+                }
+            }
+        });
     }
     
     private void format_gianhap(){
@@ -189,8 +252,10 @@ public class Form_QLSanPham extends javax.swing.JPanel {
                             if (!number.isEmpty()) {
                                 double loinhuan = Double.parseDouble(number);
                                 if (loinhuan < 0 || loinhuan > 100) {
-                                    lbl_errorInput.setText("Lợi nhuận chỉ nằm trong phạm vi 0 đến 100%");
-                                    lbl_errorInput.setVisible(true);
+                                    tf_loinhuan.setText("100");
+                                    FormPopupNotification popup = new FormPopupNotification("Giá trị lợi nhuận không hợp lệ", FormPopupNotification.Type.WARNING);
+                                    popup.setAlwaysOnTop(true);
+                                    popup.setVisible(true);
                                 } else {
                                     String giaNhapText = tf_gianhap.getText();
                                     if (giaNhapText != null && !giaNhapText.isEmpty()) {
@@ -200,10 +265,8 @@ public class Form_QLSanPham extends javax.swing.JPanel {
                                         long giaBanRounded = Math.round(giaBan);
                                         tf_giaban.setText(numberFormat.format(giaBanRounded)); 
                                     }
-                                    lbl_errorInput.setVisible(false);
                                 }
                             } else {
-                                lbl_errorInput.setVisible(false);
                             }
                         } catch (NumberFormatException e) {
                             // Handle exception
@@ -224,7 +287,7 @@ public class Form_QLSanPham extends javax.swing.JPanel {
     
     private void loadData_SP() {
        connect_DB();
-       List<SanPham> SanPhamList = sanPhamDao.getAll_viewSP();
+       List<SanPham> SanPhamList = sanPhamDao.getAll_viewSP(null);
 
         String[] columnNames = {"Mã SP", "Tên Sản Phẩm", "Tên Loại Sản Phẩm", "Tên Nhà Sản Xuất", "Đơn vị tính", "Giá tiền", "Giá nhập", "Số lượng", "Lợi nhuận", "Tình trạng", "Hình ảnh", "Mã NSX", "Mã LSP"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0) {
@@ -358,6 +421,23 @@ public class Form_QLSanPham extends javax.swing.JPanel {
             cbb_NSXselect.addItem(nhaSanXuat.getMaNSX(), nhaSanXuat.getTenNSX());
         }
     }
+    
+    private void load_cbbfilter(){
+        connect_DB();        
+        cbb_LSPfilter.removeAllItems();
+        cbb_LSPfilter.addItem("Tất cả");
+        List<LoaiSanPham> loaiSanPhamList = loaiSanPhamDao.getAll();
+        for (LoaiSanPham loaiSanPham : loaiSanPhamList) {
+            cbb_LSPfilter.addItem(loaiSanPham.getMaLoaiSP(), loaiSanPham.getTenLoaiSP());
+        }
+        
+        cbb_NSXfilter.removeAllItems();
+        cbb_NSXfilter.addItem("Tất cả");
+        List<NhaSanXuat> nhaSanXuatList = nhaSanXuatDao.getAll();
+        for (NhaSanXuat nhaSanXuat : nhaSanXuatList) {
+            cbb_NSXfilter.addItem(nhaSanXuat.getMaNSX(), nhaSanXuat.getTenNSX());
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -402,14 +482,14 @@ public class Form_QLSanPham extends javax.swing.JPanel {
         jPanel3 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        button1 = new com.raven.swing.Button();
+        btn_applyfilter = new com.raven.swing.Button();
         jLabel11 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        tf_tenSPfilter = new javax.swing.JTextField();
         button2 = new com.raven.swing.Button();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
-        customCombobox1 = new com.raven.swing.CustomCombobox();
-        customCombobox2 = new com.raven.swing.CustomCombobox();
+        cbb_LSPfilter = new com.raven.swing.CustomCombobox();
+        cbb_NSXfilter = new com.raven.swing.CustomCombobox();
         jPanel4 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
@@ -485,6 +565,11 @@ public class Form_QLSanPham extends javax.swing.JPanel {
         btn_reload.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btn_reload.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         btn_reload.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btn_reload.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_reloadActionPerformed(evt);
+            }
+        });
 
         btn_stopSP.setBackground(new java.awt.Color(51, 102, 255));
         btn_stopSP.setForeground(new java.awt.Color(255, 255, 255));
@@ -492,6 +577,11 @@ public class Form_QLSanPham extends javax.swing.JPanel {
         btn_stopSP.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btn_stopSP.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         btn_stopSP.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btn_stopSP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_stopSPActionPerformed(evt);
+            }
+        });
 
         btn_capnhatSP.setBackground(new java.awt.Color(51, 102, 255));
         btn_capnhatSP.setForeground(new java.awt.Color(255, 255, 255));
@@ -499,6 +589,11 @@ public class Form_QLSanPham extends javax.swing.JPanel {
         btn_capnhatSP.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btn_capnhatSP.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         btn_capnhatSP.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btn_capnhatSP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_capnhatSPActionPerformed(evt);
+            }
+        });
 
         btn_themSP.setBackground(new java.awt.Color(51, 102, 255));
         btn_themSP.setForeground(new java.awt.Color(255, 255, 255));
@@ -583,7 +678,7 @@ public class Form_QLSanPham extends javax.swing.JPanel {
                         .addComponent(btn_stopSP, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(29, 29, 29)
                         .addComponent(btn_capnhatSP, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26)
+                        .addGap(18, 18, 18)
                         .addComponent(btn_themSP, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
@@ -642,14 +737,15 @@ public class Form_QLSanPham extends javax.swing.JPanel {
                         .addGap(2, 2, 2)
                         .addComponent(jLabel22))
                     .addComponent(cbb_DVT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28)
+                .addGap(29, 29, 29)
                 .addComponent(lbl_errorInput)
-                .addGap(27, 27, 27)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btn_reload, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_stopSP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_capnhatSP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_themSP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(btn_themSP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_reload, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(16, 16, 16))
         );
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
@@ -713,18 +809,23 @@ public class Form_QLSanPham extends javax.swing.JPanel {
 
         jLabel8.setOpaque(true);
 
-        button1.setBackground(new java.awt.Color(51, 102, 255));
-        button1.setForeground(new java.awt.Color(255, 255, 255));
-        button1.setText("Áp dụng   ");
-        button1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        button1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        button1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btn_applyfilter.setBackground(new java.awt.Color(51, 102, 255));
+        btn_applyfilter.setForeground(new java.awt.Color(255, 255, 255));
+        btn_applyfilter.setText("Áp dụng   ");
+        btn_applyfilter.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btn_applyfilter.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        btn_applyfilter.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btn_applyfilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_applyfilterActionPerformed(evt);
+            }
+        });
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel11.setText("Tên sản phẩm");
 
-        jTextField3.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jTextField3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        tf_tenSPfilter.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        tf_tenSPfilter.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         button2.setBackground(new java.awt.Color(51, 102, 255));
         button2.setForeground(new java.awt.Color(255, 255, 255));
@@ -737,11 +838,11 @@ public class Form_QLSanPham extends javax.swing.JPanel {
         jLabel12.setText("Loại sản phẩm");
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jLabel13.setText("Nhà cung cấp");
+        jLabel13.setText("Nhà sản xuất");
 
-        customCombobox1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cbb_LSPfilter.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
-        customCombobox2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cbb_NSXfilter.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -756,7 +857,7 @@ public class Form_QLSanPham extends javax.swing.JPanel {
                         .addGap(4, 4, 4)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(button1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btn_applyfilter, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(32, 32, 32)
                                 .addComponent(button2, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel3Layout.createSequentialGroup()
@@ -764,19 +865,19 @@ public class Form_QLSanPham extends javax.swing.JPanel {
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addGap(108, 108, 108))
-                                    .addComponent(jTextField3))
+                                    .addComponent(tf_tenSPfilter))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addGap(52, 52, 52))
-                                    .addComponent(customCombobox1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(cbb_LSPfilter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addGap(62, 62, 62))
-                                    .addComponent(customCombobox2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+                                    .addComponent(cbb_NSXfilter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -797,13 +898,13 @@ public class Form_QLSanPham extends javax.swing.JPanel {
                         .addComponent(jLabel11)
                         .addGap(4, 4, 4)))
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField3)
+                    .addComponent(tf_tenSPfilter)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(customCombobox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(customCombobox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(cbb_LSPfilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cbb_NSXfilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(15, 15, 15)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(button1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_applyfilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(button2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(22, 22, 22))
         );
@@ -900,34 +1001,51 @@ public class Form_QLSanPham extends javax.swing.JPanel {
     }//GEN-LAST:event_lbl_picSPMouseClicked
 
     private void btn_themSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_themSPActionPerformed
-        // Create a new SanPham object
-        SanPham sp = new SanPham();
+        connect_DB();
+        try {
+            // Check if any of the text fields are empty
+            if (tf_tensp.getText().isEmpty() || tf_giaban.getText().isEmpty() || tf_gianhap.getText().isEmpty() || tf_soluong.getText().isEmpty() || tf_loinhuan.getText().isEmpty()) {
+                lbl_errorInput.setText("Vui lòng nhập đầy đủ thông tin");
+                lbl_errorInput.setVisible(true);
+                FormPopupNotification popup = new FormPopupNotification("Thêm sản phẩm thất bại", FormPopupNotification.Type.ERROR);
+                popup.setAlwaysOnTop(true);
+                popup.setVisible(true);
+                return;
+            }
 
-        // Set the properties of the SanPham object based on the input fields
-        sp.setTenSP(tf_tensp.getText());
-        sp.setMaLoaiSP(cbb_LSPselect.getSelectedValue());
-        sp.setMaNSX(cbb_NSXselect.getSelectedValue());
-        sp.setDonViTinh(cbb_DVT.getSelectedItem().toString());
-        System.out.println(sp.getDonViTinh());
-        String giatien = tf_giaban.getText().replaceAll(",", "");
-        sp.setGiaTien(new BigDecimal(giatien));
-        sp.setGiaNhap(new BigDecimal(tf_gianhap.getText()));
-        sp.setSoLuong(Integer.parseInt(tf_soluong.getText()));
-        sp.setLoiNhuan(Integer.parseInt(tf_loinhuan.getText()));
-        sp.setTinhTrang("Đang bán");
+            // Create a new SanPham object
+            SanPham sp = new SanPham();
 
-        // Convert the image in lbl_picSP to a byte array
-        ImageIcon icon = (ImageIcon) lbl_picSP.getIcon();
-        byte[] imageInByte = Util.imageIconToByteArray(icon);
-        sp.setHinhAnh(imageInByte);
+            // Set the properties of the SanPham object based on the input fields
+            sp.setTenSP(tf_tensp.getText());
+            sp.setMaLoaiSP(cbb_LSPselect.getSelectedValue());
+            sp.setMaNSX(cbb_NSXselect.getSelectedValue());
+            sp.setDonViTinh(cbb_DVT.getSelectedItem().toString());
+            String giatien = tf_giaban.getText().replaceAll(",", "");
+            sp.setGiaTien(new BigDecimal(giatien));
+            sp.setGiaNhap(new BigDecimal(tf_gianhap.getText()));
+            sp.setSoLuong(Integer.parseInt(tf_soluong.getText()));
+            sp.setLoiNhuan(Integer.parseInt(tf_loinhuan.getText()));
+            sp.setTinhTrang("Đang bán");
 
-        // Use SanPhamDao to add the new SanPham to the database
-        if (sanPhamDao.add(sp)) {
-            JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công");
-        } else {
-            JOptionPane.showMessageDialog(this, "Thêm sản phẩm thất bại");
+            // Convert the image in lbl_picSP to a byte array
+            ImageIcon icon = (ImageIcon) lbl_picSP.getIcon();
+            byte[] imageInByte = Util.imageIconToByteArray(icon);
+            sp.setHinhAnh(imageInByte);
+
+            // Use SanPhamDao to add the new SanPham to the database
+            if (sanPhamDao.add(sp)) {
+                JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công");
+                init();
+            } else {
+                throw new Exception("Thêm sản phẩm thất bại");
+            }
+        } catch (Exception e) {
+            // Show a popup notification with the error message
+            FormPopupNotification popup = new FormPopupNotification("Thêm sản phẩm thất bại", FormPopupNotification.Type.ERROR);
+            popup.setAlwaysOnTop(true);
+            popup.setVisible(true);
         }
-        init();
     }//GEN-LAST:event_btn_themSPActionPerformed
 
     private void table_listSPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_listSPMouseClicked
@@ -965,23 +1083,165 @@ public class Form_QLSanPham extends javax.swing.JPanel {
 
         // Đặt hình ảnh cho lbl_picSP từ dữ liệu trong bảng
         lbl_picSP.setIcon((ImageIcon) table_listSP.getValueAt(selectedRow, 10));
+        
+        btn_stopSP.setEnabled(true);
+        btn_capnhatSP.setEnabled(true);
+        btn_themSP.setEnabled(false);
+        
+        if(model.getValueAt(selectedRow, 9).toString().equals("Ngừng bán")){
+            btn_capnhatSP.setEnabled(false);
+        }
     }//GEN-LAST:event_table_listSPMouseClicked
 
+    private void btn_reloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_reloadActionPerformed
+        // TODO add your handling code here:
+        init();
+    }//GEN-LAST:event_btn_reloadActionPerformed
+
+    private void btn_applyfilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_applyfilterActionPerformed
+        // TODO add your handling code here:
+        filterSP();
+    }//GEN-LAST:event_btn_applyfilterActionPerformed
+
+    private void btn_stopSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_stopSPActionPerformed
+        // TODO add your handling code here:
+        connect_DB();
+        DefaultTableModel model = (DefaultTableModel) table_listSP.getModel();
+        int selectedRow = table_listSP.getSelectedRow();
+        if (selectedRow != -1) {
+            String MaSP = model.getValueAt(selectedRow, 0).toString(); // Assuming MaSP is at column 0
+            boolean result = sanPhamDao.soft_delete(MaSP);
+            if (result) {
+                if(model.getValueAt(selectedRow, 9).toString().equals("Đang bán")){
+                    FormPopupNotification popup = new FormPopupNotification("Ngừng kinh doanh "+model.getValueAt(selectedRow, 1).toString(), FormPopupNotification.Type.SUCCESS);
+                    popup.setAlwaysOnTop(true);
+                    popup.setVisible(true);
+                    popup.toFront();
+                }
+                else{
+                    FormPopupNotification popup = new FormPopupNotification("Kinh doanh "+model.getValueAt(selectedRow, 1).toString(), FormPopupNotification.Type.SUCCESS);
+                    popup.setAlwaysOnTop(true);
+                    popup.setVisible(true);
+                    popup.toFront();
+                }
+                init();
+            } else {
+                JOptionPane.showMessageDialog(null, "Quá trình xử lý thất bại");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Không có hàng nào được chọn");
+        }
+    }//GEN-LAST:event_btn_stopSPActionPerformed
+
+    private void btn_capnhatSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_capnhatSPActionPerformed
+        // TODO add your handling code here:
+        connect_DB();
+        DefaultTableModel model = (DefaultTableModel) table_listSP.getModel();
+        int selectedRow = table_listSP.getSelectedRow();
+        if (selectedRow != -1) {
+            String MaSP = model.getValueAt(selectedRow, 0).toString(); // Assuming MaSP is at column 0
+            try {
+                // Check if any of the text fields are empty
+                if (tf_tensp.getText().isEmpty() || tf_giaban.getText().isEmpty() || tf_gianhap.getText().isEmpty() || tf_soluong.getText().isEmpty() || tf_loinhuan.getText().isEmpty()) {
+                    lbl_errorInput.setText("Vui lòng nhập đầy đủ thông tin");
+                    lbl_errorInput.setVisible(true);
+                    FormPopupNotification popup = new FormPopupNotification("Cập nhật sản phẩm thất bại", FormPopupNotification.Type.ERROR);
+                    popup.setAlwaysOnTop(true);
+                    popup.setVisible(true);
+                    return;
+                }
+
+                // Create a new SanPham object
+                SanPham sp = new SanPham();
+
+                // Set the properties of the SanPham object based on the input fields
+                sp.setMaSP(MaSP);
+                sp.setTenSP(tf_tensp.getText());
+                sp.setMaLoaiSP(cbb_LSPselect.getSelectedValue());
+                sp.setMaNSX(cbb_NSXselect.getSelectedValue());
+                sp.setDonViTinh(cbb_DVT.getSelectedItem().toString());
+                String giatien = tf_giaban.getText().replaceAll(",", "");
+                sp.setGiaTien(new BigDecimal(giatien));
+                sp.setGiaNhap(new BigDecimal(tf_gianhap.getText()));
+                sp.setSoLuong(Integer.parseInt(tf_soluong.getText()));
+                sp.setLoiNhuan(Integer.parseInt(tf_loinhuan.getText()));
+                sp.setTinhTrang("Đang bán");
+
+                // Convert the image in lbl_picSP to a byte array
+                ImageIcon icon = (ImageIcon) lbl_picSP.getIcon();
+                byte[] imageInByte = Util.imageIconToByteArray(icon);
+                sp.setHinhAnh(imageInByte);
+
+                // Use SanPhamDao to update the SanPham in the database
+                if (sanPhamDao.update_info(sp)) {
+                    JOptionPane.showMessageDialog(this, "Cập nhật sản phẩm thành công");
+                    init();
+                } else {
+                    throw new Exception("Cập nhật sản phẩm thất bại");
+                }
+            } catch (Exception e) {
+                // Show a popup notification with the error message
+                FormPopupNotification popup = new FormPopupNotification("Cập nhật sản phẩm thất bại", FormPopupNotification.Type.ERROR);
+                popup.setAlwaysOnTop(true);
+                popup.setVisible(true);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Không có hàng nào được chọn");
+        }
+    }//GEN-LAST:event_btn_capnhatSPActionPerformed
+
+    public void filterSP(){
+        DefaultTableModel model = (DefaultTableModel) table_listSP.getModel();
+        connect_DB();
+        String tenSP= tf_tenSPfilter.getText();
+        String MaNSX = null;
+        String MaLSP = null;
+        if(cbb_LSPfilter.getSelectedIndex()!=0){
+            MaLSP = cbb_LSPfilter.getSelectedValue();
+        }
+        if(cbb_NSXfilter.getSelectedIndex()!=0){
+            MaNSX = cbb_NSXfilter.getSelectedValue();
+        }
+        List<SanPham> SanPhamList = sanPhamDao.findByBoLoc_viewSP(tenSP, MaNSX, MaLSP);
+        model.setRowCount(0);
+        for (SanPham sanPham : SanPhamList) {
+            Object[] row = new Object[13];
+            row[0] = sanPham.getMaSP();
+            row[1] = sanPham.getTenSP();
+            row[2] = sanPham.getTenLoaiSP();
+            row[3] = sanPham.getTenNSX();
+            row[4] = sanPham.getDonViTinh();
+            row[5] = sanPham.getGiaTien();
+            row[6] = sanPham.getGiaNhap();
+            row[7] = sanPham.getSoLuong();
+            row[8] = sanPham.getLoiNhuan();
+            row[9] = sanPham.getTinhTrang();
+            if (sanPham.getHinhAnh() != null) {
+                row[10] = Util.byteArrayToImageIcon(sanPham.getHinhAnh()); // Convert byte[] to ImageIcon
+            } else {
+                row[10] = new ImageIcon(getClass().getResource("/com/grocerystore/icon/none_SP.jpg"));
+            }
+            row[11] = sanPham.getMaNSX();
+            row[12] = sanPham.getMaLoaiSP();
+            model.addRow(row);
+        }
+    }
+    
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.raven.swing.Button btn_applyfilter;
     private com.raven.swing.Button btn_capnhatSP;
     private com.raven.swing.Button btn_reload;
     private com.raven.swing.Button btn_stopSP;
     private com.raven.swing.Button btn_themSP;
-    private com.raven.swing.Button button1;
     private com.raven.swing.Button button2;
     private com.grocerystore.component.Card_custom card_LSP;
     private com.grocerystore.component.Card_custom card_NSX;
     private com.raven.swing.CustomCombobox cbb_DVT;
+    private com.raven.swing.CustomCombobox cbb_LSPfilter;
     private com.raven.swing.CustomCombobox cbb_LSPselect;
+    private com.raven.swing.CustomCombobox cbb_NSXfilter;
     private com.raven.swing.CustomCombobox cbb_NSXselect;
-    private com.raven.swing.CustomCombobox customCombobox1;
-    private com.raven.swing.CustomCombobox customCombobox2;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -1007,7 +1267,6 @@ public class Form_QLSanPham extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextField jTextField3;
     private javax.swing.JLabel lbl_errorInput;
     private javax.swing.JLabel lbl_picSP;
     private com.grocerystore.swing.table.Table table_listSP;
@@ -1015,6 +1274,7 @@ public class Form_QLSanPham extends javax.swing.JPanel {
     private javax.swing.JTextField tf_gianhap;
     private javax.swing.JTextField tf_loinhuan;
     private javax.swing.JTextField tf_soluong;
+    private javax.swing.JTextField tf_tenSPfilter;
     private javax.swing.JTextField tf_tensp;
     // End of variables declaration//GEN-END:variables
 }

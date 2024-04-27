@@ -29,7 +29,7 @@ public class Product extends javax.swing.JPanel {
     private final Timer timerStop;
     private final ProductDescription cardDescription;
     private int y = 140;
-    private int speed = 4;
+    private int speed = 10;
     private boolean showing = false;
     private ProductClickListener listener;
 
@@ -117,7 +117,7 @@ public class Product extends javax.swing.JPanel {
     protected void paintComponent(Graphics grphcs) {
         Graphics2D g2 = (Graphics2D) grphcs;
         g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        Icon icsanpham = util.Util.byteArrayToImageIcon(sanpham.getHinhAnh());
+        ImageIcon icsanpham = util.Util.byteArrayToImageIcon(sanpham.getHinhAnh());
         Rectangle size = getAutoSize(icsanpham);
         g2.drawImage(toImage(icsanpham), size.x, size.y, size.width, size.height, null);
         super.paintComponent(grphcs);
@@ -142,7 +142,7 @@ public class Product extends javax.swing.JPanel {
         double xScale = (double) w / iw;
         double yScale = (double) h / ih;
         double scale = Math.max(xScale, yScale);
-        int width = (int) (scale * iw);
+        int width = (int) (scale * iw * 0.8);
         int height = (int) (scale * ih);
         int x = (w - width) / 2;
         int y = (h - height) / 2;

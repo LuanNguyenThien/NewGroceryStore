@@ -18,12 +18,16 @@ import com.grocerystore.DAO.IKhachHang;
 import com.grocerystore.model.NhanVien;
 import com.grocerystore.DAO.INhanVienDAO;
 import com.grocerystore.DAO.KhachHangDAOImpl;
+import com.grocerystore.DAO.LoaiSanPhamDAOImpl;
+import com.grocerystore.DAO.NhaSanXuatDAOImpl;
 import com.grocerystore.DAO.NhanVienDAOImpl;
 import com.grocerystore.main.DataInitializer;
 import com.grocerystore.model.CTHD;
 import com.grocerystore.model.HoaDon;
 import com.grocerystore.model.KhachHang;
+import com.grocerystore.model.LoaiSanPham;
 import com.grocerystore.model.ModelStudent;
+import com.grocerystore.model.NhaSanXuat;
 import com.grocerystore.model.SanPham;
 import com.grocerystore.model.XuatHoaDon;
 import com.grocerystore.swing.scrollbar.ScrollBarCustom;
@@ -98,6 +102,8 @@ public class Form_QLBanHang extends javax.swing.JPanel {
     private IKhachHang khachHangDao;  
     private IHoaDonDAO hoaDonDao;
     private IChiTietHoaDonDAO chitietHDDao;
+    private LoaiSanPhamDAOImpl loaiSanPhamDao;
+    private NhaSanXuatDAOImpl nhaSanXuatDao; 
     private HoaDon hd;
     private KhachHang currKH;
     private boolean themhd = false;
@@ -108,6 +114,8 @@ public class Form_QLBanHang extends javax.swing.JPanel {
      */
     public Form_QLBanHang() {
         format = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        loaiSanPhamDao = new LoaiSanPhamDAOImpl();
+        nhaSanXuatDao = new NhaSanXuatDAOImpl();
         hoaDonDao = new HoaDonDAOImpl();
         chitietHDDao = new ChiTietHoaDonDAOImpl();
         khachHangDao = new KhachHangDAOImpl();
@@ -115,6 +123,7 @@ public class Form_QLBanHang extends javax.swing.JPanel {
         initComponents();
         setOpaque(false);
         init();
+        setWidget();
     }
     
     private void init(){
@@ -136,7 +145,7 @@ public class Form_QLBanHang extends javax.swing.JPanel {
         btn_thanhtoan.setEnabled(false);
         btnHuy.setEnabled(false);
         loadData();
-        setWidget();
+        load_cbbfilter();
     }
     
     private void setWidget(){
@@ -319,6 +328,23 @@ public class Form_QLBanHang extends javax.swing.JPanel {
         });
     }
     
+    private void load_cbbfilter(){
+        connect_DB();        
+        cbb_LSPfilter.removeAllItems();
+        cbb_LSPfilter.addItem("Tất cả");
+        List<LoaiSanPham> loaiSanPhamList = loaiSanPhamDao.getAll();
+        for (LoaiSanPham loaiSanPham : loaiSanPhamList) {
+            cbb_LSPfilter.addItem(loaiSanPham.getMaLoaiSP(), loaiSanPham.getTenLoaiSP());
+        }
+        
+        cbb_NSXfilter.removeAllItems();
+        cbb_NSXfilter.addItem("Tất cả");
+        List<NhaSanXuat> nhaSanXuatList = nhaSanXuatDao.getAll();
+        for (NhaSanXuat nhaSanXuat : nhaSanXuatList) {
+            cbb_NSXfilter.addItem(nhaSanXuat.getMaNSX(), nhaSanXuat.getTenNSX());
+        }
+    }
+    
     private void connect_DB(){
         try {
             DatabaseConnection.getInstance().connectToDatabase();
@@ -444,6 +470,10 @@ public class Form_QLBanHang extends javax.swing.JPanel {
     }
     
     private void themCTHD(){
+        if (table_hoadon.isEditing()) {
+            // Nếu có, lấy giá trị đang được chỉnh sửa từ cell editor
+            cellEditor.stopCellEditing();
+        }
         connect_DB();
         try {
             String maHD = hoaDonDao.LayMaHDMoiNhat();
@@ -463,7 +493,30 @@ public class Form_QLBanHang extends javax.swing.JPanel {
             }
         } catch (Exception e) {
             // Handle the exception
-            JOptionPane.showMessageDialog(this, "Thêm CTHD thất bại");
+            JOptionPane.showMessageDialog(this, "Thanh toán thất bại");
+        }
+        try {
+            // Parse the text of tf_tienKH and lbl_tongtien to BigDecimal
+            BigDecimal tienKH = new BigDecimal(tf_tienKH.getText().replaceAll("[^0-9,]", "").replace(",", "."));
+            BigDecimal tienThua = new BigDecimal(tf_tienthua.getText().replaceAll("[^0-9,]", "").replace(",", "."));
+            BigDecimal tongTien = new BigDecimal(lbl_tongtien.getText().replaceAll("[^0-9,]", "").replace(",", "."));
+
+            // Convert BigDecimal to double
+            double tienKhachTra = tienKH.doubleValue();
+            double tienThuaDouble = tienThua.doubleValue();
+
+            // Update CapnhatTrangthaiTienHD
+            String maHD = hoaDonDao.LayMaHDMoiNhat();
+            if (!hoaDonDao.CapnhatTrangthaiTienHD(maHD, tienKhachTra, tienThuaDouble, tongTien.doubleValue())) {
+                // Handle the case when CapnhatTrangthaiTienHD returns false
+                FormPopupNotification popup = new FormPopupNotification("Thanh toán thất bại!!!", FormPopupNotification.Type.ERROR);
+                popup.setAlwaysOnTop(true);
+                popup.setVisible(true);
+            }
+           
+        } catch (Exception e) {
+            // Handle the exception
+            JOptionPane.showMessageDialog(this, "Thanh toán thất bại");
         }
     }
     
@@ -557,8 +610,8 @@ public class Form_QLBanHang extends javax.swing.JPanel {
         button2 = new com.raven.swing.Button();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
-        customCombobox1 = new com.raven.swing.CustomCombobox();
-        customCombobox2 = new com.raven.swing.CustomCombobox();
+        cbb_LSPfilter = new com.raven.swing.CustomCombobox();
+        cbb_NSXfilter = new com.raven.swing.CustomCombobox();
         jPanel4 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
@@ -791,11 +844,11 @@ public class Form_QLBanHang extends javax.swing.JPanel {
         jLabel12.setText("Loại sản phẩm");
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jLabel13.setText("Nhà cung cấp");
+        jLabel13.setText("Nhà sản xuất");
 
-        customCombobox1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cbb_LSPfilter.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
-        customCombobox2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cbb_NSXfilter.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -824,13 +877,13 @@ public class Form_QLBanHang extends javax.swing.JPanel {
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addGap(52, 52, 52))
-                                    .addComponent(customCombobox1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(cbb_LSPfilter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addGap(62, 62, 62))
-                                    .addComponent(customCombobox2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+                                    .addComponent(cbb_NSXfilter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -853,8 +906,8 @@ public class Form_QLBanHang extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jTextField3)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(customCombobox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(customCombobox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(cbb_LSPfilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cbb_NSXfilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(button1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -946,7 +999,7 @@ public class Form_QLBanHang extends javax.swing.JPanel {
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 528, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
@@ -1021,8 +1074,8 @@ public class Form_QLBanHang extends javax.swing.JPanel {
     private com.raven.swing.EditButton btn_thanhtoan;
     private com.raven.swing.Button button1;
     private com.raven.swing.Button button2;
-    private com.raven.swing.CustomCombobox customCombobox1;
-    private com.raven.swing.CustomCombobox customCombobox2;
+    private com.raven.swing.CustomCombobox cbb_LSPfilter;
+    private com.raven.swing.CustomCombobox cbb_NSXfilter;
     private com.grocerystore.form.Form_Product form_Product2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

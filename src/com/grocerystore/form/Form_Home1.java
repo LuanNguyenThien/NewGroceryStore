@@ -1,29 +1,65 @@
 package com.grocerystore.form;
 
+import chart.ModelPolarAreaChart;
+import com.grocerystore.DAO.IThongKeDAO;
+import com.grocerystore.DAO.ThongKeDAOImpl;
 import com.grocerystore.dialog.Message;
 import com.grocerystore.main.Main;
 import com.grocerystore.model.ModelCard;
 import com.grocerystore.model.ModelStudent;
+import com.grocerystore.model.SanPham;
 import com.grocerystore.swing.icon.GoogleMaterialDesignIcons;
 import com.grocerystore.swing.icon.IconFontSwing;
 import com.grocerystore.swing.noticeboard.ModelNoticeBoard;
 import com.grocerystore.swing.table.EventAction;
+import connection.DatabaseConnection;
 import java.awt.Color;
+import java.sql.SQLException;
+import java.util.List;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 public class Form_Home1 extends javax.swing.JPanel {
 
+    private IThongKeDAO thongKeDao;
     public Form_Home1() {
+        thongKeDao = new ThongKeDAOImpl();
         initComponents();
-//        table1.fixTable(jScrollPane1);
         setOpaque(false);
         initData();
+        chart_Top10SP.start();
+    }
+    
+    private void connect_DB(){
+        try {
+            DatabaseConnection.getInstance().connectToDatabase();
+        } catch (SQLException e) {
+            System.err.println(e);
+        }
     }
 
     private void initData() {
         initCardData();
         initTableData();
+        connect_DB();
+        List<SanPham> top10SP = thongKeDao.Top10SP();
+        Color[] colors = new Color[] {
+            new Color(52, 148, 203),
+            new Color(175, 67, 237),
+            new Color(87, 218, 137),
+            new Color(255, 105, 97),
+            new Color(255, 179, 71),
+            new Color(97, 255, 189),
+            new Color(97, 255, 189),
+            new Color(255, 97, 136),
+            new Color(97, 255, 189),
+            new Color(255, 97, 97)
+        };
+
+        for (int i = 0; i < top10SP.size(); i++) {
+            SanPham sp = top10SP.get(i);
+            chart_Top10SP.addItem(new ModelPolarAreaChart(colors[i], sp.getTenSP(), sp.getSoLuong()));
+        }
     }
 
     private void initTableData() {
@@ -80,6 +116,7 @@ public class Form_Home1 extends javax.swing.JPanel {
         card4 = new com.grocerystore.component.Card();
         jPanel1 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
+        chart_Top10SP = new chart.PolarAreaChart();
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         form_Product1 = new com.grocerystore.form.Form_Product();
@@ -109,7 +146,9 @@ public class Form_Home1 extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(chart_Top10SP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 526, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -117,7 +156,9 @@ public class Form_Home1 extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(70, 70, 70)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 1, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(chart_Top10SP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(60, 60, 60))
         );
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
@@ -196,6 +237,7 @@ public class Form_Home1 extends javax.swing.JPanel {
     private com.grocerystore.component.Card card2;
     private com.grocerystore.component.Card card3;
     private com.grocerystore.component.Card card4;
+    private chart.PolarAreaChart chart_Top10SP;
     private com.grocerystore.form.Form_Product form_Product1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;

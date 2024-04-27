@@ -16,8 +16,9 @@ public interface ISanPhamDao {
     Boolean soft_delete(String MaSP);
     Boolean update_info(SanPham sp);
     List<SanPham> getAll();
-    List<SanPham> getAll_viewSP();
+    List<SanPham> getAll_viewSP(String TinhTrang);
     List<SanPham> findByBoLoc(String param, String MaNSX, String MaLSP);
+    List<SanPham> findByBoLoc_viewSP(String param, String MaNSX, String MaLSP);
     SanPham findById(String MaSP);
     Boolean update_soluong(String MaSP, int soluong);
 }
