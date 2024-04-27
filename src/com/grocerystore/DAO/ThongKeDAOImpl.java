@@ -4,6 +4,7 @@
  */
 package com.grocerystore.DAO;
 
+import com.grocerystore.model.DoanhThu;
 import com.grocerystore.model.SanPham;
 import connection.DatabaseConnection;
 import java.math.BigDecimal;
@@ -141,6 +142,42 @@ public class ThongKeDAOImpl implements IThongKeDAO{
                 sp.setTenSP(rs.getString("TenSP"));
                 sp.setSoLuong(rs.getInt("TotalSold"));
                 list.add(sp);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public List<DoanhThu> Top10Ngay() {
+        List<DoanhThu> list = new ArrayList<>();
+        String sql = "SELECT DATE(h.NgayBanHang) AS Ngay, SUM(h.TriGiaHoaDon) AS DoanhThu, " +
+                    "SUM((SELECT SUM(s.GiaNhap * c.Soluong) FROM ChiTietHoaDon c JOIN SanPham s ON c.MaSP = s.MaSP WHERE c.MaHD = h.MaHD)) AS ChiPhi " +
+                    "FROM HoaDon h " +
+                    "WHERE h.TrangThai = 'Đã thanh toán' " +
+                    "GROUP BY Ngay " +
+                    "ORDER BY DoanhThu DESC " +
+                    "LIMIT 6";
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = DatabaseConnection.getInstance().getConnection().prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                DoanhThu dt = new DoanhThu();
+                dt.setNgay(rs.getDate("Ngay"));
+                dt.setDoanhthu(rs.getDouble("DoanhThu"));
+                dt.setChiphi(rs.getDouble("ChiPhi"));
+                dt.setLoinhuan(dt.getDoanhthu() - dt.getChiphi());
+                list.add(dt);
             }
         } catch (SQLException e) {
             e.printStackTrace();

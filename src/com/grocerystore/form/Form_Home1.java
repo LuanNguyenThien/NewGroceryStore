@@ -5,6 +5,7 @@ import com.grocerystore.DAO.IThongKeDAO;
 import com.grocerystore.DAO.ThongKeDAOImpl;
 import com.grocerystore.dialog.Message;
 import com.grocerystore.main.Main;
+import com.grocerystore.model.DoanhThu;
 import com.grocerystore.model.ModelCard;
 import com.grocerystore.model.ModelStudent;
 import com.grocerystore.model.SanPham;
@@ -12,6 +13,7 @@ import com.grocerystore.swing.icon.GoogleMaterialDesignIcons;
 import com.grocerystore.swing.icon.IconFontSwing;
 import com.grocerystore.swing.noticeboard.ModelNoticeBoard;
 import com.grocerystore.swing.table.EventAction;
+import com.raven.chart.ModelChart;
 import connection.DatabaseConnection;
 import java.awt.Color;
 import java.sql.SQLException;
@@ -28,6 +30,7 @@ public class Form_Home1 extends javax.swing.JPanel {
         setOpaque(false);
         initData();
         chart_Top10SP.start();
+        chart_doanhthu.start();
     }
     
     private void connect_DB(){
@@ -59,6 +62,15 @@ public class Form_Home1 extends javax.swing.JPanel {
         for (int i = 0; i < top10SP.size(); i++) {
             SanPham sp = top10SP.get(i);
             chart_Top10SP.addItem(new ModelPolarAreaChart(colors[i], sp.getTenSP(), sp.getSoLuong()));
+        }
+        
+        connect_DB();
+        chart_doanhthu.addLegend("Doanh thu", new Color(245, 189, 135));
+        chart_doanhthu.addLegend("Chi phí", new Color(135, 189, 245));
+        chart_doanhthu.addLegend("Lợi nhuận", new Color(189, 135, 245));
+        List<DoanhThu> top10DT = thongKeDao.Top10Ngay();
+        for(int i = 0; i < top10DT.size(); i++){
+            chart_doanhthu.addData(new ModelChart(top10DT.get(i).getNgay().toString(),new double[]{top10DT.get(i).getDoanhthu(), top10DT.get(i).getChiphi(), top10DT.get(i).getLoinhuan()}));
         }
     }
 
@@ -115,7 +127,8 @@ public class Form_Home1 extends javax.swing.JPanel {
         chart_Top10SP = new chart.PolarAreaChart();
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        form_Product1 = new com.grocerystore.form.Form_Product();
+        jLabel6 = new javax.swing.JLabel();
+        chart_doanhthu = new com.raven.chart.Chart();
 
         card1.setColorGradient(new java.awt.Color(211, 28, 215));
 
@@ -143,8 +156,8 @@ public class Form_Home1 extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(chart_Top10SP, javax.swing.GroupLayout.DEFAULT_SIZE, 526, Short.MAX_VALUE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(chart_Top10SP, javax.swing.GroupLayout.DEFAULT_SIZE, 549, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -164,6 +177,8 @@ public class Form_Home1 extends javax.swing.JPanel {
         jLabel5.setText("Data Student");
         jLabel5.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
 
+        jLabel6.setOpaque(true);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -171,8 +186,11 @@ public class Form_Home1 extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
-                    .addComponent(form_Product1, javax.swing.GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE))
+                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(chart_doanhthu, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -180,9 +198,11 @@ public class Form_Home1 extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(form_Product1, javax.swing.GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(37, 37, 37)
+                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 1, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31)
+                .addComponent(chart_doanhthu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(55, 55, 55))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -193,20 +213,18 @@ public class Form_Home1 extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(card1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(card1, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
-                        .addComponent(card2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(card2, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
-                        .addComponent(card3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(card3, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
-                        .addComponent(card4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(card4, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE))
+                    .addComponent(jLabel1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -234,10 +252,11 @@ public class Form_Home1 extends javax.swing.JPanel {
     private com.grocerystore.component.Card card3;
     private com.grocerystore.component.Card card4;
     private chart.PolarAreaChart chart_Top10SP;
-    private com.grocerystore.form.Form_Product form_Product1;
+    private com.raven.chart.Chart chart_doanhthu;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     // End of variables declaration//GEN-END:variables

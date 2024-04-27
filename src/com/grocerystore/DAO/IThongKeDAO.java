@@ -4,6 +4,7 @@
  */
 package com.grocerystore.DAO;
 
+import com.grocerystore.model.DoanhThu;
 import com.grocerystore.model.SanPham;
 import java.math.BigDecimal;
 import java.util.List;
@@ -18,4 +19,5 @@ public interface IThongKeDAO {
     public int GetCountKH();
     public int GetSumDonHang();
     public List<SanPham> Top10SP();
+    public List<DoanhThu> Top10Ngay();
 }
