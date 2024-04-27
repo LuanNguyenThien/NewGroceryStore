@@ -7,6 +7,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 public class Card extends javax.swing.JPanel {
 
@@ -31,8 +33,12 @@ public class Card extends javax.swing.JPanel {
 
     public void setData(ModelCard data) {
         DecimalFormat df = new DecimalFormat("#,##0.##");
+        NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         lbTitle.setText(data.getTitle());
-        lbValues.setText(df.format(data.getValues()));
+        if(data.getTitle().equals("Tổng doanh thu"))
+            lbValues.setText(format.format(data.getValues()));
+        else
+            lbValues.setText(df.format(data.getValues()));
         lbIcon.setIcon(data.getIcon());
         pro.setValue(data.getPercentage());
         lbPer.setText(df.format(data.getPercentage()) + "%");

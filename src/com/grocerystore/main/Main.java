@@ -67,13 +67,8 @@ public class Main extends javax.swing.JFrame {
             @Override
             public void menuSelected(int menuIndex, int subMenuIndex) {
                 System.out.println("Menu Index : " + menuIndex + " SubMenu Index " + subMenuIndex);
-                if (menuIndex == 0) {
-                    if (subMenuIndex == 0) {
-                        main.showForm(new Form_Home());
-                    } else if (subMenuIndex == 1) {
-                        main.showForm(new Form_Home1());
-                    }
-                }
+                if (menuIndex == 0) 
+                    main.showForm(new Form_Home1());
                 if (menuIndex == 1)
                     main.showForm(new Form_QLBanHang());
                 if (menuIndex == 2)
@@ -142,7 +137,7 @@ public class Main extends javax.swing.JFrame {
         //  Init google icon font
         IconFontSwing.register(GoogleMaterialDesignIcons.getIconFont());
         //  Start with this form
-        main.showForm(new Form_Home());
+        main.showForm(new Form_Home1());
     }
 
     @SuppressWarnings("unchecked")

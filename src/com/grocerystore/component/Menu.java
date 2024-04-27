@@ -56,7 +56,7 @@ public class Menu extends javax.swing.JPanel {
     }
 
     public void initMenuItem() {
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/1.png")), "Dashboard", "Trang chủ", "Hóa đơn"));
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/1.png")), "Trang chủ"));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/2.png")), "Bán hàng"));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/3.png")), "Nhập hàng"));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/4.png")), "Sản phẩm"));
@@ -64,12 +64,6 @@ public class Menu extends javax.swing.JPanel {
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/6.png")), "Khách hàng"));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/7.png")), "Thiết lập tài khoản"));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/8.png")), ""));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/9.png")), ""));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/10.png")), ""));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/11.png")), ""));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/12.png")), ""));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/13.png")), ""));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/14.png")), ""));
     }
 
     private void addMenu(ModelMenu menu) {

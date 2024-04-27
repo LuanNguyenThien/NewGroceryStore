@@ -39,9 +39,9 @@ public class Form_Product extends javax.swing.JPanel {
         panel.setLayout(new FlowLayout());
         jScrollPane1.setVerticalScrollBar(new ScrollBarCustom(JScrollBar.VERTICAL));
         // Load all cards
-//        loadProducts();
+        loadProducts();
         // Load the first page
-//        loadPage(0);
+        loadPage(0);
     }
     
     private void connect_DB(){

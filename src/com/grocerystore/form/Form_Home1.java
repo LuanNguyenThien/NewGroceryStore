@@ -16,8 +16,11 @@ import com.grocerystore.swing.table.EventAction;
 import com.raven.chart.ModelChart;
 import connection.DatabaseConnection;
 import java.awt.Color;
+import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -47,16 +50,16 @@ public class Form_Home1 extends javax.swing.JPanel {
         connect_DB();
         List<SanPham> top10SP = thongKeDao.Top10SP();
         Color[] colors = new Color[] {
-            new Color(52, 148, 203),
-            new Color(175, 67, 237),
-            new Color(87, 218, 137),
-            new Color(255, 105, 97),
-            new Color(255, 179, 71),
-            new Color(97, 255, 189),
-            new Color(97, 255, 189),
-            new Color(255, 97, 136),
-            new Color(97, 255, 189),
-            new Color(255, 97, 97)
+            new Color(230, 25, 75),    // Red
+            new Color(60, 180, 75),    // Green
+            new Color(255, 225, 25),   // Yellow
+            new Color(0, 130, 200),    // Blue
+            new Color(245, 130, 48),   // Orange
+            new Color(145, 30, 180),   // Purple
+            new Color(70, 240, 240),   // Cyan
+            new Color(240, 50, 230),   // Magenta
+            new Color(210, 245, 60),   // Lime
+            new Color(250, 190, 190)   // Pink
         };
 
         for (int i = 0; i < top10SP.size(); i++) {
@@ -97,14 +100,19 @@ public class Form_Home1 extends javax.swing.JPanel {
     }
 
     private void initCardData() {
-        Icon icon1 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.PEOPLE, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
-        card1.setData(new ModelCard("New Student", 5100, 20, icon1));
-        Icon icon2 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.MONETIZATION_ON, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
-        card2.setData(new ModelCard("Income", 2000, 60, icon2));
-        Icon icon3 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.SHOPPING_BASKET, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
-        card3.setData(new ModelCard("Expense", 3000, 80, icon3));
-        Icon icon4 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.BUSINESS_CENTER, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
-        card4.setData(new ModelCard("Other Income", 550, 95, icon4));
+        int sumSP = thongKeDao.GetSumSPBan();
+        Icon icon1 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.BUSINESS_CENTER, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
+        card1.setData(new ModelCard("Tổng sản phẩm bán", sumSP, 20, icon1));
+        int sumDH = thongKeDao.GetSumDonHang();
+        Icon icon2 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.SHOPPING_BASKET, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
+        card2.setData(new ModelCard("Tổng đơn hàng", sumDH, 100, icon2));
+        Icon icon3 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.MONETIZATION_ON, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
+        BigDecimal sumDT = thongKeDao.GetSumDoanhThu();
+        double sumformatDT = sumDT.doubleValue();
+        card3.setData(new ModelCard("Tổng doanh thu", sumformatDT, 100, icon3));
+        int sumKH = thongKeDao.GetCountKH();
+        Icon icon4 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.PEOPLE, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
+        card4.setData(new ModelCard("Tổng khách hàng", sumKH, 95, icon4));
     }
 
     private boolean showMessage(String message) {
@@ -125,6 +133,7 @@ public class Form_Home1 extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         chart_Top10SP = new chart.PolarAreaChart();
+        jLabel7 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -149,6 +158,11 @@ public class Form_Home1 extends javax.swing.JPanel {
 
         jLabel4.setOpaque(true);
 
+        jLabel7.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(76, 76, 76));
+        jLabel7.setText("Thống Kê Top 10 Sản Phẩm Có Doanh Số Cao Nhất");
+        jLabel7.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -157,13 +171,18 @@ public class Form_Home1 extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(chart_Top10SP, javax.swing.GroupLayout.DEFAULT_SIZE, 549, Short.MAX_VALUE))
+                    .addComponent(chart_Top10SP, javax.swing.GroupLayout.DEFAULT_SIZE, 549, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(70, 70, 70)
+                .addGap(14, 14, 14)
+                .addComponent(jLabel7)
+                .addGap(34, 34, 34)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 1, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chart_Top10SP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -174,7 +193,7 @@ public class Form_Home1 extends javax.swing.JPanel {
 
         jLabel5.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(76, 76, 76));
-        jLabel5.setText("Data Student");
+        jLabel5.setText("Thống Kê Top 6 Ngày Có Doanh Thu Cao Nhất");
         jLabel5.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
 
         jLabel6.setOpaque(true);
@@ -257,6 +276,7 @@ public class Form_Home1 extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     // End of variables declaration//GEN-END:variables
