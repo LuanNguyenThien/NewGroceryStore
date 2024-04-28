@@ -150,8 +150,9 @@ public class PanelSlide extends javax.swing.JLayeredPane {
                     NhanVien nv = new NhanVien();
                     NhanVienDAOImpl nvdao = new NhanVienDAOImpl();
                     nv = nvdao.checkLogin(userName, password);
-                    IDCurUser = nv.getMaNV();
+                    
                     if(nv!=null){
+                        IDCurUser = nv.getMaNV();
                         String quyen = nv.getQuyen();
                         String hoten = nv.getHoTen();
                         byte[] blobimg = nv.getHinhAnh();
@@ -164,13 +165,13 @@ public class PanelSlide extends javax.swing.JLayeredPane {
                         loading.doneLogin(nv_data);
                     }
                     else{
-                        loading.showError("User and Password Incorrect");
+                        loading.showError("Tên tài khoản hoặc mật khẩu không đúng");
                     }
                 } catch (InterruptedException e) {
                     System.err.println(e);
                 } catch (Exception e) {
                     System.err.println(e);
-                    loading.showError("Erro Server");
+                    loading.showError("Lỗi kết nối database");
                 } finally {
                     latch.countDown(); // Signal that the login is done
                 }

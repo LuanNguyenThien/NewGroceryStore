@@ -46,7 +46,6 @@ public class Form_Home1 extends javax.swing.JPanel {
 
     private void initData() {
         initCardData();
-        initTableData();
         connect_DB();
         List<SanPham> top10SP = thongKeDao.Top10SP();
         Color[] colors = new Color[] {
@@ -77,28 +76,6 @@ public class Form_Home1 extends javax.swing.JPanel {
         }
     }
 
-    private void initTableData() {
-        EventAction eventAction = new EventAction() {
-            @Override
-            public void delete(ModelStudent student) {
-                if (showMessage("Delete Student : " + student.getName())) {
-                    System.out.println("User click OK");
-                } else {
-                    System.out.println("User click Cancel");
-                }
-            }
-
-            @Override
-            public void update(ModelStudent student) {
-                if (showMessage("Update Student : " + student.getName())) {
-                    System.out.println("User click OK");
-                } else {
-                    System.out.println("User click Cancel");
-                }
-            }
-        };
-    }
-
     private void initCardData() {
         int sumSP = thongKeDao.GetSumSPBan();
         Icon icon1 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.BUSINESS_CENTER, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
@@ -108,7 +85,9 @@ public class Form_Home1 extends javax.swing.JPanel {
         card2.setData(new ModelCard("Tổng đơn hàng", sumDH, 100, icon2));
         Icon icon3 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.MONETIZATION_ON, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
         BigDecimal sumDT = thongKeDao.GetSumDoanhThu();
-        double sumformatDT = sumDT.doubleValue();
+        double sumformatDT = 0;
+        if (sumDT!=null)
+            sumformatDT = sumDT.doubleValue();
         card3.setData(new ModelCard("Tổng doanh thu", sumformatDT, 100, icon3));
         int sumKH = thongKeDao.GetCountKH();
         Icon icon4 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.PEOPLE, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
