@@ -28,7 +28,7 @@ public class Form_Product extends javax.swing.JPanel {
     }
     
     private ProductClickListener listener;
-    private int itemsPerPage = 10;
+    private int itemsPerPage = 8;
     private int currentPage = 0;
     private List<Product> products;
     private ISanPhamDao sanPhamDao;
@@ -75,7 +75,30 @@ public class Form_Product extends javax.swing.JPanel {
         }
     }
 
-    private void loadPage(int pageNumber) {
+    public void loadFilteredProducts(String param, String MaNSX, String MaLSP) {
+        connect_DB();
+        // Gọi phương thức findByBoLoc_viewSP với các tham số tương ứng
+        List<SanPham> SanPhamList = sanPhamDao.findByBoLoc_viewSP(param, MaNSX, MaLSP);
+        products = new ArrayList<>();
+
+        for (SanPham sp : SanPhamList) {
+            Product product = new Product(sp);
+            product.setProductClickListener(new Product.ProductClickListener() {
+                @Override
+                public void onProductClick(SanPham product) {
+                    if (listener != null) {
+                        listener.onProductClick(product);
+                    }
+                }
+            });
+            products.add(product);
+        }
+    }
+    
+    public void loadPage(int pageNumber) {
+        int totalPages = (int) Math.ceil((double) products.size() / itemsPerPage);
+        int curpage = totalPages == 0 ? 0 : pageNumber + 1;
+        lbl_page.setText(curpage+"/"+totalPages);
         // Clear the panel
         panel.removeAll();
         panel.setLayout(new WrapLayout(WrapLayout.LEADING));
@@ -155,6 +178,7 @@ public class Form_Product extends javax.swing.JPanel {
         panel = new javax.swing.JPanel();
         btnBack = new javax.swing.JButton();
         btnContinue = new javax.swing.JButton();
+        lbl_page = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -192,6 +216,9 @@ public class Form_Product extends javax.swing.JPanel {
             }
         });
 
+        lbl_page.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lbl_page.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -201,7 +228,9 @@ public class Form_Product extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(42, 42, 42)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbl_page, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnContinue, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE))
@@ -213,9 +242,10 @@ public class Form_Product extends javax.swing.JPanel {
                 .addGap(20, 20, 20)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 405, Short.MAX_VALUE)
                 .addGap(15, 15, 15)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnContinue, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnContinue, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_page, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(9, 9, 9))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -235,6 +265,7 @@ public class Form_Product extends javax.swing.JPanel {
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnContinue;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lbl_page;
     private javax.swing.JPanel panel;
     // End of variables declaration//GEN-END:variables
 }

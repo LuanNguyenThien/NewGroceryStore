@@ -14,6 +14,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.NumberFormat;
+import java.util.Locale;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.Timer;
@@ -32,17 +34,19 @@ public class Product extends javax.swing.JPanel {
     private int speed = 10;
     private boolean showing = false;
     private ProductClickListener listener;
+    NumberFormat format;
 
     public void setProductClickListener(ProductClickListener listener) {
         this.listener = listener;
     }
 
     public Product(SanPham sanpham) {
+        format = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         this.sanpham = sanpham;
         initComponents();
         setOpaque(false);
-        String description = "Tên SP: "+sanpham.getTenSP()+"\nNSX: "+sanpham.getTenNSX()+"\nSố lượng: "+sanpham.getSoLuong();
-        cardDescription = new ProductDescription(sanpham.getGiaTien().toPlainString(), description);
+        String description = "Tên SP: "+sanpham.getTenSP()+"\nNSX: "+sanpham.getTenNSX()+"\nSố lượng: "+(sanpham.getSoLuong() == 0 ? "Hết hàng" : sanpham.getSoLuong());
+        cardDescription = new ProductDescription(format.format(sanpham.getGiaTien()), description);
         cardDescription.setLocation(0, y);
         
         this.addMouseListener(new MouseAdapter() {

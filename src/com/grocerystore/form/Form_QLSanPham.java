@@ -120,12 +120,15 @@ public class Form_QLSanPham extends javax.swing.JPanel {
         format_loinhuan();
         
         tf_tenSPfilter.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
             public void changedUpdate(DocumentEvent e) {
                 filter();
             }
+            @Override
             public void removeUpdate(DocumentEvent e) {
                 filter();
             }
+            @Override
             public void insertUpdate(DocumentEvent e) {
                 filter();
             }
