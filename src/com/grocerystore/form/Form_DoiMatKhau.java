@@ -6,17 +6,25 @@ package com.grocerystore.form;
 
 import com.grocerystore.DAO.INhanVienDAO;
 import com.grocerystore.DAO.NhanVienDAOImpl;
+import com.grocerystore.component.Header;
 import com.grocerystore.main.DataInitializer;
+import com.grocerystore.main.Login;
 import com.grocerystore.main.Main;
 import com.grocerystore.model.NhanVien;
 import connection.DatabaseConnection;
+import static groovy.ui.text.FindReplaceUtility.dispose;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
 import util.Util;
 
 /**
@@ -413,19 +421,24 @@ public class Form_DoiMatKhau extends javax.swing.JPanel {
                 if (passwordChanged) {
                     // Password successfully changed
                     JOptionPane.showMessageDialog(this, "Đổi mật khẩu thành công!");
+                    JFrame yourFrame = (JFrame) SwingUtilities.getWindowAncestor(Form_DoiMatKhau.this);
+                    if (yourFrame != null) {
+                        yourFrame.dispose();
+                        new Login().setVisible(true);
+                    } else {
+                        // Failed to change password
+                        JOptionPane.showMessageDialog(this, "Thất bại! Vui lòng thử lại.");
+                    }
                 } else {
-                    // Failed to change password
-                    JOptionPane.showMessageDialog(this, "Thất bại! Vui lòng thử lại.");
+                    // Passwords don't match
+                    JOptionPane.showMessageDialog(this, "Mật khẩu mới không khớp! Vui lòng nhập lại.");
                 }
-            } else {
-                // Passwords don't match
-                JOptionPane.showMessageDialog(this, "Mật khẩu mới không khớp! Vui lòng nhập lại.");
             }
         }
     }//GEN-LAST:event_btnXacNhanActionPerformed
 
     private void txtUsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsernameActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_txtUsernameActionPerformed
 
     private void txtNewPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNewPassActionPerformed
@@ -456,18 +469,29 @@ public class Form_DoiMatKhau extends javax.swing.JPanel {
     private void btn_reloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_reloadActionPerformed
         // TODO add your handling code here:
         //Reset cac truong
-        tf_TenNhanVien.setText("");
-        tf_DiaChi.setText("");
-        tf_Sdt.setText("");
-        tf_NgaySinh.setText("");
-        lbl_picSP.setIcon(null);
-        tf_TenNhanVien.setText("");
-        cb_GioiTinh.setSelectedItem(0);
+        loadData();
     }//GEN-LAST:event_btn_reloadActionPerformed
 
+
     private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_updateActionPerformed
-        // TODO add your handling code here:
-        
+        INhanVienDAO nhanVienDao = new NhanVienDAOImpl();
+        NhanVien nv = nhanVienDao.findByID(DataInitializer.curUser.getMaNV());
+        nv.setMaNV(DataInitializer.curUser.getMaNV());
+        nv.setHoTen(tf_TenNhanVien.getText());
+        nv.setSdt(tf_Sdt.getText());
+        nv.setNgaySinh(Date.valueOf(tf_NgaySinh.getText()));
+        nv.setGioiTinh(cb_GioiTinh.getSelectedItem().toString());
+        nv.setDiaChi(tf_DiaChi.getText());
+
+
+        if (lbl_picSP.getIcon() != null) {
+            nv.setHinhAnh(Util.imageIconToByteArray((ImageIcon) lbl_picSP.getIcon()));
+        }
+        if (nhanVienDao.update(nv)) {
+            JOptionPane.showMessageDialog(null, "Cập nhật thành công!");
+            System.out.println(nv.getHoTen());
+        }
+
     }//GEN-LAST:event_btn_updateActionPerformed
 
 
@@ -538,6 +562,20 @@ public class Form_DoiMatKhau extends javax.swing.JPanel {
         NhanVien user = DataInitializer.curUser;
         txtUsername.setEditable(false);
         txtUsername.setText(user.getTenTK());
+        tf_TenNhanVien.setText(user.getHoTen());
+        tf_DiaChi.setText(user.getDiaChi());
+        tf_Sdt.setText(user.getSdt());
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        String ngaySinh = sdf.format(user.getNgaySinh());
+        tf_NgaySinh.setText(ngaySinh);
+        if (user.getHinhAnh() != null) {
+            lbl_picSP.setIcon(Util.byteArrayToImageIcon(user.getHinhAnh()));
+        } else {
+            lbl_picSP.setIcon(null);
+            System.out.println("null picture");
+        }
+        tf_TenNhanVien.setText(user.getHoTen());
+        cb_GioiTinh.setSelectedItem(0);
         txtOldPass.setEchoChar('*');
         txtNewPass.setEchoChar('*');
         txtConfirmNewPass.setEchoChar('*');
