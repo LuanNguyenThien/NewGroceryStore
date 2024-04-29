@@ -58,7 +58,6 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
     private IChiTietDonNhapHangDAO chiTietDonNhapDAO = new ChiTietDonNhapHangDAOImpl();
     
     private DonNhapHang donNhap ;
-    private int SoLuong;
     private String MaDNH;
     
     /**
@@ -785,7 +784,6 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
         tf_TenSP.setText(tb_SanPham.getValueAt(row, 1).toString());
         tf_GiaNhap.setText(tb_SanPham.getValueAt(row, 6).toString());
         tf_SoLuong.setEditable(true);
-        SoLuong = Integer.parseInt(tb_SanPham.getValueAt(row, 7).toString());
         
     }//GEN-LAST:event_tb_SanPhamMouseClicked
 
@@ -861,14 +859,28 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
 
                         DefaultTableModel model = new DefaultTableModel();
                         model = (DefaultTableModel) tb_ChiTietDonHang.getModel();
-
+                        
+                        
+                        
                         for(int i = 0 ; i < model.getRowCount(); i++){
                             ChiTietDonNhapHang chiTiet = new ChiTietDonNhapHang();
-                            chiTiet.setMaDNH(maDNH);
-                            chiTiet.setMaSP(tb_ChiTietDonHang.getValueAt(i, 0).toString());
-                            chiTiet.setSoLuong(Integer.parseInt(tb_ChiTietDonHang.getValueAt(i, 3).toString()));
-                            chiTiet.setDonGia(Double.parseDouble(tb_ChiTietDonHang.getValueAt(i, 2).toString()));
-                            chiTietDonNhapDAO.ThemCTDNH(chiTiet);
+ 
+                           
+                            if(chiTietDonNhapDAO.checkMaSP(maDNH, tb_ChiTietDonHang.getValueAt(i, 0).toString())){
+
+                                chiTietDonNhapDAO.updateSoLuongSP(maDNH,
+                                    tb_ChiTietDonHang.getValueAt(i, 0).toString(),
+                                    Integer.parseInt(tb_ChiTietDonHang.getValueAt(i, 3).toString()));
+                            }
+                            else{
+                                chiTiet.setMaDNH(maDNH);
+                                chiTiet.setMaSP(tb_ChiTietDonHang.getValueAt(i, 0).toString());
+                                chiTiet.setSoLuong(Integer.parseInt(tb_ChiTietDonHang.getValueAt(i, 3).toString()));
+                                chiTiet.setDonGia(Double.parseDouble(tb_ChiTietDonHang.getValueAt(i, 2).toString()));
+                                chiTietDonNhapDAO.ThemCTDNH(chiTiet);
+                            }
+                            
+
                         }
 
                         JOptionPane.showMessageDialog(this, "Tạo đơn hàng thành công");
@@ -908,9 +920,6 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
             if(tf_SoLuong.getText().isEmpty()){
                 JOptionPane.showMessageDialog(this, "Vui lòng nhập số lượng sản phẩm");
                 tf_SoLuong.requestFocus();
-            }
-            else if(Integer.parseInt(tf_SoLuong.getText()) > SoLuong){
-                JOptionPane.showMessageDialog(this, "Số lượng sản phẩm còn lại không đủ");
             }
             else{
                 

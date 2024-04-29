@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -77,5 +78,61 @@ public class ChiTietDonNhapHangDAOImpl implements IChiTietDonNhapHangDAO{
         }
         return list;
     }
+
+    @Override
+    public Boolean updateSoLuongSP(String MaDNH, String MaSP, int SoLuong) {
+        String sql = "UPDATE ChiTietDonNhapHang SET SoLuong = SoLuong + ? WHERE MaDNH = ? AND MaSP = ?";
+        PreparedStatement ps = null;
+        try{
+            ps = DatabaseConnection.getInstance().getConnection().prepareStatement(sql);
+            
+            ps.setInt(1, SoLuong);
+            ps.setString(2, MaDNH);
+            ps.setString(3, MaSP);
+
+            int rowsInserted = ps.executeUpdate();
+            return rowsInserted > 0;
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Lỗi! " + e.getMessage(), "Thông báo", JOptionPane.ERROR_MESSAGE);
+        }
+        finally{
+            try {
+                if (ps != null) ps.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean checkMaSP(String MaDNH, String MaSP) {
+        String sql = "SELECT * FROM ChiTietDonNhapHang WHERE MaDNH = ? AND MaSP = ?";
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try{
+            ps = DatabaseConnection.getInstance().getConnection().prepareStatement(sql);
+            
+
+            ps.setString(1, MaDNH);
+            ps.setString(2, MaSP);
+
+            rs = ps.executeQuery();
+            
+            if(rs.next()){
+                return true;
+            }
+                    
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Lỗi! " + e.getMessage(), "Thông báo", JOptionPane.ERROR_MESSAGE);
+        }
+        finally{
+            try {
+                if (ps != null) ps.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return false;    }
     
 }

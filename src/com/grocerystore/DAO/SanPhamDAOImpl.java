@@ -328,7 +328,7 @@ public class SanPhamDAOImpl implements ISanPhamDao{
 
     @Override
     public Boolean update_soluongByNhapHang(String MaSP, int soluong) {
-        String sql = "UPDATE SanPham SET SoLuong = SoLuong - ? WHERE MaSP = ?";
+        String sql = "UPDATE SanPham SET SoLuong = SoLuong + ? WHERE MaSP = ?";
         PreparedStatement stmt = null;
   
         try {
