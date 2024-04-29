@@ -8,9 +8,11 @@ import com.grocerystore.DAO.INhanVienDAO;
 import com.grocerystore.DAO.NhanVienDAOImpl;
 import com.grocerystore.component.Header;
 import com.grocerystore.main.DataInitializer;
+import static com.grocerystore.main.DataInitializer.curUser;
 import com.grocerystore.main.Login;
 import com.grocerystore.main.Main;
 import com.grocerystore.model.NhanVien;
+import com.raven.component.PanelSlide;
 import connection.DatabaseConnection;
 import static groovy.ui.text.FindReplaceUtility.dispose;
 import java.awt.event.WindowAdapter;
@@ -484,8 +486,8 @@ public class Form_DoiMatKhau extends javax.swing.JPanel {
         }else if (!tf_Sdt.getText().matches("^\\d{10}$")) {    //Chi nhan so co 10 chu so khong co khoang trong
             JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ!");
         }else {
-        INhanVienDAO nhanVienDao = new NhanVienDAOImpl();
-        NhanVien nv = nhanVienDao.findByID(DataInitializer.curUser.getMaNV());
+        NhanVienDAOImpl nvdao = new NhanVienDAOImpl();
+        NhanVien nv = nvdao.findByID(PanelSlide.IDCurUser);
         nv.setMaNV(DataInitializer.curUser.getMaNV());
         nv.setHoTen(tf_TenNhanVien.getText());
         nv.setSdt(tf_Sdt.getText());
@@ -497,7 +499,7 @@ public class Form_DoiMatKhau extends javax.swing.JPanel {
         if (lbl_picSP.getIcon() != null) {
             nv.setHinhAnh(Util.imageIconToByteArray((ImageIcon) lbl_picSP.getIcon()));
         }
-        if (nhanVienDao.update(nv)) {
+        if (nvdao.update(nv)) {
             JOptionPane.showMessageDialog(null, "Cập nhật thành công!");
             System.out.println(nv.getHoTen());
         }
@@ -540,7 +542,8 @@ public class Form_DoiMatKhau extends javax.swing.JPanel {
 
     private boolean changePassword(String username, String oldPassword, String newPassword) {
         // Find the user by their username
-        NhanVien user = DataInitializer.curUser;
+        NhanVienDAOImpl nvdao = new NhanVienDAOImpl();
+        NhanVien user = nvdao.findByID(PanelSlide.IDCurUser);
 
         if (user != null && user.getTenTK().equals(username)) {
             // Check if the old password matches the password stored in the database
@@ -570,7 +573,8 @@ public class Form_DoiMatKhau extends javax.swing.JPanel {
     }
 
     private void loadData() {
-        NhanVien user = DataInitializer.curUser;
+        NhanVienDAOImpl nvdao = new NhanVienDAOImpl();
+        NhanVien user = nvdao.findByID(PanelSlide.IDCurUser);
         txtUsername.setEditable(false);
         txtUsername.setText(user.getTenTK());
         tf_TenNhanVien.setText(user.getHoTen());
