@@ -17,10 +17,12 @@ import com.grocerystore.DAO.IHoaDonDAO;
 import com.grocerystore.DAO.IKhachHang;
 import com.grocerystore.model.NhanVien;
 import com.grocerystore.DAO.INhanVienDAO;
+import com.grocerystore.DAO.ISanPhamDao;
 import com.grocerystore.DAO.KhachHangDAOImpl;
 import com.grocerystore.DAO.LoaiSanPhamDAOImpl;
 import com.grocerystore.DAO.NhaSanXuatDAOImpl;
 import com.grocerystore.DAO.NhanVienDAOImpl;
+import com.grocerystore.DAO.SanPhamDAOImpl;
 import com.grocerystore.main.DataInitializer;
 import com.grocerystore.model.CTHD;
 import com.grocerystore.model.HoaDon;
@@ -98,7 +100,8 @@ import print.model.ParameterReportPayment;
  * @author My PC
  */
 public class Form_QLBanHang extends javax.swing.JPanel {
-    
+   
+    private ISanPhamDao sanPhamDao;
     private IKhachHang khachHangDao;  
     private IHoaDonDAO hoaDonDao;
     private IChiTietHoaDonDAO chitietHDDao;
@@ -114,6 +117,7 @@ public class Form_QLBanHang extends javax.swing.JPanel {
      */
     public Form_QLBanHang() {
         format = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        sanPhamDao = new SanPhamDAOImpl();
         loaiSanPhamDao = new LoaiSanPhamDAOImpl();
         nhaSanXuatDao = new NhaSanXuatDAOImpl();
         hoaDonDao = new HoaDonDAOImpl();
@@ -450,10 +454,10 @@ public class Form_QLBanHang extends javax.swing.JPanel {
         connect_DB();
         hd = new HoaDon();
         hd.setMaNV(DataInitializer.nhanVien1.getMaNV());
-        if(tf_tenKH==null||tf_tenKH.getText().equals(""))
-            hd.setMaKH("KH0000");
-        else
-            hd.setMaKH(currKH.getMaKH());
+        if(tf_tenKH==null||tf_tenKH.getText().equals("")){
+            currKH = khachHangDao.findById("KH0000");
+        }
+        hd.setMaKH(currKH.getMaKH());
         try {
             hoaDonDao.ThemHD(hd);
         } catch (Exception e) {
@@ -503,6 +507,7 @@ public class Form_QLBanHang extends javax.swing.JPanel {
             String maHD = hoaDonDao.LayMaHDMoiNhat();
 
             for (int i = 0; i < table_hoadon.getRowCount(); i++) {
+                connect_DB();
                 String maSP = table_hoadon.getValueAt(i, 0).toString();
                 int soLuong = Integer.parseInt(table_hoadon.getValueAt(i, 3).toString());
                 double tongTien = Double.parseDouble(table_hoadon.getValueAt(i, 4).toString());
@@ -513,12 +518,22 @@ public class Form_QLBanHang extends javax.swing.JPanel {
                     FormPopupNotification popup = new FormPopupNotification("Thanh toán thất bại!!!", FormPopupNotification.Type.ERROR);
                     popup.setAlwaysOnTop(true);
                     popup.setVisible(true);
+                    return;
+                }
+                // Cap nhat so luong san pham
+                if(!sanPhamDao.update_soluong(maSP, soLuong*(-1))){
+                    FormPopupNotification popup = new FormPopupNotification("Thanh toán thất bại!!!", FormPopupNotification.Type.ERROR);
+                    popup.setAlwaysOnTop(true);
+                    popup.setVisible(true);
+                    return;
                 }
             }
         } catch (Exception e) {
             // Handle the exception
             JOptionPane.showMessageDialog(this, "Thanh toán thất bại");
+            return;
         }
+        connect_DB();
         try {
             // Parse the text of tf_tienKH and lbl_tongtien to BigDecimal
             BigDecimal tienKH = new BigDecimal(tf_tienKH.getText().replaceAll("[^0-9,]", "").replace(",", "."));
@@ -529,6 +544,13 @@ public class Form_QLBanHang extends javax.swing.JPanel {
             double tienKhachTra = tienKH.doubleValue();
             double tienThuaDouble = tienThua.doubleValue();
 
+            // Update chitieuKH
+            if(!khachHangDao.updateChiTieu(currKH.getMaKH(), tongTien)){
+                FormPopupNotification popup = new FormPopupNotification("Thanh toán thất bại!!!", FormPopupNotification.Type.ERROR);
+                popup.setAlwaysOnTop(true);
+                popup.setVisible(true);
+            }
+            
             // Update CapnhatTrangthaiTienHD
             String maHD = hoaDonDao.LayMaHDMoiNhat();
             if (!hoaDonDao.CapnhatTrangthaiTienHD(maHD, tienKhachTra, tienThuaDouble, tongTien.doubleValue())) {
