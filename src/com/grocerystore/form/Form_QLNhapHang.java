@@ -753,20 +753,15 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
         newForm.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         newForm.setVisible(true);
         
-        // Kiểm trâ đã chọn nhà sản xuất chưa
-        // Chưa biết cách nào để kiểm tra đã nhấn button bên form chọn Nhà cung cấp chưa
         newForm.addWindowListener(new WindowAdapter(){
             @Override
             public void windowClosed(WindowEvent e){
                 String MaNSX = newForm.getMaNSX();
                 if(MaNSX != null){
-                    // Chưa lấy được mã nhà sản xuất đã chọn
                     loadSanPhamByNSX(MaNSX);
 
-                    // Create new Don Nhap Hang
                     donNhap = new DonNhapHang();
 
-                    // Chưa lấy được mã nhân viên và mã nhà sản xuất
                     donNhap.setMaNV(PanelSlide.IDCurUser);
                     donNhap.setMaNSX(MaNSX);
 
@@ -812,15 +807,19 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
                 "Xác Nhận Đơn Hàng",JOptionPane.YES_NO_OPTION);
 
         if(JOptionPane.YES_OPTION == result){
-            chiTietDonNhapDAO = new ChiTietDonNhapHangDAOImpl();
-            donNhapDAO.XacNhanDNH(MaDNH);
-            List<ChiTietDonNhapHang> listSanPham =  chiTietDonNhapDAO.listSanPham(MaDNH);
-            for(ChiTietDonNhapHang sanpham : listSanPham){
-                sanPhamDAO.update_soluongByNhapHang(sanpham.getMaSP(), sanpham.getSoLuong());
+            if(donNhapDAO.XacNhanDNH(MaDNH)){
+                List<ChiTietDonNhapHang> listSanPham =  chiTietDonNhapDAO.listSanPham(MaDNH);
+                for(ChiTietDonNhapHang sanpham : listSanPham){
+                    sanPhamDAO.update_soluongByNhapHang(sanpham.getMaSP(), sanpham.getSoLuong());
+                }
+                loadSanPham();
+                loadDonNhapHang();
+                JOptionPane.showMessageDialog(this, "Xác nhận đơn nhập hàng thành công");  
+            }else{
+                JOptionPane.showMessageDialog(this, "Xác nhận thất bại","Hệ thống thông báo",JOptionPane.ERROR_MESSAGE);
             }
-            loadSanPham();
-            loadDonNhapHang();
-            JOptionPane.showMessageDialog(this, "Xác nhận đơn nhập hàng thành công");
+            
+            
  
         }
        
@@ -831,18 +830,22 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
         int result = JOptionPane.showConfirmDialog(this,
                 "Bạn Có Muốn Xóa Đơn Hàng Này Không ?",
                 "Xác Nhận Xóa",JOptionPane.WARNING_MESSAGE,JOptionPane.YES_NO_OPTION);
-
         if(JOptionPane.YES_OPTION == result){
+            if(donNhapDAO.XoaDNH(MaDNH)){
+                loadDonNhapHang();
+                JOptionPane.showMessageDialog(this, "Xóa thành công");
 
-            donNhapDAO.XoaDNH(MaDNH);
-            loadDonNhapHang();
-            JOptionPane.showMessageDialog(this, "Xóa thành công");
-            
-            btn_XacNhan.setEnabled(false);
-            btn_XacNhan.setBackground(Color.gray);
-            btn_Xoa.setEnabled(false);
-            btn_Xoa.setBackground(Color.gray);
+                btn_XacNhan.setEnabled(false);
+                btn_XacNhan.setBackground(Color.gray);
+                btn_Xoa.setEnabled(false);
+                btn_Xoa.setBackground(Color.gray);  
+            }else{
+                JOptionPane.showMessageDialog(this, "Xóa thất bại","Hệ thống thông báo",JOptionPane.ERROR_MESSAGE);
+            }
+        
         }
+        
+        
     }//GEN-LAST:event_btn_XoaActionPerformed
 
     private void btn_LuuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_LuuActionPerformed
@@ -851,27 +854,32 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
             int result = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn lưu đơn nhập hàng này?","Hệ thống",JOptionPane.YES_NO_CANCEL_OPTION);
             
             if(JOptionPane.YES_NO_OPTION == result){
-                donNhapDAO.ThemDNH(donNhap);
-                chiTietDonNhapDAO = new ChiTietDonNhapHangDAOImpl();
-                String maDNH = donNhapDAO.GetMaxDNH();
-                
-                DefaultTableModel model = new DefaultTableModel();
-                model = (DefaultTableModel) tb_ChiTietDonHang.getModel();
+                if(donNhapDAO.ThemDNH(donNhap)){
 
-                for(int i = 0 ; i < model.getRowCount(); i++){
-                    ChiTietDonNhapHang chiTiet = new ChiTietDonNhapHang();
-                    chiTiet.setMaDNH(maDNH);
-                    chiTiet.setMaSP(tb_ChiTietDonHang.getValueAt(i, 0).toString());
-                    chiTiet.setSoLuong(Integer.parseInt(tb_ChiTietDonHang.getValueAt(i, 3).toString()));
-                    chiTiet.setDonGia(Double.parseDouble(tb_ChiTietDonHang.getValueAt(i, 2).toString()));
-                    chiTietDonNhapDAO.ThemCTDNH(chiTiet);
+                        chiTietDonNhapDAO = new ChiTietDonNhapHangDAOImpl();
+                        String maDNH = donNhapDAO.GetMaxDNH();
+
+                        DefaultTableModel model = new DefaultTableModel();
+                        model = (DefaultTableModel) tb_ChiTietDonHang.getModel();
+
+                        for(int i = 0 ; i < model.getRowCount(); i++){
+                            ChiTietDonNhapHang chiTiet = new ChiTietDonNhapHang();
+                            chiTiet.setMaDNH(maDNH);
+                            chiTiet.setMaSP(tb_ChiTietDonHang.getValueAt(i, 0).toString());
+                            chiTiet.setSoLuong(Integer.parseInt(tb_ChiTietDonHang.getValueAt(i, 3).toString()));
+                            chiTiet.setDonGia(Double.parseDouble(tb_ChiTietDonHang.getValueAt(i, 2).toString()));
+                            chiTietDonNhapDAO.ThemCTDNH(chiTiet);
+                        }
+
+                        JOptionPane.showMessageDialog(this, "Tạo đơn hàng thành công");
+                        tb_ChiTietDonHang.removeAll();
+                        loadDonNhapHang();
+                        loadChiTiet();
+                        loadSanPham();
+
+                }else{
+                    JOptionPane.showMessageDialog(this, "Có lỗi xảy ra trong quá trình tạo đơn","Hệ thống thông báo",JOptionPane.ERROR_MESSAGE);
                 }
-
-                JOptionPane.showMessageDialog(this, "Tạo đơn hàng thành công");
-                tb_ChiTietDonHang.removeAll();
-                loadDonNhapHang();
-                loadChiTiet();
-                loadSanPham();
             }
             
         }catch(Exception e){
