@@ -17,6 +17,7 @@ import com.grocerystore.model.DonNhapHang;
 import com.grocerystore.model.NhaSanXuat;
 import com.grocerystore.model.SanPham;
 import com.grocerystore.swing.scrollbar.ScrollBarCustom;
+import com.raven.component.PanelSlide;
 import com.sun.java.swing.plaf.windows.WindowsBorders;
 import connection.DatabaseConnection;
 import java.awt.Color;
@@ -26,6 +27,8 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 import java.util.List;
 import javax.swing.BorderFactory;
@@ -55,8 +58,9 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
     private IChiTietDonNhapHangDAO chiTietDonNhapDAO = new ChiTietDonNhapHangDAOImpl();
     
     private DonNhapHang donNhap ;
-    
+    private int SoLuong;
     private String MaDNH;
+    
     /**
      * Creates new form Form_QLNhanVien
      */
@@ -751,28 +755,32 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
         
         // Kiểm trâ đã chọn nhà sản xuất chưa
         // Chưa biết cách nào để kiểm tra đã nhấn button bên form chọn Nhà cung cấp chưa
+        newForm.addWindowListener(new WindowAdapter(){
+            @Override
+            public void windowClosed(WindowEvent e){
+                String MaNSX = newForm.getMaNSX();
+                if(MaNSX != null){
+                    // Chưa lấy được mã nhà sản xuất đã chọn
+                    loadSanPhamByNSX(MaNSX);
 
-        if(JOptionPane.YES_OPTION == 0){
-            
-            // Chưa lấy được mã nhà sản xuất đã chọn
-            loadSanPhamByNSX("NSX01");
-            
-            // Create new Don Nhap Hang
-            donNhap = new DonNhapHang();
-            
-            // Chưa lấy được mã nhân viên và mã nhà sản xuất
-            donNhap.setMaNV("NV001");
-            donNhap.setMaNSX("NSX01");
+                    // Create new Don Nhap Hang
+                    donNhap = new DonNhapHang();
 
-            btn_Them.setEnabled(true);
-            btn_Them.setBackground(new Color(51,102,255));
-            
-            btn_HuyPhieu.setEnabled(true);
-            btn_HuyPhieu.setBackground(new Color(204,0,51));
-            
-            tb_SanPham.setEnabled(true);
-        }
- 
+                    // Chưa lấy được mã nhân viên và mã nhà sản xuất
+                    donNhap.setMaNV(PanelSlide.IDCurUser);
+                    donNhap.setMaNSX(MaNSX);
+
+                    btn_Them.setEnabled(true);
+                    btn_Them.setBackground(new Color(51,102,255));
+
+                    btn_HuyPhieu.setEnabled(true);
+                    btn_HuyPhieu.setBackground(new Color(204,0,51));
+
+                    tb_SanPham.setEnabled(true);
+                }
+            }
+        });
+
     }//GEN-LAST:event_btn_TaoPhieuActionPerformed
 
     private void tb_SanPhamMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tb_SanPhamMouseClicked
@@ -782,6 +790,7 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
         tf_TenSP.setText(tb_SanPham.getValueAt(row, 1).toString());
         tf_GiaNhap.setText(tb_SanPham.getValueAt(row, 6).toString());
         tf_SoLuong.setEditable(true);
+        SoLuong = Integer.parseInt(tb_SanPham.getValueAt(row, 7).toString());
         
     }//GEN-LAST:event_tb_SanPhamMouseClicked
 
@@ -803,8 +812,13 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
                 "Xác Nhận Đơn Hàng",JOptionPane.YES_NO_OPTION);
 
         if(JOptionPane.YES_OPTION == result){
-
+            chiTietDonNhapDAO = new ChiTietDonNhapHangDAOImpl();
             donNhapDAO.XacNhanDNH(MaDNH);
+            List<ChiTietDonNhapHang> listSanPham =  chiTietDonNhapDAO.listSanPham(MaDNH);
+            for(ChiTietDonNhapHang sanpham : listSanPham){
+                sanPhamDAO.update_soluongByNhapHang(sanpham.getMaSP(), sanpham.getSoLuong());
+            }
+            loadSanPham();
             loadDonNhapHang();
             JOptionPane.showMessageDialog(this, "Xác nhận đơn nhập hàng thành công");
  
@@ -814,7 +828,7 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
 
     private void btn_XoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_XoaActionPerformed
    
-        int result = JOptionPane.showConfirmDialog(btn_Xoa,
+        int result = JOptionPane.showConfirmDialog(this,
                 "Bạn Có Muốn Xóa Đơn Hàng Này Không ?",
                 "Xác Nhận Xóa",JOptionPane.WARNING_MESSAGE,JOptionPane.YES_NO_OPTION);
 
@@ -834,6 +848,8 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
     private void btn_LuuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_LuuActionPerformed
         
         try{
+            int result = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn lưu đơn nhập hàng này?","Hệ thống",JOptionPane.YES_NO_CANCEL_OPTION);
+            
             donNhapDAO.ThemDNH(donNhap);
             chiTietDonNhapDAO = new ChiTietDonNhapHangDAOImpl();
 
@@ -848,7 +864,7 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
                 chiTietDonNhapDAO.ThemCTDNH(chiTiet);
             }
             
-            JOptionPane.showMessageDialog(btn_Luu, "Tạo đơn hàng thành công");
+            JOptionPane.showMessageDialog(this, "Tạo đơn hàng thành công");
             tb_ChiTietDonHang.removeAll();
             loadDonNhapHang();
             loadChiTiet();
@@ -872,14 +888,17 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
         btn_Luu.setBackground(new Color(51,102,255));
         btn_Huy.setEnabled(true);
         btn_Huy.setBackground(new Color(204,0,51));
-        
+
         if(tf_MaSP.getText().isEmpty()){
-            JOptionPane.showMessageDialog(btn_Them, "Vui lòng chọn sản phẩm thêm vào đơn hàng");
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm thêm vào đơn hàng");
         }
         else{
             if(tf_SoLuong.getText().isEmpty()){
-                JOptionPane.showMessageDialog(btn_Luu, "Vui lòng nhập số lượng sản phẩm");
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập số lượng sản phẩm");
                 tf_SoLuong.requestFocus();
+            }
+            else if(Integer.parseInt(tf_SoLuong.getText()) > SoLuong){
+                JOptionPane.showMessageDialog(this, "Số lượng sản phẩm còn lại không đủ");
             }
             else{
                 
@@ -902,7 +921,7 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
     }//GEN-LAST:event_btn_ThemActionPerformed
 
     private void btn_HuyPhieuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_HuyPhieuActionPerformed
-        int result = JOptionPane.showConfirmDialog(btn_HuyPhieu, "Bạn có chắc muốn hủy phiếu này không","Thông báo",JOptionPane.YES_NO_CANCEL_OPTION);
+        int result = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn hủy phiếu này không","Thông báo",JOptionPane.YES_NO_CANCEL_OPTION);
         if(JOptionPane.YES_OPTION == result){
             loadSanPham();
             loadChiTiet();
@@ -916,7 +935,7 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
     }//GEN-LAST:event_btn_HuyPhieuActionPerformed
 
     private void btn_HuyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_HuyActionPerformed
-        int result = JOptionPane.showConfirmDialog(btn_HuyPhieu, "Bạn có chắc muốn hủy phiếu này không","Thông báo",JOptionPane.YES_NO_CANCEL_OPTION);
+        int result = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn hủy phiếu này không","Thông báo",JOptionPane.YES_NO_CANCEL_OPTION);
         if(JOptionPane.YES_OPTION == result){
             loadSanPham();
             loadChiTiet();

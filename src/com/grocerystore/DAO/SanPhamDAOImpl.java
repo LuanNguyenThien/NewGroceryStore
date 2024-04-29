@@ -287,7 +287,7 @@ public class SanPhamDAOImpl implements ISanPhamDao{
         String sql = "SELECT * FROM SanPham WHERE MaNSX = ? ";
         PreparedStatement stmt = null;
         ResultSet rs = null;
-
+        
         try {
             stmt = DatabaseConnection.getInstance().getConnection().prepareStatement(sql);
             
@@ -324,6 +324,40 @@ public class SanPhamDAOImpl implements ISanPhamDao{
         }
 
         return sanPhamList;
+    }
+
+    @Override
+    public Boolean update_soluongByNhapHang(String MaSP, int soluong) {
+        String sql = "UPDATE SanPham SET SoLuong = SoLuong - ? WHERE MaSP = ?";
+        PreparedStatement stmt = null;
+  
+        try {
+            stmt = DatabaseConnection.getInstance().getConnection().prepareStatement(sql);
+            stmt.setInt(1, soluong);
+            stmt.setString(2, MaSP);
+            
+            
+
+            int affectedRows = stmt.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Updating soluong failed, no rows affected.");
+            }
+
+            return true;
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+        finally {
+            try {
+                if (stmt != null) stmt.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+
     }
     
 }

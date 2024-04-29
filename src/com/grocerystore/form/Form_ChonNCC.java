@@ -27,6 +27,7 @@ public class Form_ChonNCC extends javax.swing.JFrame {
     private ComboItem data;
     private List<ComboItem> listItem = new ArrayList<>();
     private int result;
+    private String MaNSX ;
     
     /**
      * Creates new form Form_ChonNCC
@@ -42,11 +43,12 @@ public class Form_ChonNCC extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent e) {
                 result = JOptionPane.showConfirmDialog(btn_selected, "Bạn có xác nhận chọn nhà cung cấp này không","Message",JOptionPane.YES_NO_OPTION);
                 if(JOptionPane.YES_OPTION == result){
-                    String MaNSX = listItem.get(cb_ncc.getSelectedIndex()).getValue();
+                    MaNSX = listItem.get(cb_ncc.getSelectedIndex()).getValue();
                     dispose();
                 }
             }
         });
+        
     }
     
 
@@ -138,6 +140,10 @@ public class Form_ChonNCC extends javax.swing.JFrame {
         } catch (SQLException e) {
             System.err.println(e);
         }
+    }
+    
+    public String getMaNSX(){
+        return MaNSX;
     }
     
     private void loadDataComboBox(){

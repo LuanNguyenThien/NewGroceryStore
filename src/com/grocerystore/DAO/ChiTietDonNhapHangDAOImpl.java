@@ -7,7 +7,10 @@ package com.grocerystore.DAO;
 import com.grocerystore.model.ChiTietDonNhapHang;
 import connection.DatabaseConnection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -38,6 +41,40 @@ public class ChiTietDonNhapHangDAOImpl implements IChiTietDonNhapHangDAO{
             }
         }
         return false;
+    }
+
+    @Override
+    public List<ChiTietDonNhapHang> listSanPham(String MaDNH) {
+        String sql = "SELECT * FROM ChiTietDonNhapHang WHERE MaDNH = ?";
+        List<ChiTietDonNhapHang> list = new ArrayList<ChiTietDonNhapHang>();
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        
+        try {
+            preparedStatement = DatabaseConnection.getInstance().getConnection().prepareStatement(sql);
+            preparedStatement.setString(1, MaDNH);
+            resultSet = preparedStatement.executeQuery();
+            
+            while (resultSet.next()) {
+                ChiTietDonNhapHang sanpham = new ChiTietDonNhapHang();
+                sanpham.setMaDNH(resultSet.getString("MaDNH"));
+                sanpham.setMaSP(resultSet.getString("MaSP"));
+                sanpham.setSoLuong(resultSet.getInt("SoLuong"));
+                sanpham.setDonGia(resultSet.getDouble("DonGia"));
+
+                list.add(sanpham);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) resultSet.close();
+                if (preparedStatement != null) preparedStatement.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return list;
     }
     
 }

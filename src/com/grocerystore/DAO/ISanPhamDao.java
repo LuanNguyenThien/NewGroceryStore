@@ -21,4 +21,5 @@ public interface ISanPhamDao {
     List<SanPham> findByMaNSX(String MaNSX);
     SanPham findById(String MaSP);
     Boolean update_soluong(String MaSP, int soluong);
+    Boolean update_soluongByNhapHang(String MaSP, int soluong);
 }
