@@ -16,4 +16,5 @@ public interface IDonNhapHangDAO {
     List<DonNhapHang> GetDSDNH(); //lay trang thai chua nhap
     Boolean XacNhanDNH(String MaDNH);
     Boolean XoaDNH(String MaDNH);
+    String GetMaxDNH();
 }

@@ -123,5 +123,33 @@ public class DonNhapHangDAOImpl implements IDonNhapHangDAO{
         }
         return false;
     }
+
+    @Override
+    public String GetMaxDNH() {
+        String MaDNH = "";
+        String sql = "SELECT MAX(MaDNH) FROM DonNhapHang";
+        
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        
+        try {
+            preparedStatement = DatabaseConnection.getInstance().getConnection().prepareStatement(sql);
+            resultSet = preparedStatement.executeQuery();
+            
+            while (resultSet.next()) {
+                MaDNH = resultSet.getString("MAX(MaDNH)");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) resultSet.close();
+                if (preparedStatement != null) preparedStatement.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return MaDNH;
+    }
     
 }

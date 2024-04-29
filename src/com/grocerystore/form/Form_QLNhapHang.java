@@ -850,25 +850,29 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
         try{
             int result = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn lưu đơn nhập hàng này?","Hệ thống",JOptionPane.YES_NO_CANCEL_OPTION);
             
-            donNhapDAO.ThemDNH(donNhap);
-            chiTietDonNhapDAO = new ChiTietDonNhapHangDAOImpl();
+            if(JOptionPane.YES_NO_OPTION == result){
+                donNhapDAO.ThemDNH(donNhap);
+                chiTietDonNhapDAO = new ChiTietDonNhapHangDAOImpl();
+                String maDNH = donNhapDAO.GetMaxDNH();
+                
+                DefaultTableModel model = new DefaultTableModel();
+                model = (DefaultTableModel) tb_ChiTietDonHang.getModel();
 
-            DefaultTableModel model = new DefaultTableModel();
-            model = (DefaultTableModel) tb_ChiTietDonHang.getModel();
+                for(int i = 0 ; i < model.getRowCount(); i++){
+                    ChiTietDonNhapHang chiTiet = new ChiTietDonNhapHang();
+                    chiTiet.setMaDNH(maDNH);
+                    chiTiet.setMaSP(tb_ChiTietDonHang.getValueAt(i, 0).toString());
+                    chiTiet.setSoLuong(Integer.parseInt(tb_ChiTietDonHang.getValueAt(i, 3).toString()));
+                    chiTiet.setDonGia(Double.parseDouble(tb_ChiTietDonHang.getValueAt(i, 2).toString()));
+                    chiTietDonNhapDAO.ThemCTDNH(chiTiet);
+                }
 
-            for(int i = 0 ; i < model.getRowCount(); i++){
-                ChiTietDonNhapHang chiTiet = new ChiTietDonNhapHang();
-                chiTiet.setMaSP(tb_ChiTietDonHang.getValueAt(i, 0).toString());
-                chiTiet.setSoLuong(Integer.parseInt(tb_ChiTietDonHang.getValueAt(i, 3).toString()));
-                chiTiet.setDonGia(Double.parseDouble(tb_ChiTietDonHang.getValueAt(i, 2).toString()));
-                chiTietDonNhapDAO.ThemCTDNH(chiTiet);
+                JOptionPane.showMessageDialog(this, "Tạo đơn hàng thành công");
+                tb_ChiTietDonHang.removeAll();
+                loadDonNhapHang();
+                loadChiTiet();
+                loadSanPham();
             }
-            
-            JOptionPane.showMessageDialog(this, "Tạo đơn hàng thành công");
-            tb_ChiTietDonHang.removeAll();
-            loadDonNhapHang();
-            loadChiTiet();
-            loadSanPham();
             
         }catch(Exception e){
             e.printStackTrace();

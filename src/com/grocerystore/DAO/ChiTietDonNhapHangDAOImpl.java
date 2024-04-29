@@ -20,14 +20,15 @@ public class ChiTietDonNhapHangDAOImpl implements IChiTietDonNhapHangDAO{
 
     @Override
     public Boolean ThemCTDNH(ChiTietDonNhapHang chiTietDonNhapHang) {
-        String sql = "Call ThemChiTietDonNhapHang(?, ?, ?)";
+        String sql = "INSERT INTO ChiTietDonNhapHang (MaDNH, MaSP, SoLuong, DonGia) VALUES (?, ?, ?, ?)";
         PreparedStatement preparedStatement = null;
         
         try {
             preparedStatement = DatabaseConnection.getInstance().getConnection().prepareStatement(sql);
-            preparedStatement.setString(1, chiTietDonNhapHang.getMaSP());
-            preparedStatement.setInt(2, chiTietDonNhapHang.getSoLuong());
-            preparedStatement.setDouble(3, chiTietDonNhapHang.getDonGia());
+            preparedStatement.setString(1, chiTietDonNhapHang.getMaDNH());
+            preparedStatement.setString(2, chiTietDonNhapHang.getMaSP());
+            preparedStatement.setInt(3, chiTietDonNhapHang.getSoLuong());
+            preparedStatement.setDouble(4, chiTietDonNhapHang.getDonGia());
             
             int rowsInserted = preparedStatement.executeUpdate();
             return rowsInserted > 0;
