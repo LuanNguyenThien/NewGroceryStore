@@ -27,6 +27,9 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
@@ -70,6 +73,7 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
         tb_DonNhapHang.fixTable(jScrollPane1);
         tb_ChiTietDonHang.fixTable(jScrollPane2);
         tb_SanPham.fixTable(jScrollPane3);
+        
         setEditTextField();
         loadSanPham();
         loadDonNhapHang();
@@ -893,7 +897,7 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
                         loadDonNhapHang();
                         loadChiTiet();
                         loadSanPham();
-
+                        turnOffButton();
                 }else{
                     JOptionPane.showMessageDialog(this, "Có lỗi xảy ra trong quá trình tạo đơn","Hệ thống thông báo",JOptionPane.ERROR_MESSAGE);
                 }
@@ -971,8 +975,19 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btn_HuyPhieuActionPerformed
 
-    private void btn_XoaSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_XoaSPActionPerformed
+    private void tb_ChiTietDonHangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tb_ChiTietDonHangMouseClicked
+        int row = tb_ChiTietDonHang.getSelectedRow();
         
+        if(row != -1){
+            btn_XoaSP.setEnabled(true);
+            btn_XoaSP.setBackground(new Color(204,0,51));
+        }else{
+            btn_XoaSP.setEnabled(false);
+            btn_XoaSP.setBackground(Color.GRAY);
+        }
+    }//GEN-LAST:event_tb_ChiTietDonHangMouseClicked
+
+    private void btn_XoaSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_XoaSPActionPerformed
         int row = tb_ChiTietDonHang.getSelectedRow();
         if(row == -1){
             JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm muốn xóa"
@@ -984,22 +999,10 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
                 model = (DefaultTableModel) tb_ChiTietDonHang.getModel();
                 int modelIndex = tb_ChiTietDonHang.convertRowIndexToModel(row);
                 model.removeRow(modelIndex);
-                loadChiTiet();
                 JOptionPane.showMessageDialog(this, "Đã xóa sản phẩm khỏi đơn hàng");
             }
         }
     }//GEN-LAST:event_btn_XoaSPActionPerformed
-
-    private void tb_ChiTietDonHangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tb_ChiTietDonHangMouseClicked
-        int row = tb_ChiTietDonHang.getSelectedRow();
-        if(row != -1){
-            btn_XoaSP.setEnabled(false);
-            btn_XoaSP.setBackground(Color.GRAY);
-        }else{
-            btn_XoaSP.setEnabled(true);
-            btn_XoaSP.setBackground(new Color(204,0,51));
-        }
-    }//GEN-LAST:event_tb_ChiTietDonHangMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
