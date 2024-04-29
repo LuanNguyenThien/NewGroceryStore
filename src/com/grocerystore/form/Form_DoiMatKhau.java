@@ -474,6 +474,16 @@ public class Form_DoiMatKhau extends javax.swing.JPanel {
 
 
     private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_updateActionPerformed
+        int namHienTai = LocalDate.now().getYear();
+        int namSinh = Integer.parseInt(tf_NgaySinh.getText().split("-")[0]);
+        if (tf_TenNhanVien.getText().isEmpty() || tf_DiaChi.getText().isEmpty() || 
+                tf_Sdt.getText().isEmpty() || tf_NgaySinh.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin!");
+        }else if (namHienTai - namSinh < 16){
+            JOptionPane.showMessageDialog(null, "Tuổi không hợp lệ!");
+        }else if (!tf_Sdt.getText().matches("^\\d{10}$")) {    //Chi nhan so co 10 chu so khong co khoang trong
+            JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ!");
+        }else {
         INhanVienDAO nhanVienDao = new NhanVienDAOImpl();
         NhanVien nv = nhanVienDao.findByID(DataInitializer.curUser.getMaNV());
         nv.setMaNV(DataInitializer.curUser.getMaNV());
@@ -490,6 +500,7 @@ public class Form_DoiMatKhau extends javax.swing.JPanel {
         if (nhanVienDao.update(nv)) {
             JOptionPane.showMessageDialog(null, "Cập nhật thành công!");
             System.out.println(nv.getHoTen());
+        }
         }
 
     }//GEN-LAST:event_btn_updateActionPerformed
