@@ -295,8 +295,8 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
         btn_HuyPhieu.setBackground(Color.gray);
         btn_Luu.setEnabled(false);
         btn_Luu.setBackground(Color.gray);
-        btn_Huy.setEnabled(false);
-        btn_Huy.setBackground(Color.gray);
+        btn_XoaSP.setEnabled(false);
+        btn_XoaSP.setBackground(Color.gray);
         btn_XacNhan.setEnabled(false);
         btn_XacNhan.setBackground(Color.gray);
         btn_Xoa.setEnabled(false);
@@ -330,7 +330,7 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
         btn_Them = new com.raven.swing.Button();
         btn_HuyPhieu = new com.raven.swing.Button();
         btn_Luu = new com.raven.swing.Button();
-        btn_Huy = new com.raven.swing.Button();
+        btn_XoaSP = new com.raven.swing.Button();
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -369,6 +369,11 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        tb_ChiTietDonHang.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tb_ChiTietDonHangMouseClicked(evt);
             }
         });
         jScrollPane2.setViewportView(tb_ChiTietDonHang);
@@ -462,15 +467,15 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
             }
         });
 
-        btn_Huy.setBackground(new java.awt.Color(204, 0, 51));
-        btn_Huy.setForeground(new java.awt.Color(255, 255, 255));
-        btn_Huy.setText("Hủy   ");
-        btn_Huy.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btn_Huy.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        btn_Huy.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btn_Huy.addActionListener(new java.awt.event.ActionListener() {
+        btn_XoaSP.setBackground(new java.awt.Color(204, 0, 51));
+        btn_XoaSP.setForeground(new java.awt.Color(255, 255, 255));
+        btn_XoaSP.setText("Xóa   ");
+        btn_XoaSP.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btn_XoaSP.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        btn_XoaSP.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btn_XoaSP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_HuyActionPerformed(evt);
+                btn_XoaSPActionPerformed(evt);
             }
         });
 
@@ -527,7 +532,7 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btn_Luu, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btn_Huy, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btn_XoaSP, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -564,7 +569,7 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
                 .addGap(15, 15, 15)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_Luu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_Huy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btn_XoaSP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -910,8 +915,8 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
         
         btn_Luu.setEnabled(true);
         btn_Luu.setBackground(new Color(51,102,255));
-        btn_Huy.setEnabled(true);
-        btn_Huy.setBackground(new Color(204,0,51));
+        btn_XoaSP.setEnabled(true);
+        btn_XoaSP.setBackground(new Color(204,0,51));
 
         if(tf_MaSP.getText().isEmpty()){
             JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm thêm vào đơn hàng");
@@ -926,13 +931,24 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
                 DefaultTableModel model = new DefaultTableModel();
                 model = (DefaultTableModel) tb_ChiTietDonHang.getModel();
 
+                int vitri = -1;
 
-                Object[] row = new Object[4];
-                row[0] = tf_MaSP.getText();
-                row[1] = tf_TenSP.getText();
-                row[2] = tf_GiaNhap.getText();
-                row[3] = tf_SoLuong.getText();
-                model.addRow(row);
+                for(int i = 0 ; i < model.getRowCount(); i++){
+                    if(tb_ChiTietDonHang.getValueAt(i, 0).equals(tf_MaSP.getText())){
+                        vitri = i;
+                    }
+                }
+                if(vitri != -1){
+                    int newSoLuong = Integer.parseInt(tb_ChiTietDonHang.getValueAt(vitri, 3).toString())+Integer.parseInt(tf_SoLuong.getText());
+                    tb_ChiTietDonHang.setValueAt(newSoLuong, vitri, 3);
+                }else{
+                   Object[] row = new Object[4];
+                   row[0] = tf_MaSP.getText();
+                   row[1] = tf_TenSP.getText();
+                   row[2] = tf_GiaNhap.getText();
+                   row[3] = tf_SoLuong.getText();
+                   model.addRow(row);
+                }
 
                 clearText();
                 setEditTextField();
@@ -955,29 +971,45 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btn_HuyPhieuActionPerformed
 
-    private void btn_HuyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_HuyActionPerformed
-        int result = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn hủy phiếu này không","Thông báo",JOptionPane.YES_NO_CANCEL_OPTION);
-        if(JOptionPane.YES_OPTION == result){
-            loadSanPham();
-            loadChiTiet();
-            loadDonNhapHang();
-
-            turnOffButton();
-            clearText();
-            setEditTextField();
-            JOptionPane.showMessageDialog(this, "Đã hủy tạo phiếu thành công");
+    private void btn_XoaSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_XoaSPActionPerformed
+        
+        int row = tb_ChiTietDonHang.getSelectedRow();
+        if(row == -1){
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm muốn xóa"
+                    ,"Hệ thống",JOptionPane.WARNING_MESSAGE);
+        }else{
+            int result = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa sản phẩm này không","Thông báo",JOptionPane.YES_NO_CANCEL_OPTION);
+            if(JOptionPane.YES_OPTION == result){ 
+                DefaultTableModel model = new DefaultTableModel();
+                model = (DefaultTableModel) tb_ChiTietDonHang.getModel();
+                int modelIndex = tb_ChiTietDonHang.convertRowIndexToModel(row);
+                model.removeRow(modelIndex);
+                loadChiTiet();
+                JOptionPane.showMessageDialog(this, "Đã xóa sản phẩm khỏi đơn hàng");
+            }
         }
-    }//GEN-LAST:event_btn_HuyActionPerformed
+    }//GEN-LAST:event_btn_XoaSPActionPerformed
+
+    private void tb_ChiTietDonHangMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tb_ChiTietDonHangMouseClicked
+        int row = tb_ChiTietDonHang.getSelectedRow();
+        if(row != -1){
+            btn_XoaSP.setEnabled(false);
+            btn_XoaSP.setBackground(Color.GRAY);
+        }else{
+            btn_XoaSP.setEnabled(true);
+            btn_XoaSP.setBackground(new Color(204,0,51));
+        }
+    }//GEN-LAST:event_tb_ChiTietDonHangMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.raven.swing.Button btn_Huy;
     private com.raven.swing.Button btn_HuyPhieu;
     private com.raven.swing.Button btn_Luu;
     private com.raven.swing.Button btn_TaoPhieu;
     private com.raven.swing.Button btn_Them;
     private com.raven.swing.Button btn_XacNhan;
     private com.raven.swing.Button btn_Xoa;
+    private com.raven.swing.Button btn_XoaSP;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
