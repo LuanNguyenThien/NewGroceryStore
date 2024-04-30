@@ -878,20 +878,27 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
 
     private void btn_LuuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_LuuActionPerformed
         
+        DefaultTableModel model = new DefaultTableModel();
+        model = (DefaultTableModel) tb_ChiTietDonHang.getModel();
+        
         try{
             int result = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn lưu đơn nhập hàng này?","Hệ thống",JOptionPane.YES_NO_CANCEL_OPTION);
-            
+
             if(JOptionPane.YES_NO_OPTION == result){
-                if(donNhapDAO.ThemDNH(donNhap)){
+                if(model.getRowCount() == 0){
+                    FormPopupNotification popup = new FormPopupNotification("Chưa có sản phẩm nào trong đơn hàng vui lòng thêm sản phẩm", FormPopupNotification.Type.WARNING);
+                    popup.setAlwaysOnTop(true);
+                    popup.setVisible(true);
+                    popup.toFront();
+                }
+                else{
+                    if(donNhapDAO.ThemDNH(donNhap)){
 
                         chiTietDonNhapDAO = new ChiTietDonNhapHangDAOImpl();
                         String maDNH = donNhapDAO.GetMaxDNH();
 
-                        DefaultTableModel model = new DefaultTableModel();
-                        model = (DefaultTableModel) tb_ChiTietDonHang.getModel();
                         
-                        
-                        
+
                         for(int i = 0 ; i < model.getRowCount(); i++){
                             ChiTietDonNhapHang chiTiet = new ChiTietDonNhapHang();
  
@@ -926,14 +933,16 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
                         
                         btn_TaoPhieu.setEnabled(true);
                         btn_TaoPhieu.setBackground(new Color(51,102,255));
-                }else{
-                    
-                    FormPopupNotification popup = new FormPopupNotification("Có lỗi xảy ra trong quá trình tạo đơn", FormPopupNotification.Type.ERROR);
-                    popup.setAlwaysOnTop(true);
-                    popup.setVisible(true);
-                    popup.toFront();
+                    }else{
 
+                        FormPopupNotification popup = new FormPopupNotification("Có lỗi xảy ra trong quá trình tạo đơn", FormPopupNotification.Type.ERROR);
+                        popup.setAlwaysOnTop(true);
+                        popup.setVisible(true);
+                        popup.toFront();
+
+                    }
                 }
+
             }
             
         }catch(Exception e){
@@ -1042,11 +1051,16 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
                 int modelIndex = tb_ChiTietDonHang.convertRowIndexToModel(row);
                 model.removeRow(modelIndex);
                 
+                if(model.getRowCount() == 0){
+                    btn_XoaSP.setEnabled(false);
+                    btn_XoaSP.setBackground(Color.GRAY);
+                }
+                
                 FormPopupNotification popup = new FormPopupNotification("Đã xóa sản phẩm khỏi đơn hàng", FormPopupNotification.Type.INFO);
                 popup.setAlwaysOnTop(true);
                 popup.setVisible(true);
                 popup.toFront();
-
+                
             }
         }
     }//GEN-LAST:event_btn_XoaSPActionPerformed
