@@ -7,6 +7,7 @@ package com.grocerystore.form;
 import com.grocerystore.model.NhanVien;
 import com.grocerystore.DAO.INhanVienDAO;
 import com.grocerystore.DAO.NhanVienDAOImpl;
+import com.grocerystore.main.DataInitializer;
 import com.grocerystore.swing.scrollbar.ScrollBarCustom;
 import com.sun.java.swing.plaf.windows.WindowsBorders;
 import connection.DatabaseConnection;
@@ -64,7 +65,7 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
     
     private void loadData() {
         btn_update.setEnabled(false);
-        btn_delete.setEnabled(false);
+        btn_sathai.setEnabled(false);
         btn_add.setEnabled(true);
         
         INhanVienDAO nhanVienDao = new NhanVienDAOImpl();
@@ -148,8 +149,8 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
         jLabel15 = new javax.swing.JLabel();
         tf_TenTaiKhoan = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
-        btn_SaThai = new com.raven.swing.Button();
-        btn_delete = new com.raven.swing.Button();
+        btn_lammoi = new com.raven.swing.Button();
+        btn_sathai = new com.raven.swing.Button();
         btn_update = new com.raven.swing.Button();
         btn_add = new com.raven.swing.Button();
         jPanel2 = new javax.swing.JPanel();
@@ -239,27 +240,27 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel10.setText("Tài khoản");
 
-        btn_SaThai.setBackground(new java.awt.Color(51, 102, 255));
-        btn_SaThai.setForeground(new java.awt.Color(255, 255, 255));
-        btn_SaThai.setText("Sa thải     ");
-        btn_SaThai.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btn_SaThai.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        btn_SaThai.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btn_SaThai.addActionListener(new java.awt.event.ActionListener() {
+        btn_lammoi.setBackground(new java.awt.Color(51, 102, 255));
+        btn_lammoi.setForeground(new java.awt.Color(255, 255, 255));
+        btn_lammoi.setText("Làm mới   ");
+        btn_lammoi.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btn_lammoi.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        btn_lammoi.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btn_lammoi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_SaThaiActionPerformed(evt);
+                btn_lammoiActionPerformed(evt);
             }
         });
 
-        btn_delete.setBackground(new java.awt.Color(51, 102, 255));
-        btn_delete.setForeground(new java.awt.Color(255, 255, 255));
-        btn_delete.setText("Xóa   ");
-        btn_delete.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btn_delete.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        btn_delete.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btn_delete.addActionListener(new java.awt.event.ActionListener() {
+        btn_sathai.setBackground(new java.awt.Color(51, 102, 255));
+        btn_sathai.setForeground(new java.awt.Color(255, 255, 255));
+        btn_sathai.setText("Sa thải   ");
+        btn_sathai.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btn_sathai.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        btn_sathai.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btn_sathai.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_deleteActionPerformed(evt);
+                btn_sathaiActionPerformed(evt);
             }
         });
 
@@ -327,26 +328,29 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(cb_GioiTinh, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(btn_SaThai, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btn_lammoi, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(36, 36, 36)
                                         .addComponent(btn_update, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(21, 21, 21)))))
-                        .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btn_ChonNgaySinh, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(lbl_picSP, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(19, 19, 19))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(btn_delete, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(41, 41, 41)
-                                        .addComponent(btn_add, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(62, 62, 62)))))
+                                        .addComponent(lbl_picSP, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(19, 19, 19))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(62, 62, 62))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(btn_sathai, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                                        .addComponent(btn_add, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(38, 38, 38))))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(btn_ChonNgaySinh, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -389,9 +393,9 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
                 .addGap(66, 66, 66)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_add, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_delete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_sathai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_update, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_SaThai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btn_lammoi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
 
@@ -598,7 +602,7 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
 
     }//GEN-LAST:event_lbl_picSPMouseClicked
 
-    private void btn_SaThaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SaThaiActionPerformed
+    private void btn_lammoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_lammoiActionPerformed
         // TODO add your handling code here:
         tf_TenTaiKhoan.setEnabled(true);
         //Reset cac truong
@@ -606,12 +610,15 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
         tf_DiaChi.setText("");
         tf_Sdt.setText("");
         tf_TenTaiKhoan.setText("");
-        tf_NgaySinh.setText("");
         lbl_picSP.setIcon(null);
         tf_TenNhanVien.setText("");
-        cb_GioiTinh.setSelectedItem(0);
-        cb_Quyen.setSelectedItem(0);
-    }//GEN-LAST:event_btn_SaThaiActionPerformed
+        cb_GioiTinh.setSelectedIndex(0);
+        cb_Quyen.setSelectedIndex(0);
+        
+        btn_update.setEnabled(false);
+        btn_sathai.setEnabled(false);
+        btn_add.setEnabled(true);
+    }//GEN-LAST:event_btn_lammoiActionPerformed
 
     private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_updateActionPerformed
         // TODO add your handling code here:
@@ -661,7 +668,7 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
 
                     tf_TenTaiKhoan.setEnabled(true);
                     btn_update.setEnabled(false);
-                    btn_delete.setEnabled(false);
+                    btn_sathai.setEnabled(false);
                     btn_add.setEnabled(true);
                 } else {
                     JOptionPane.showMessageDialog(null, "Số điện thoại hoặc tài khoản đã tồn tại!");
@@ -675,13 +682,20 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
         
     }//GEN-LAST:event_btn_updateActionPerformed
 
-    private void btn_deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_deleteActionPerformed
+    private void btn_sathaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_sathaiActionPerformed
         // TODO add your handling code here:
         
         DefaultTableModel model = (DefaultTableModel) tb_QLNhanVien.getModel();
         int selectedRow = tb_QLNhanVien.getSelectedRow();
         if(selectedRow != -1) {
-            // remove selected row from the model
+           // remove selected row from the model
+           if(model.getValueAt(selectedRow, 0).toString().equals(DataInitializer.curUser.getMaNV()))
+           {
+               FormPopupNotification popup = new FormPopupNotification("Không thể sa thải chính mình", FormPopupNotification.Type.ERROR);
+                popup.setAlwaysOnTop(true);
+                popup.setVisible(true);
+                return;
+           }
            int result = JOptionPane.showConfirmDialog(null,  "Bạn muốn xóa nhân viên này?", "Xóa", JOptionPane.YES_NO_OPTION);
            if (result == JOptionPane.YES_OPTION) {
                INhanVienDAO nhanVienDao = new NhanVienDAOImpl();
@@ -695,18 +709,18 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
                 tf_NgaySinh.setText("");
                 lbl_picSP.setIcon(null);
                 tf_TenNhanVien.setText("");
-                cb_GioiTinh.setSelectedItem(0);
-                cb_Quyen.setSelectedItem(0);
+                cb_GioiTinh.setSelectedIndex(0);
+                cb_Quyen.setSelectedIndex(0);
 
                 tf_TenTaiKhoan.setEnabled(true);
                 btn_update.setEnabled(false);
-                btn_delete.setEnabled(false);
+                btn_sathai.setEnabled(false);
                 btn_add.setEnabled(true);
            }
         } else {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên để xóa!");
         }
-    }//GEN-LAST:event_btn_deleteActionPerformed
+    }//GEN-LAST:event_btn_sathaiActionPerformed
 
     private void btn_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addActionPerformed
         // TODO add your handling code here:
@@ -764,7 +778,7 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
         // TODO add your handling code here:
         tf_TenTaiKhoan.setEnabled(false);
         btn_update.setEnabled(true);
-        btn_delete.setEnabled(true);
+        btn_sathai.setEnabled(true);
         btn_add.setEnabled(false);
         int selectedRow = tb_QLNhanVien.getSelectedRow();
         DefaultTableModel model = (DefaultTableModel) tb_QLNhanVien.getModel();
@@ -883,9 +897,9 @@ public class Form_QLNhanVien extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.raven.swing.Button btn_ApDung;
     private com.grocerystore.swing.Button btn_ChonNgaySinh;
-    private com.raven.swing.Button btn_SaThai;
     private com.raven.swing.Button btn_add;
-    private com.raven.swing.Button btn_delete;
+    private com.raven.swing.Button btn_lammoi;
+    private com.raven.swing.Button btn_sathai;
     private com.raven.swing.Button btn_update;
     private com.raven.swing.Button button2;
     private com.raven.swing.CustomCombobox cb_GioiTinh;

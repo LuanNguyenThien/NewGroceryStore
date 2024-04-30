@@ -3,6 +3,7 @@ package com.grocerystore.component;
 import com.grocerystore.event.EventMenu;
 import com.grocerystore.event.EventMenuSelected;
 import com.grocerystore.event.EventShowPopupMenu;
+import com.grocerystore.main.DataInitializer;
 import com.grocerystore.model.ModelMenu;
 import com.grocerystore.swing.MenuAnimation;
 import com.grocerystore.swing.MenuItem;
@@ -56,13 +57,20 @@ public class Menu extends javax.swing.JPanel {
     }
 
     public void initMenuItem() {
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/1.png")), "Trang chủ"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/2.png")), "Bán hàng"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/3.png")), "Nhập hàng"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/4.png")), "Sản phẩm"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/5.png")), "Nhân viên"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/6.png")), "Khách hàng"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/7.png")), "Thiết lập tài khoản"));
+        if("Quản lý".equals(DataInitializer.curUser.getQuyen())){
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/1.png")), "Trang chủ"));
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/2.png")), "Bán hàng"));
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/3.png")), "Nhập hàng"));
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/4.png")), "Sản phẩm"));
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/5.png")), "Nhân viên"));
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/6.png")), "Khách hàng"));
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/7.png")), "Thiết lập tài khoản"));
+        }
+        else{
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/2.png")), "Bán hàng"));
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/6.png")), "Khách hàng"));
+            addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/grocerystore/icon/7.png")), "Thiết lập tài khoản"));
+        }
     }
 
     private void addMenu(ModelMenu menu) {

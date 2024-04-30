@@ -4,8 +4,10 @@ import com.grocerystore.main.DataInitializer;
 import com.grocerystore.main.Login;
 import com.grocerystore.model.NhanVien;
 import com.raven.model.ModelUser;
+import connection.DatabaseConnection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import util.Util;
@@ -18,6 +20,15 @@ public class Header extends javax.swing.JPanel {
         this.nv_data = nv_data;
         init();
     }
+    
+    public void connect_DB(){
+        try {
+            DatabaseConnection.getInstance().connectToDatabase();
+        } catch (SQLException e) {
+            System.err.println(e);
+        }
+    }
+    
     public Header() {
         initComponents();
         btn_minimize.addActionListener(new ActionListener() {
@@ -33,6 +44,7 @@ public class Header extends javax.swing.JPanel {
         btn_close.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                connect_DB();
                 JFrame yourFrame = (JFrame) SwingUtilities.getWindowAncestor(Header.this);
                 if (yourFrame != null) {
                     yourFrame.dispose();

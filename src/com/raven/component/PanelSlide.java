@@ -22,6 +22,7 @@ import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 import com.grocerystore.DAO.NhanVienDAOImpl;
+import com.grocerystore.main.DataInitializer;
 import com.grocerystore.model.NhanVien;
 import java.util.concurrent.CountDownLatch;
 import javax.swing.SwingWorker;
@@ -152,6 +153,7 @@ public class PanelSlide extends javax.swing.JLayeredPane {
                     nv = nvdao.checkLogin(userName, password);
                     
                     if(nv!=null){
+                        DataInitializer.curUser = nv;
                         IDCurUser = nv.getMaNV();
                         String quyen = nv.getQuyen();
                         String hoten = nv.getHoTen();

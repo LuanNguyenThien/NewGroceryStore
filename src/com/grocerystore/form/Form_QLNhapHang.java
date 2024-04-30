@@ -185,13 +185,11 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
                 }
             }
 
-            tableColumn.setMinWidth(preferredWidth+5); // Set minimum width instead of preferred width
+            tableColumn.setMinWidth(preferredWidth+65); // Set minimum width instead of preferred width
         }
     }   
     
     private void loadChiTiet(){
-       
-
         String[] columnNames = {"Mã Sản Phẩm", "Tên Sản Phẩm", "Đơn Giá Nhập", "Số lượng"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
@@ -221,9 +219,11 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
                     break;
                 }
             }
-
             tableColumn.setMinWidth(preferredWidth+5); // Set minimum width instead of preferred width
+            if(column==1)
+                tableColumn.setMinWidth(preferredWidth+80);
         }
+        
     }
     
     private void loadSanPhamByNSX(String maNSX){
@@ -831,6 +831,11 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
                 loadSanPham();
                 loadDonNhapHang();
                 
+                btn_XacNhan.setEnabled(false);
+                btn_XacNhan.setBackground(Color.gray);
+                btn_Xoa.setEnabled(false);
+                btn_Xoa.setBackground(Color.gray);
+                
                 FormPopupNotification popup = new FormPopupNotification("Đơn hàng đã được xác nhận thành công", FormPopupNotification.Type.SUCCESS);
                 popup.setAlwaysOnTop(true);
                 popup.setVisible(true);
@@ -1019,6 +1024,9 @@ public class Form_QLNhapHang extends javax.swing.JPanel {
             turnOffButton();
             clearText();
             setEditTextField();
+            btn_TaoPhieu.setEnabled(true);
+            btn_TaoPhieu.setBackground(new Color(51,102,255));
+            
         }
     }//GEN-LAST:event_btn_HuyPhieuActionPerformed
 
