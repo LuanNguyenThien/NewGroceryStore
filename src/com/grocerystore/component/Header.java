@@ -1,5 +1,6 @@
 package com.grocerystore.component;
 
+import com.grocerystore.main.DataInitializer;
 import com.grocerystore.main.Login;
 import com.grocerystore.model.NhanVien;
 import com.raven.model.ModelUser;
@@ -44,7 +45,17 @@ public class Header extends javax.swing.JPanel {
     private void init(){
         lbUserName.setText(nv_data.getHoTen());
         lbRole.setText(nv_data.getQuyen());
-        //pic.setIcon(Util.byteArrayToImageIcon(nv_data.getHinhAnh()));
+        if(nv_data.getHinhAnh()!=null)
+            pic.setIcon(Util.byteArrayToImageIcon(nv_data.getHinhAnh()));
+    }
+    
+    public void updateHeader() {
+        lbUserName.setText(DataInitializer.curUser.getHoTen());
+        lbRole.setText(DataInitializer.curUser.getQuyen());
+        if(DataInitializer.curUser.getHinhAnh()!=null)
+            pic.setIcon(Util.byteArrayToImageIcon(DataInitializer.curUser.getHinhAnh()));
+            pic.repaint();
+            pic.revalidate();
     }
     
     public void addMenuEvent(ActionListener event) {
@@ -71,7 +82,7 @@ public class Header extends javax.swing.JPanel {
 
         lbUserName.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
         lbUserName.setForeground(new java.awt.Color(127, 127, 127));
-        lbUserName.setText("User Name");
+        lbUserName.setText("Nguyễn Thiện Luân Đẹp Trai");
 
         lbRole.setForeground(new java.awt.Color(127, 127, 127));
         lbRole.setText("Admin");
@@ -97,7 +108,7 @@ public class Header extends javax.swing.JPanel {
                     .addComponent(lbRole, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGap(18, 18, 18)
                 .addComponent(pic, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 418, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 318, Short.MAX_VALUE)
                 .addComponent(btn_minimize, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_close, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)

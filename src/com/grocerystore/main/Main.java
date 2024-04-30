@@ -10,6 +10,7 @@ import com.grocerystore.event.EventShowPopupMenu;
 import com.grocerystore.form.Form1;
 import com.grocerystore.form.Form_DoiMatKhau;
 import com.grocerystore.form.Form_DoiMatKhau;
+import com.grocerystore.form.Form_DoiMatKhau.UserUpdateListener;
 import com.grocerystore.form.Form_Home;
 import com.grocerystore.form.Form_Home1;
 import com.grocerystore.form.Form_QLBanHang;
@@ -79,8 +80,17 @@ public class Main extends javax.swing.JFrame {
                     main.showForm(new Form_QLNhanVien());
                 if (menuIndex == 5)
                     main.showForm(new Form_QLKhachHang());
-                if (menuIndex == 6)
-                    main.showForm(new Form_DoiMatKhau());
+                if (menuIndex == 6){
+                    Form_DoiMatKhau formDoiMatKhau = new Form_DoiMatKhau();
+                    formDoiMatKhau.setUserUpdateListener(new UserUpdateListener() {
+                        @Override
+                        public void onUserUpdated(NhanVien updatedUser) {
+                            // Update the header
+                            header.updateHeader();
+                        }
+                    });
+                    main.showForm(formDoiMatKhau);
+                }
             }
         });
         menu.addEventShowPopup(new EventShowPopupMenu() {

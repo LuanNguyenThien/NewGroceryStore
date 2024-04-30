@@ -33,8 +33,16 @@ import util.Util;
  *
  * @author Admin
  */
-public class Form_DoiMatKhau extends javax.swing.JPanel {
 
+public class Form_DoiMatKhau extends javax.swing.JPanel {
+    public interface UserUpdateListener {
+        void onUserUpdated(NhanVien updatedUser);
+    }
+    private UserUpdateListener userUpdateListener;
+
+    public void setUserUpdateListener(UserUpdateListener listener) {
+        this.userUpdateListener = listener;
+    }
     /**
      * Creates new form Form_DoiMatKhau2
      */
@@ -486,23 +494,29 @@ public class Form_DoiMatKhau extends javax.swing.JPanel {
         }else if (!tf_Sdt.getText().matches("^\\d{10}$")) {    //Chi nhan so co 10 chu so khong co khoang trong
             JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ!");
         }else {
-        NhanVienDAOImpl nvdao = new NhanVienDAOImpl();
-        NhanVien nv = nvdao.findByID(PanelSlide.IDCurUser);
-        nv.setMaNV(DataInitializer.curUser.getMaNV());
-        nv.setHoTen(tf_TenNhanVien.getText());
-        nv.setSdt(tf_Sdt.getText());
-        nv.setNgaySinh(Date.valueOf(tf_NgaySinh.getText()));
-        nv.setGioiTinh(cb_GioiTinh.getSelectedItem().toString());
-        nv.setDiaChi(tf_DiaChi.getText());
+            NhanVienDAOImpl nvdao = new NhanVienDAOImpl();
+            NhanVien nv = nvdao.findByID(PanelSlide.IDCurUser);
+            nv.setMaNV(DataInitializer.curUser.getMaNV());
+            nv.setHoTen(tf_TenNhanVien.getText());
+            nv.setSdt(tf_Sdt.getText());
+            nv.setNgaySinh(Date.valueOf(tf_NgaySinh.getText()));
+            nv.setGioiTinh(cb_GioiTinh.getSelectedItem().toString());
+            nv.setDiaChi(tf_DiaChi.getText());
 
 
-        if (lbl_picSP.getIcon() != null) {
-            nv.setHinhAnh(Util.imageIconToByteArray((ImageIcon) lbl_picSP.getIcon()));
-        }
-        if (nvdao.update(nv)) {
-            JOptionPane.showMessageDialog(null, "Cập nhật thành công!");
-            System.out.println(nv.getHoTen());
-        }
+            if (lbl_picSP.getIcon() != null) {
+                nv.setHinhAnh(Util.imageIconToByteArray((ImageIcon) lbl_picSP.getIcon()));
+            }
+            if (nvdao.update(nv)) {
+                JOptionPane.showMessageDialog(null, "Cập nhật thành công!");
+                DataInitializer.curUser = nv;
+                System.out.println(nv.getHoTen());
+                
+                // Notify the listener
+                if (userUpdateListener != null) {
+                    userUpdateListener.onUserUpdated(nv);
+                }
+            }
         }
 
     }//GEN-LAST:event_btn_updateActionPerformed
