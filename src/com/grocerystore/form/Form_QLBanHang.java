@@ -154,6 +154,11 @@ public class Form_QLBanHang extends javax.swing.JPanel {
         btnHuy.setEnabled(false);
         loadData();
         load_cbbfilter();
+        
+        tf_tenSPfilter.setText("");
+        cbb_LSPfilter.setSelectedIndex(0);
+        cbb_NSXfilter.setSelectedIndex(0);
+        filterSP();
     }
     
     private void setWidget(){

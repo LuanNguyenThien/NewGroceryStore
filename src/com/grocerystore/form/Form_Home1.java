@@ -77,6 +77,7 @@ public class Form_Home1 extends javax.swing.JPanel {
     }
 
     private void initCardData() {
+        connect_DB();
         int sumSP = thongKeDao.GetSumSPBan();
         Icon icon1 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.BUSINESS_CENTER, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
         card1.setData(new ModelCard("Tổng sản phẩm bán", sumSP, 20, icon1));
