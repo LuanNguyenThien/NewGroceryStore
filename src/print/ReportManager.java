@@ -36,9 +36,13 @@ public class ReportManager {
 
     public void printReportPayment(ParameterReportPayment data) throws JRException {
         Map para = new HashMap();
+        para.put("id", data.getIdHD());
+        para.put("date", data.getTime());
         para.put("staff", data.getStaff());
         para.put("customer", data.getCustomer());
         para.put("total", data.getTotal());
+        para.put("customerpay", data.getCustomerpay());
+        para.put("left", data.getLeft());
         para.put("qrcode", data.getQrcode());
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(data.getFields());
         JasperPrint print = JasperFillManager.fillReport(reportPay, para, dataSource);

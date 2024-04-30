@@ -124,7 +124,7 @@ public class HoaDonDAOImpl implements IHoaDonDAO{
             while (rs.next()) {
                 XuatHoaDon xhd = new XuatHoaDon();
                 xhd.setMaHD(rs.getString("MaHD"));
-                xhd.setNgayBanHang(rs.getDate("NgayBanHang"));
+                xhd.setNgayBanHang(rs.getTimestamp("NgayBanHang").toLocalDateTime());
                 xhd.setTriGiaHoaDon(rs.getBigDecimal("TriGiaHoaDon"));
                 xhd.setTienKhachTra(rs.getBigDecimal("TienKhachTra"));
                 xhd.setTienThua(rs.getBigDecimal("TienThua"));

@@ -4,12 +4,12 @@
  */
 package com.grocerystore.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.math.BigDecimal;
 
 public class XuatHoaDon {
     private String maHD;
-    private Date ngayBanHang;
+    private LocalDateTime ngayBanHang;
     private BigDecimal triGiaHoaDon;
     private BigDecimal tienKhachTra;
     private BigDecimal tienThua;
@@ -25,8 +25,8 @@ public class XuatHoaDon {
     public String getMaHD() { return maHD; }
     public void setMaHD(String maHD) { this.maHD = maHD; }
 
-    public Date getNgayBanHang() { return ngayBanHang; }
-    public void setNgayBanHang(Date ngayBanHang) { this.ngayBanHang = ngayBanHang; }
+    public LocalDateTime getNgayBanHang() { return ngayBanHang; }
+    public void setNgayBanHang(LocalDateTime ngayBanHang) { this.ngayBanHang = ngayBanHang; }
 
     public BigDecimal getTriGiaHoaDon() { return triGiaHoaDon; }
     public void setTriGiaHoaDon(BigDecimal triGiaHoaDon) { this.triGiaHoaDon = triGiaHoaDon; }

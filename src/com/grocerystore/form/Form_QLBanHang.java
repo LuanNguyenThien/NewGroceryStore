@@ -94,6 +94,8 @@ import javax.swing.table.TableColumn;
 import print.ReportManager;
 import print.model.FieldReportPayment;
 import print.model.ParameterReportPayment;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -111,11 +113,13 @@ public class Form_QLBanHang extends javax.swing.JPanel {
     private KhachHang currKH;
     private boolean themhd = false;
     NumberFormat format;
+    DateTimeFormatter formatter;
     private QtyCellEditor cellEditor;
     /**
      * Creates new form Form_QLNhanVien
      */
     public Form_QLBanHang() {
+        formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         format = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         sanPhamDao = new SanPhamDAOImpl();
         loaiSanPhamDao = new LoaiSanPhamDAOImpl();
@@ -1089,10 +1093,14 @@ public class Form_QLBanHang extends javax.swing.JPanel {
             if(listxuathoadon != null)
                 xhd = listxuathoadon.get(0); // Get the first XuatHoaDon
 
+            String maHD = xhd.getMaHD();
+            String thoigianBH = xhd.getNgayBanHang().format(formatter);
             String tenNhanVien = xhd.getTenNhanVien();
             String tenKhachHang = xhd.getTenKhachHang();
-            String trigia = xhd.getTriGiaHoaDon().toString();
-            ParameterReportPayment dataprint = new ParameterReportPayment(tenNhanVien, tenKhachHang, trigia, generateQrcode(), fields);
+            String trigia = format.format(xhd.getTriGiaHoaDon());
+            String tienKH = format.format(xhd.getTienKhachTra());
+            String tienthua = format.format(xhd.getTienThua());
+            ParameterReportPayment dataprint = new ParameterReportPayment(maHD, thoigianBH, tenNhanVien, tenKhachHang, trigia, tienKH, tienthua, generateQrcode(), fields);
             ReportManager.getInstance().compileReport();
             ReportManager.getInstance().printReportPayment(dataprint);
         } catch (Exception e) {

@@ -8,6 +8,10 @@
 	<parameter name="customer" class="java.lang.String"/>
 	<parameter name="total" class="java.lang.String"/>
 	<parameter name="qrcode" class="java.io.InputStream"/>
+	<parameter name="id" class="java.lang.String"/>
+	<parameter name="date" class="java.lang.String"/>
+	<parameter name="customerpay" class="java.lang.String"/>
+	<parameter name="left" class="java.lang.String"/>
 	<field name="name" class="java.lang.String"/>
 	<field name="qty" class="java.lang.Integer"/>
 	<field name="price" class="java.lang.Double"/>
@@ -39,7 +43,7 @@
 				<text><![CDATA[Mã hóa đơn:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="170" y="70" width="50" height="15" uuid="2f889604-f4fe-4b4f-8f36-08553459bfad"/>
+				<reportElement x="150" y="70" width="50" height="15" uuid="2f889604-f4fe-4b4f-8f36-08553459bfad"/>
 				<textElement>
 					<font fontName="Verdana" size="9"/>
 				</textElement>
@@ -72,6 +76,25 @@
 					<font fontName="Verdana" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{customer}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="70" width="50" height="15" uuid="ca5ea728-2a34-4278-b189-a6b3ee63aa97">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Verdana" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="70" width="109" height="15" uuid="fec38cb6-5dc1-44fb-876f-fcfbf361d6f1">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Verdana" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{date}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -188,13 +211,6 @@
 				</textElement>
 				<text><![CDATA[Tiền khách trả]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="225" y="45" width="84" height="15" uuid="1452b0b2-a97b-4573-a98d-40593812c58f"/>
-				<textElement textAlignment="Right">
-					<font fontName="Verdana" size="9"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{total}]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement x="75" y="60" width="150" height="15" uuid="84b5b898-ce9a-4ff3-b033-dedf7507bcb4"/>
 				<textElement textAlignment="Right">
@@ -202,26 +218,33 @@
 				</textElement>
 				<text><![CDATA[Tiền thừa]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="225" y="60" width="84" height="15" uuid="951ee8ad-3e54-43cd-81b4-2e66fb6c7e25"/>
-				<textElement textAlignment="Right">
-					<font fontName="Verdana" size="9"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{total}]]></textFieldExpression>
-			</textField>
-                        <line>
+			<line>
 				<reportElement x="0" y="210" width="309" height="1" uuid="a56e4fe8-70f1-415f-8796-cc54e0376a11"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineStyle="Solid"/>
 				</graphicElement>
 			</line>
-                        <staticText>
+			<staticText>
 				<reportElement x="0" y="210" width="310" height="30" uuid="42cacdc9-f3a5-4942-a6f4-5e1cb5b3c7fa"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12" isItalic="true"/>
 				</textElement>
 				<text><![CDATA[Cảm ơn quý khách đã mua sắm ở cửa hàng!!!]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="225" y="45" width="84" height="15" uuid="7274050f-ab99-48d5-af49-ea516c7d2e87"/>
+				<textElement textAlignment="Right">
+					<font fontName="Verdana" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{customerpay}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="225" y="60" width="84" height="15" uuid="7f8a574c-46cd-424d-bf0d-8d6409190cd4"/>
+				<textElement textAlignment="Right">
+					<font fontName="Verdana" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{left}]]></textFieldExpression>
+			</textField>
 		</band>
 	</summary>
 </jasperReport>
