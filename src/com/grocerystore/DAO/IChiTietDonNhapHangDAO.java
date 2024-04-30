@@ -5,6 +5,7 @@
 package com.grocerystore.DAO;
 
 import com.grocerystore.model.ChiTietDonNhapHang;
+import java.util.List;
 
 /**
  *
@@ -12,4 +13,7 @@ import com.grocerystore.model.ChiTietDonNhapHang;
  */
 public interface IChiTietDonNhapHangDAO {
     Boolean ThemCTDNH(ChiTietDonNhapHang chiTietDonNhapHang);
+    List<ChiTietDonNhapHang> listSanPham(String MaDNH);
+    Boolean checkMaSP(String MaDNH , String MaSP);
+    Boolean updateSoLuongSP(String MaDNH, String MaSP, int SoLuong);
 }

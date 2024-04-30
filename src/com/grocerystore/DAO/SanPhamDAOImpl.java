@@ -100,11 +100,11 @@ public class SanPhamDAOImpl implements ISanPhamDao{
     public List<SanPham> getAll() {
         List<SanPham> sanPhamList = new ArrayList<>();
         String sql = "SELECT * FROM SanPham";
-
-        try (Connection conn = DatabaseConnection.getInstance().getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            ResultSet rs = stmt.executeQuery();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try  {
+            stmt = DatabaseConnection.getInstance().getConnection().prepareStatement(sql);
+            rs = stmt.executeQuery();
 
             while (rs.next()) {
                 SanPham sp = new SanPham();
@@ -124,6 +124,14 @@ public class SanPhamDAOImpl implements ISanPhamDao{
 
         } catch (SQLException ex) {
             ex.printStackTrace();
+        }
+        finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
 
         return sanPhamList;
@@ -176,7 +184,7 @@ public class SanPhamDAOImpl implements ISanPhamDao{
     public List<SanPham> findByBoLoc(String param, String MaNSX, String MaLSP) {
         List<SanPham> sanPhamList = new ArrayList<>();
         String sql = "SELECT * FROM SanPham WHERE TenSP LIKE ? ";
-
+        
         if (MaNSX != null) {
             sql += "AND MaNSX = ? ";
         }
@@ -332,6 +340,85 @@ public class SanPhamDAOImpl implements ISanPhamDao{
             ex.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public List<SanPham> findByMaNSX(String MaNSX) {
+        List<SanPham> sanPhamList = new ArrayList<>();
+        String sql = "SELECT * FROM SanPham WHERE MaNSX = ? ";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        try {
+            stmt = DatabaseConnection.getInstance().getConnection().prepareStatement(sql);
+            
+            stmt.setString(1, MaNSX);
+
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                SanPham sp = new SanPham();
+                sp.setMaSP(rs.getString("MaSP"));
+                sp.setMaLoaiSP(rs.getString("MaLoaiSP"));
+                sp.setMaNSX(rs.getString("MaNSX"));
+                sp.setTenSP(rs.getString("TenSP"));
+                sp.setDonViTinh(rs.getString("DonViTinh"));
+                sp.setGiaTien(rs.getBigDecimal("GiaTien"));
+                sp.setGiaNhap(rs.getBigDecimal("GiaNhap"));
+                sp.setSoLuong(rs.getInt("SoLuong"));
+                sp.setLoiNhuan(rs.getInt("LoiNhuan"));
+                sp.setTinhTrang(rs.getString("TinhTrang"));
+                sp.setHinhAnh(rs.getBytes("HinhAnh"));
+                sanPhamList.add(sp);
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        return sanPhamList;
+    }
+
+    @Override
+    public Boolean update_soluongByNhapHang(String MaSP, int soluong) {
+        String sql = "UPDATE SanPham SET SoLuong = SoLuong + ? WHERE MaSP = ?";
+        PreparedStatement stmt = null;
+  
+        try {
+            stmt = DatabaseConnection.getInstance().getConnection().prepareStatement(sql);
+            stmt.setInt(1, soluong);
+            stmt.setString(2, MaSP);
+            
+            
+
+            int affectedRows = stmt.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Updating soluong failed, no rows affected.");
+            }
+
+            return true;
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+        finally {
+            try {
+                if (stmt != null) stmt.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+
     }
     
 }

@@ -56,4 +56,9 @@ public class NhaSanXuat {
         this.Sdt = Sdt;
     }
     
+    public NhaSanXuat(String MaNSX, String TenNSX){
+        this.MaNSX = MaNSX;
+        this.TenNSX = TenNSX;
+    }
+    
 }

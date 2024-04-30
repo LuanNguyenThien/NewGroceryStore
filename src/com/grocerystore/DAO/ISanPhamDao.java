@@ -19,6 +19,8 @@ public interface ISanPhamDao {
     List<SanPham> getAll_viewSP(String TinhTrang);
     List<SanPham> findByBoLoc(String param, String MaNSX, String MaLSP);
     List<SanPham> findByBoLoc_viewSP(String param, String MaNSX, String MaLSP);
+    List<SanPham> findByMaNSX(String MaNSX);
     SanPham findById(String MaSP);
     Boolean update_soluong(String MaSP, int soluong);
+    Boolean update_soluongByNhapHang(String MaSP, int soluong);
 }
