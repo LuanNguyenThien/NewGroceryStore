@@ -15,6 +15,8 @@ import com.grocerystore.model.NhanVien;
 import com.raven.component.PanelSlide;
 import connection.DatabaseConnection;
 import static groovy.ui.text.FindReplaceUtility.dispose;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.Date;
@@ -587,6 +589,22 @@ public class Form_DoiMatKhau extends javax.swing.JPanel {
     }
 
     private void loadData() {
+        tf_Sdt.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!((c >= '0') && (c <= '9') ||
+                     (c == KeyEvent.VK_BACK_SPACE) ||
+                     (c == KeyEvent.VK_DELETE))) {
+                    e.consume();  // ignore event
+                } else if (tf_Sdt.getText().length() >= 10) { // Check if length of text is more than 10
+                    e.consume();  // ignore event
+                    FormPopupNotification popup = new FormPopupNotification("Số điện thoại không quá 10 số", FormPopupNotification.Type.WARNING);
+                    popup.setAlwaysOnTop(true);
+                    popup.setVisible(true);
+                    popup.toFront();
+                }
+            }
+        });
         NhanVienDAOImpl nvdao = new NhanVienDAOImpl();
         NhanVien user = nvdao.findByID(PanelSlide.IDCurUser);
         txtUsername.setEditable(false);
@@ -594,9 +612,7 @@ public class Form_DoiMatKhau extends javax.swing.JPanel {
         tf_TenNhanVien.setText(user.getHoTen());
         tf_DiaChi.setText(user.getDiaChi());
         tf_Sdt.setText(user.getSdt());
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        String ngaySinh = sdf.format(user.getNgaySinh());
-        tf_NgaySinh.setText(ngaySinh);
+        tf_NgaySinh.setText(user.getNgaySinh().toString());
         if (user.getHinhAnh() != null) {
             lbl_picSP.setIcon(Util.byteArrayToImageIcon(user.getHinhAnh()));
         } else {
