@@ -106,6 +106,7 @@ public class NhanVienDAOImpl implements INhanVienDAO{
                 nhanVien.setHoTen(rs.getString("HoTen"));
                 nhanVien.setHinhAnh(rs.getBytes("HinhAnh"));
                 nhanVien.setQuyen(rs.getString("Quyen"));
+                nhanVien.setTrangThai(rs.getString("TrangThai"));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();

@@ -153,6 +153,10 @@ public class PanelSlide extends javax.swing.JLayeredPane {
                     nv = nvdao.checkLogin(userName, password);
                     
                     if(nv!=null){
+                        if("Đã nghỉ".equals(nv.getTrangThai())){
+                            loading.showError("Nhân viên đã bị sa thải");
+                            return;
+                        }
                         DataInitializer.curUser = nv;
                         IDCurUser = nv.getMaNV();
                         String quyen = nv.getQuyen();
