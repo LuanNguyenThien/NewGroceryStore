@@ -10,6 +10,8 @@ import com.grocerystore.model.KhachHang;
 import connection.DatabaseConnection;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -566,5 +568,23 @@ public class Form_QLKhachHang extends javax.swing.JPanel {
             }
         };
         tf_param.getDocument().addDocumentListener(documentListener);
+        
+        tf_phone.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!((c >= '0') && (c <= '9') ||
+                     (c == KeyEvent.VK_BACK_SPACE) ||
+                     (c == KeyEvent.VK_DELETE))) {
+                    e.consume();  // ignore event
+                } else if (tf_phone.getText().length() >= 10) { // Check if length of text is more than 10
+                    e.consume();  // ignore event
+                    FormPopupNotification popup = new FormPopupNotification("Số điện thoại không hợp lệ", FormPopupNotification.Type.WARNING);
+                    popup.setAlwaysOnTop(true);
+                    popup.setVisible(true);
+                    popup.toFront();
+                }
+            }
+        });
     }
 }
